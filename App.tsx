@@ -23,6 +23,9 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import HomeVerticalCard from './src/home-horizontal-card';
+import HomeHorizontalCard from './src/home-horizontal-card';
+import VerticalClimateCard from './src/home-vertical-card';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -81,7 +84,7 @@ function App(): React.JSX.Element {
       <ScrollView
         style={backgroundStyle}>
         <View style={{paddingRight: safePadding}}>
-          <Header/>
+         {/* <Header/>*/}
         </View>
         <View
           style={{
@@ -89,20 +92,15 @@ function App(): React.JSX.Element {
             paddingHorizontal: safePadding,
             paddingBottom: safePadding,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+        
+        
+          <HomeHorizontalCard />
+          <VerticalClimateCard
+            imageUri="https://example.com/image.jpg"
+            title="Climate Action"
+            subtitle="Take steps to reduce your carbon footprint"
+            buttonText="Upload Now"
+          />
         </View>
       </ScrollView>
     </View>

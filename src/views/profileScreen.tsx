@@ -1,0 +1,18 @@
+import { Text, TouchableOpacity, View } from "react-native";
+import { BackIcon } from "../images/icons";
+
+export const ProfileScreen = () => {
+
+    const toggleDrawer = () => {
+    //   navigation.toggleDrawer();
+    };
+
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <TouchableOpacity onPress={toggleDrawer}>
+          <BackIcon />
+        </TouchableOpacity>
+        <Text>Profile Screen</Text>
+      </View>
+    );
+  };

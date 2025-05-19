@@ -18,7 +18,6 @@
     "@react-navigation/bottom-tabs": "^7.3.13",
     "@react-navigation/drawer": "^7.3.12",
     "@react-navigation/native": "^7.1.9",
-<<<<<<< HEAD
     "@react-navigation/stack": "^7.3.2",
     "@reduxjs/toolkit": "^2.8.2",
     "moment": "^2.30.1",
@@ -47,16 +46,6 @@
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
     "rn-swipe-button": "^3.0.1"
-=======
-    "lucide-react-native": "^0.511.0",
-    "react": "19.0.0",
-    "react-native": "0.79.0",
-    "react-native-gesture-handler": "^2.25.0",
-    "react-native-reanimated": "^3.17.5",
-    "react-native-safe-area-context": "^5.4.0",
-    "react-native-screens": "^4.10.0",
-    "react-native-svg": "^15.12.0"
->>>>>>> 6cbd5ad8a130d4235e0863f64f770f0d9312e72a
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

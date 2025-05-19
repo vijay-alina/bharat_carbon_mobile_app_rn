@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
-import { BackIcon } from "../images/icons";
+import { BackIcon } from "../../images/icons";
 
-export const ProfileScreen = () => {
+export const StatsScreen = () => {
 
     const toggleDrawer = () => {
     //   navigation.toggleDrawer();
@@ -12,7 +12,7 @@ export const ProfileScreen = () => {
         <TouchableOpacity onPress={toggleDrawer}>
           <BackIcon />
         </TouchableOpacity>
-        <Text>Profile Screen</Text>
+        <Text>Stats Screen</Text>
       </View>
     );
-  };
+  }

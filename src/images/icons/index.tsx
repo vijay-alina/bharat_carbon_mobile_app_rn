@@ -5,6 +5,9 @@ import ClassRankIcon from './class_rank_icon.svg';
 import SchoolRankIcon from './school_rank_icon.svg';
 import UserIcon from './user_icon.svg';
 import UsersGroupIcon from './users_group_icon.svg';
+import MenuIcon from './menu_icon.svg';
+import PointsStarIcon from './points_star_icon.svg';
+import AvatarIcon from './avatar_icon.svg';
 
 export {
   BackIcon,
@@ -14,4 +17,7 @@ export {
   SchoolRankIcon,
   UserIcon,
   UsersGroupIcon,
+  MenuIcon,
+  PointsStarIcon,
+  AvatarIcon,
 };

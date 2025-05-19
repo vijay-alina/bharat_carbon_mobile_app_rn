@@ -1,5 +1,5 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import { BackIcon } from "../images/icons";
+import { Text, TouchableOpacity, View } from 'react-native';
+import { BackIcon } from '../../images/icons';
 
 export const AddScreen = () => {
 
@@ -15,4 +15,4 @@ export const AddScreen = () => {
         <Text>Add Screen</Text>
       </View>
     );
-  }
+  };

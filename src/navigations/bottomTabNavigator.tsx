@@ -1,12 +1,12 @@
 import React from 'react';
 import {BottomTabBarProps, createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CustomTabBar from './customTabBar';
-import { HomeScreen } from '../views/homeScreen';
+import { HomeScreen } from '../views/home/homeScreen';
 import { TabParamList } from './navigation.types';
-import { HistoryScreen } from '../views/historyScreen';
-import { AddScreen } from '../views/addScreen';
-import { StatsScreen } from '../views/statsScreen';
-import { ProfileScreen } from '../views/profileScreen';
+import { HistoryScreen } from '../views/challenge/historyScreen';
+import { AddScreen } from '../views/add/addScreen';
+import { StatsScreen } from '../views/stats/statsScreen';
+import { ProfileScreen } from '../views/profile/profileScreen';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 

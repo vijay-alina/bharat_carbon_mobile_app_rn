@@ -1,14 +1,34 @@
 import React from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
-import ListHeader from './components/List.Header';
+import ListHeaderContent from './components/List.HeaderContent';
+import VerticalClimateCard from '../../home-vertical-card';
+
+const _item = {
+  imageUri: 'https://picsum.photos/200/300',
+  title: 'Take Your First Climate Action!',
+  subtitle:
+    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
+  buttonText: 'Upload Now',
+};
+
+const list = [_item, _item, _item, _item];
 
 export const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        ListHeaderComponent={ListHeader}
-        data={[]}
-        renderItem={() => <View />}
+        ListHeaderComponent={ListHeaderContent}
+        data={list}
+        numColumns={2}
+        renderItem={({item, index}) => (
+          <VerticalClimateCard
+            key={index.toString()}
+            imageUri={item.imageUri}
+            title={item.title}
+            subtitle={item.subtitle}
+            buttonText={item.buttonText}
+          />
+        )}
       />
     </View>
   );

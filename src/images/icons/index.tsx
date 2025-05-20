@@ -8,6 +8,7 @@ import UsersGroupIcon from './users_group_icon.svg';
 import MenuIcon from './menu_icon.svg';
 import PointsStarIcon from './points_star_icon.svg';
 import AvatarIcon from './avatar_icon.svg';
+import HeaderContentBackgroundImage from './header_content_bg.png';
 
 export {
   BackIcon,
@@ -20,4 +21,5 @@ export {
   MenuIcon,
   PointsStarIcon,
   AvatarIcon,
+  HeaderContentBackgroundImage,
 };

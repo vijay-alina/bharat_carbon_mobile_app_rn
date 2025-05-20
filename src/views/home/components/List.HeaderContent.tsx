@@ -1,19 +1,39 @@
-import React, {FC} from 'react';
-import {View, Text, TouchableOpacity, Image, Dimensions} from 'react-native';
-import {StyleSheet} from 'react-native';
-import {MenuIcon, PointsStarIcon} from '../../../images/icons';
+import React from 'react';
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import {
+  HeaderContentBackgroundImage,
+  MenuIcon,
+  PointsStarIcon,
+} from '../../../images/icons';
+import HomeHorizontalCard from './home-horizontal-card';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
-import ListHeaderContent from './List.HeaderContent';
+import { Colors } from '../../../constants/colors';
 
-const ListHeader: FC = ({}) => {
+type Props = {};
+
+const ListHeaderContent = (props: Props) => {
+    console.log('ListHeaderContent-props',props);
   const navigation = useNavigation();
+  const {width} = useWindowDimensions();
 
   const openDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
   };
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.container}>
+    <ImageBackground
+      style={styles.container}
+      source={HeaderContentBackgroundImage}
+      width={width}
+      height={273}>
+      <View style={styles.menuContainer}>
         <TouchableOpacity onPress={openDrawer}>
           <MenuIcon />
         </TouchableOpacity>
@@ -28,20 +48,23 @@ const ListHeader: FC = ({}) => {
           />
         </View>
       </View>
-      <ListHeaderContent />
-    </View>
+      <Text style={styles.greetingText}>Good Morning, Akshay</Text>
+      <HomeHorizontalCard />
+    </ImageBackground>
   );
 };
 
-const {width} = Dimensions.get('window');
-
 const styles = StyleSheet.create({
-  wrapper: {
-    width: width,
-  },
   container: {
-    backgroundColor: '#d3f5f1', // light mint/teal
     paddingHorizontal: 16,
+  },
+  greetingText: {
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 20,
+    marginVertical: 24,
+    color: Colors.PrimaryBlue,
+  },
+  menuContainer: {
     paddingVertical: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -73,5 +96,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
-
-export default ListHeader;
+export default ListHeaderContent; // Export the component

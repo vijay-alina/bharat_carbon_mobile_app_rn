@@ -1,18 +1,1 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import { BackIcon } from "../../images/icons";
-
-export const StatsScreen = () => {
-
-    const toggleDrawer = () => {
-    //   navigation.toggleDrawer();
-    };
-
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <TouchableOpacity onPress={toggleDrawer}>
-          <BackIcon />
-        </TouchableOpacity>
-        <Text>Stats Screen</Text>
-      </View>
-    );
-  }
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";import { BackIcon } from "../../images/icons";import AnalyticsCard from "./components/analyticsCard";import EmissionBreakdownCard from "./components/emissionBreakdownCard";const screenWidth = Dimensions.get('window').width;export const StatsScreen = () => {  const toggleDrawer = () => {    //   navigation.toggleDrawer();  };  return (    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>      <TouchableOpacity onPress={toggleDrawer}>        <BackIcon />      </TouchableOpacity>      <Text>Stats Screen</Text>      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>        {/* Slider Area */}        <ScrollView          horizontal          pagingEnabled          showsHorizontalScrollIndicator={false}          style={styles.slider}        >          <View style={{ width: screenWidth }}>            <AnalyticsCard />          </View>          {/* You can add more slides here if needed */}        </ScrollView>        {/* Below Slider Content */}        <View style={styles.content}>          <EmissionBreakdownCard />        </View>      </ScrollView>    </View>  );}const styles = StyleSheet.create({  container: { flex: 1, backgroundColor: '#F5F7FB' },  slider: {    height: 260, // Adjust height to fit your chart  },  content: {    paddingTop: 10,  },});

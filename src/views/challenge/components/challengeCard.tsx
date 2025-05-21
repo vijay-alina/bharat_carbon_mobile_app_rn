@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
+import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { YellowFivePointedStarIcon } from '../../../images/icons';
 
 const screenWidth = Dimensions.get('window').width;
 const cardWidth = screenWidth - 32; // Full width with 16px margin on each side
@@ -22,16 +22,17 @@ const GradientChallengeCard: React.FC<GradientChallengeCardProps> = ({
   keywords,
 }) => {
   return (
-    <LinearGradient
-      colors={['#17a086', '#083a31']}
-      style={styles.card}
-    >
+    <LinearGradient colors={['#17a086', '#083a31']} style={styles.card}>
       <View style={styles.pointsContainer}>
-        <Icon name="star" size={12} color="#FFD700" style={{ marginRight: 4 }} />
+        <YellowFivePointedStarIcon />
         <Text style={styles.pointsText}>{pointsText}</Text>
       </View>
 
-      <Image source={{ uri: imageUri }} style={styles.image} resizeMode="contain" />
+      <Image
+        source={{uri: imageUri}}
+        style={styles.image}
+        resizeMode="contain"
+      />
 
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
@@ -69,11 +70,12 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   title: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
     marginBottom: 6,
+    fontFamily: 'Montserrat-Bold',
   },
   description: {
     fontSize: 13,

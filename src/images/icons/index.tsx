@@ -9,6 +9,9 @@ import MenuIcon from './menu_icon.svg';
 import PointsStarIcon from './points_star_icon.svg';
 import AvatarIcon from './avatar_icon.svg';
 import HeaderContentBackgroundImage from './header_content_bg.png';
+import EcoPlantImage from './eco_plant.png';
+import YellowFivePointedStarIcon from './yellow_five_pointed_star.svg';
+import HomeIcon from './home_icon.svg';
 
 export {
   BackIcon,
@@ -22,4 +25,7 @@ export {
   PointsStarIcon,
   AvatarIcon,
   HeaderContentBackgroundImage,
+  EcoPlantImage,
+  YellowFivePointedStarIcon,
+  HomeIcon,
 };

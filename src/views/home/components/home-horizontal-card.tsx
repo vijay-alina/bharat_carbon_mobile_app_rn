@@ -2,22 +2,17 @@ import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import { Colors } from '../../../constants/colors';
 import { getLineHeight } from '../../../utils/utils';
+import { EcoPlantImage } from '../../../images/icons';
 
 const HomeHorizontalCard = () => (
   <View style={styles.card}>
-    {/* Left side: title and subtitle */}
     <View style={styles.textContainer}>
-      <Text style={styles.cardTitle}>{`Welcome to \nBharat carbon!`}</Text>
+      <Text style={styles.cardTitle}>{'Welcome to \nBharat carbon!'}</Text>
       <Text style={styles.cardSubtitle}>
         Take small steps every day to lower your carbon effect and earn rewards!{' '}
       </Text>
     </View>
-
-    {/* Right side: image */}
-    <Image
-      source={{uri: 'https://placehold.co/75x75'}}
-      style={styles.cardImage}
-    />
+    <Image source={EcoPlantImage} style={styles.ecoPlant} />
   </View>
 );
 
@@ -34,12 +29,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
+  ecoPlant: {
+    width: 80,
+    height: 80,
+  },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 20,
-    // height: 107,
     width: '100%',
     backgroundColor: '#1FE1BC',
     padding: 20,

@@ -1,1 +1,13 @@
-import { Text, TouchableOpacity, View } from "react-native";import { BackIcon } from "../../images/icons";import LeaderboardScreen from "./components/leaderboardScreen";export const ProfileScreen = () => {  const toggleDrawer = () => {    //   navigation.toggleDrawer();  };  return (    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>      <TouchableOpacity onPress={toggleDrawer}>        <BackIcon />      </TouchableOpacity>      <Text>Profile Screen</Text>      <LeaderboardScreen />    </View>  );};
+import { View } from "react-native";
+import LeaderboardScreen from "./components/leaderboardScreen";
+import { Header } from "../../common/header";
+
+export const ProfileScreen = () => {
+
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Header title="Leaderboard" />
+      <LeaderboardScreen />
+    </View>
+  );
+};

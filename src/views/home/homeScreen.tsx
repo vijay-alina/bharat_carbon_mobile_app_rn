@@ -1,1 +1,121 @@
-import React from 'react';import { View, StyleSheet, FlatList } from 'react-native';import ListHeaderContent from './components/List.HeaderContent';import VerticalClimateCard from '../../home-vertical-card';const _item = {  imageUri: 'https://picsum.photos/200/300',  title: 'Take Your First Climate Action!',  subtitle:    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',  buttonText: 'Upload Now',  gradientColors: ['#ff832b', '#000000']};const _itemTwo = {  imageUri: 'https://picsum.photos/200/300',  title: 'Take Your First Climate Action!',  subtitle:    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',  buttonText: 'Upload Now',  gradientColors: ['#6750a3', '#000000']};const _itemThree = {  imageUri: 'https://picsum.photos/200/300',  title: 'Take Your First Climate Action!',  subtitle:    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',  buttonText: 'Upload Now',  gradientColors: ['#17a086', '#083a31']};const _itemFour = {  imageUri: 'https://picsum.photos/200/300',  title: 'Take Your First Climate Action!',  subtitle:    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',  buttonText: 'Upload Now',  gradientColors: ['#17a086', '#083a31']};const list = [_item, _itemTwo, _itemThree, _itemFour];export const HomeScreen = () => {  return (    <View style={styles.container}>      <FlatList        ListHeaderComponent={ListHeaderContent}        data={list}        numColumns={2}        contentContainerStyle={{ alignItems: 'center', }}        renderItem={({ item, index }) => (          <VerticalClimateCard            key={index.toString()}            imageUri={item.imageUri}            title={item.title}            subtitle={item.subtitle}            buttonText={item.buttonText}            gradientColors={item.gradientColors}          />        )}      />    </View>  );};const styles = StyleSheet.create({  container: {    flex: 1,    backgroundColor: '#f5f5f5',    alignItems: 'center',    justifyContent: 'center',  },  header: {    flexDirection: 'row',    alignItems: 'center',    paddingHorizontal: 16,    paddingTop: 20,    paddingBottom: 10,    backgroundColor: 'white',  },  menuButton: {    padding: 8,    flexDirection: 'row',    alignItems: 'center',  },  menuText: {    marginLeft: 5,    fontSize: 14,  },  headerTitle: {    fontSize: 20,    fontWeight: 'bold',    marginLeft: 16,  },  content: {    flex: 1,    justifyContent: 'center',    alignItems: 'center',  },  contentText: {    fontSize: 18,    marginBottom: 20,  },  button: {    backgroundColor: '#3D9D91',    padding: 15,    borderRadius: 8,    marginTop: 20,  },  buttonText: {    color: 'white',    fontSize: 16,  },});
+import React from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
+import ListHeaderContent from './components/headerContent';
+import VerticalClimateCard from './components/home-vertical-card';
+import ListFooterContent from './components/footerComponent';
+
+const _item = {
+  imageUri: 'https://picsum.photos/200/300',
+  title: 'Take Your First Climate Action!',
+  subtitle:
+    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
+  buttonText: 'Upload Now',
+  gradientColors: ['#ff832b', '#000000'],
+};
+
+const _itemTwo = {
+  imageUri: 'https://picsum.photos/200/300',
+  title: 'Take Your First Climate Action!',
+  subtitle:
+    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
+  buttonText: 'Upload Now',
+  gradientColors: ['#6750a3', '#000000'],
+};
+const _itemThree = {
+  imageUri: 'https://picsum.photos/200/300',
+  title: 'Take Your First Climate Action!',
+  subtitle:
+    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
+  buttonText: 'Upload Now',
+  gradientColors: ['#17a086', '#083a31'],
+};
+const _itemFour = {
+  imageUri: 'https://picsum.photos/200/300',
+  title: 'Take Your First Climate Action!',
+  subtitle:
+    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
+  buttonText: 'Upload Now',
+  gradientColors: ['#17a086', '#083a31'],
+};
+const list = [_item, _itemTwo, _itemThree, _itemFour];
+
+export const HomeScreen = () => {
+  return (
+    <View style={styles.container}>
+      <FlatList
+        ListHeaderComponent={ListHeaderContent}
+        data={list}
+        numColumns={2}
+        contentContainerStyle={styles.contentContainer}
+        renderItem={({ item, index }) => (
+          <VerticalClimateCard
+            key={index.toString()}
+            imageUri={item.imageUri}
+            title={item.title}
+            subtitle={item.subtitle}
+            buttonText={item.buttonText}
+            gradientColors={item.gradientColors}
+          />
+        )}
+        ListFooterComponent={ListFooterContent}
+        ListFooterComponentStyle={{marginBottom: 80}}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // marginBottom: 100,
+    paddingBottom: 80,
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 10,
+    backgroundColor: 'white',
+  },
+  menuButton: {
+    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  menuText: {
+    marginLeft: 5,
+    fontSize: 14,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: 16,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contentText: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: '#3D9D91',
+    padding: 15,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+});

@@ -35,6 +35,19 @@ local.properties
 !debug.keystore
 .kotlin/
 
+# Android release builds
+android/app/release/
+android/app/build/outputs/apk/release/
+android/app/build/outputs/bundle/release/
+
+# Additional Android build files that are generally good to ignore
+android/*.apk
+android/*.aab
+android/app/*.apk
+android/app/*.aab
+android/build/
+android/.gradle/
+
 # node.js
 #
 node_modules/

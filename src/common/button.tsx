@@ -1,0 +1,83 @@
+import React from 'react';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  View,
+  GestureResponderEvent,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
+import AerrowIconWithTail from "../images/icons/arrow_right_with_tail.svg"
+
+interface CustomButtonProps {
+  text: string;
+  onPress: (event: GestureResponderEvent) => void;
+  backgroundColor?: string;
+  textColor?: string;
+  showIcon?: boolean;
+  iconName?: keyof typeof AerrowIconWithTail; // restricts to valid icon names
+  iconColor?: string;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+}
+
+const CustomButton: React.FC<CustomButtonProps> = ({
+  text,
+  onPress,
+  backgroundColor = '#009688',
+  textColor = '#fff',
+  showIcon = false,
+  iconName = 'arrow-forward',
+  iconColor = '#fff',
+  style,
+  textStyle,
+}) => {
+  return (
+    <TouchableOpacity
+      style={[styles.button, { backgroundColor }, style]}
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
+      <View style={styles.content}>
+        <Text style={[styles.text, { color: textColor }, textStyle]}>
+          {text}
+        </Text>
+        {showIcon && (
+            <AerrowIconWithTail
+                name={iconName}
+                color={iconColor}
+                style={styles.icon}
+            />
+        )}
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  button: {
+    borderRadius: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+    width: '100%',
+
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  icon: {
+    marginLeft: 8,
+  },
+});
+
+export default CustomButton;

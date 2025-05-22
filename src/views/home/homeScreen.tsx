@@ -3,39 +3,44 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import ListHeaderContent from './components/headerContent';
 import VerticalClimateCard from './components/home-vertical-card';
 import ListFooterContent from './components/footerComponent';
+import { AddPlusIcon, FileUploadIcon } from '../../images/icons';
 
 const _item = {
-  imageUri: 'https://picsum.photos/200/300',
+  imageUri: require('../../images/icons/girl_with_phone.png'),
   title: 'Take Your First Climate Action!',
   subtitle:
     'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
   buttonText: 'Upload Now',
   gradientColors: ['#ff832b', '#000000'],
+  icon: <FileUploadIcon />,
 };
 
 const _itemTwo = {
-  imageUri: 'https://picsum.photos/200/300',
+  imageUri: require('../../images/icons/parent_with_kid.png'),
   title: 'Take Your First Climate Action!',
   subtitle:
     'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
-  buttonText: 'Upload Now',
+  buttonText: 'Add Faimly Member',
   gradientColors: ['#6750a3', '#000000'],
+  icon: <AddPlusIcon />,
 };
 const _itemThree = {
-  imageUri: 'https://picsum.photos/200/300',
+  imageUri: require('../../images/icons/solar_panels.png'),
   title: 'Take Your First Climate Action!',
   subtitle:
     'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
-  buttonText: 'Upload Now',
+  buttonText: 'Explore Housing',
   gradientColors: ['#17a086', '#083a31'],
+  icon: null,
 };
 const _itemFour = {
-  imageUri: 'https://picsum.photos/200/300',
+  imageUri: require('../../images/icons/boy_with_bicycle.png'),
   title: 'Take Your First Climate Action!',
   subtitle:
     'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
-  buttonText: 'Upload Now',
+  buttonText: 'Explore Mobility',
   gradientColors: ['#17a086', '#083a31'],
+  icon: null,
 };
 const list = [_item, _itemTwo, _itemThree, _itemFour];
 
@@ -55,10 +60,11 @@ export const HomeScreen = () => {
             subtitle={item.subtitle}
             buttonText={item.buttonText}
             gradientColors={item.gradientColors}
+            icon={item.icon}
           />
         )}
         ListFooterComponent={ListFooterContent}
-        ListFooterComponentStyle={{marginBottom: 80}}
+        ListFooterComponentStyle={{marginLeft: 10}}
       />
     </View>
   );
@@ -74,7 +80,6 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
   contentContainer: {
-    flex: 1,
     alignItems: 'center',
   },
   header: {

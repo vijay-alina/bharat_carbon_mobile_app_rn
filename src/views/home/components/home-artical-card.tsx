@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { TArticle } from '../types';
+import { Colors } from '../../../constants/colors';
 
 interface ArticleCardProps {
   item: TArticle;
@@ -23,23 +24,26 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ item, index }) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: 300,
-    backgroundColor: '#fff',
+    width: 350,
+    height: 250,
+    backgroundColor: Colors.White,
     borderRadius: 16,
     overflow: 'hidden',
     margin: 10,
-    elevation: 3,
-    shadowColor: '#000',
+    // elevation: 2,
+    shadowColor: Colors.Black,
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
+    padding: 16,
   },
   image: {
     width: '100%',
     height: 140,
+    borderRadius: 10,
   },
   textSection: {
-    padding: 12,
+    marginTop: 12,
   },
   badge: {
     backgroundColor: '#d6f0c4',
@@ -52,10 +56,11 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 12,
     color: '#4d7c0f',
-    fontWeight: '600',
+    letterSpacing: 1,
   },
   title: {
-    fontSize: 16,
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#111',
   },

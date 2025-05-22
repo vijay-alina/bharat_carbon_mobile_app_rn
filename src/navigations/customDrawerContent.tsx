@@ -1,11 +1,12 @@
 import React from 'react';
-import {StyleSheet, ScrollView} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {
-  DrawerItemList,
   DrawerContentComponentProps,
+  DrawerContentScrollView,
 } from '@react-navigation/drawer';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {ProfileHeader} from '../components/profileHeader';
+import { UserIcon, UsersGroupIcon } from '../images/icons';
+import CustomDrawerItem from './CustomDrawerItem';
 
 type ProfileProps = {
   name: string;
@@ -29,8 +30,9 @@ export const CustomDrawerContent = (
     ...rest
   } = props;
 
+
   return (
-    <SafeAreaView style={styles.container}>
+    <DrawerContentScrollView {...rest} style={styles.container} contentContainerStyle={styles.contentContainerStyle}>
       <ProfileHeader
         name={name}
         points={points}
@@ -42,10 +44,18 @@ export const CustomDrawerContent = (
           props.navigation.toggleDrawer();
         }}
       />
-      <ScrollView style={styles.drawerItemsContainer}>
-        <DrawerItemList {...rest} />
-      </ScrollView>
-    </SafeAreaView>
+      <CustomDrawerItem icon={<UserIcon />} label="My Profile" onPress={() => {}} />
+      <CustomDrawerItem icon={<UsersGroupIcon />} label="Family Sharing" onPress={() => {}} />
+      <CustomDrawerItem icon={<UserIcon />} label="Activities" onPress={() => {}} />
+      <CustomDrawerItem icon={<UserIcon />} label="Challenge" onPress={() => {}} />
+      <CustomDrawerItem icon={<UserIcon />} label="Redeem Points" onPress={() => {}} />
+      <CustomDrawerItem icon={<UserIcon />} label="FAQs" onPress={() => {}} />
+      <CustomDrawerItem icon={<UserIcon />} label="Notification" onPress={() => {}} />
+      <CustomDrawerItem icon={<UserIcon />} label="Settings" onPress={() => {}} />
+      <CustomDrawerItem icon={<UserIcon />} label="Help Center" onPress={() => {}} />
+      <CustomDrawerItem icon={<UserIcon />} label="Logout" onPress={() => {}} />
+      <View style={styles.gap} />
+    </DrawerContentScrollView>
   );
 };
 
@@ -53,11 +63,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f8f8',
+    padding: 0,
   },
-  drawerItemsContainer: {
-    flex: 1,
-    paddingTop: 10,
+  contentContainerStyle: {
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingStart: 0,
+    paddingEnd: 0,
   },
+  gap: {
+    height: 16,
+  }
 });
 
 export default CustomDrawerContent;

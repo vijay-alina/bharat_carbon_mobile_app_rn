@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {BackIcon, HomeIcon} from '../images/icons';
+import { getLineHeight } from '../utils/utils';
 
 type HeaderProps = {
   title?: string;
@@ -49,10 +50,12 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '500',
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 16,
+    fontWeight: '700',
     textAlign: 'center',
     flex: 1,
+    lineHeight: getLineHeight(16, 120),
   },
   rightContainer: {
     width: 32, // Ensures same width as back button for proper alignment

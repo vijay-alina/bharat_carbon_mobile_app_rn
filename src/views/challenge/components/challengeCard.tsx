@@ -1,14 +1,22 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  ImageSourcePropType,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { YellowFivePointedStarIcon } from '../../../images/icons';
+import {StarIcon} from '../../../images/icons';
 
 const screenWidth = Dimensions.get('window').width;
 const cardWidth = screenWidth - 32; // Full width with 16px margin on each side
 
 type GradientChallengeCardProps = {
   pointsText: string;
-  imageUri: string;
+  offerType: string;
+  imageUri: ImageSourcePropType;
   title: string;
   description: string;
   keywords: string;
@@ -16,6 +24,7 @@ type GradientChallengeCardProps = {
 
 const GradientChallengeCard: React.FC<GradientChallengeCardProps> = ({
   pointsText,
+  offerType,
   imageUri,
   title,
   description,
@@ -24,15 +33,14 @@ const GradientChallengeCard: React.FC<GradientChallengeCardProps> = ({
   return (
     <LinearGradient colors={['#17a086', '#083a31']} style={styles.card}>
       <View style={styles.pointsContainer}>
-        <YellowFivePointedStarIcon />
-        <Text style={styles.pointsText}>{pointsText}</Text>
+        <Image source={StarIcon} style={styles.star} />
+        <View>
+          <Text style={styles.pointsText}>{pointsText}</Text>
+          <Text style={styles.offerType}>{offerType}</Text>
+        </View>
       </View>
 
-      <Image
-        source={{uri: imageUri}}
-        style={styles.image}
-        resizeMode="contain"
-      />
+      <Image source={imageUri} style={styles.image} resizeMode="contain" />
 
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
@@ -45,28 +53,40 @@ const styles = StyleSheet.create({
   card: {
     width: cardWidth,
     borderRadius: 20,
-    padding: 16,
+    padding: 12,
     marginVertical: 8,
     alignSelf: 'center',
     alignItems: 'center',
   },
+  star: {
+    height: 28,
+    width: 28,
+  },
   pointsContainer: {
     flexDirection: 'row',
-    backgroundColor: '#ffffff33',
+    backgroundColor: '#0D5F4F',
+    position: 'absolute',
+    left: 12,
+    top: 12,
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 20,
     marginBottom: 10,
     alignItems: 'center',
+    alignSelf: 'flex-start',
   },
   pointsText: {
     color: '#fff',
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '600',
   },
+  offerType: {
+    color: '#FECA03',
+    fontSize: 12,
+  },
   image: {
-    width: 100,
-    height: 100,
+    width: 263,
+    height: 150,
     marginVertical: 10,
   },
   title: {

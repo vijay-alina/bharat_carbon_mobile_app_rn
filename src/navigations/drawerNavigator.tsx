@@ -69,17 +69,6 @@ import { TabNavigator } from './bottomTabNavigator';
           },
           headerShown: false,
           drawerType: 'back',
-          drawerActiveTintColor: '#3D9D91',
-          drawerInactiveTintColor: '#333',
-          drawerLabelStyle: {
-            marginLeft: -20,
-            fontSize: 16,
-          },
-          drawerItemStyle: {
-            borderRadius: 0,
-            marginVertical: 5,
-            paddingLeft: 10,
-          },
         }}
         //@ts-ignore
         id="Drawer"  // Properly typed in newer React Navigation versions

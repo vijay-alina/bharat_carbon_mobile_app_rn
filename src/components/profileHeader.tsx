@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import {
-  BackIcon,
   ClassRankIcon,
   EarnedPointsIcon,
   LevelBadgeIcon,
   SchoolRankIcon,
 } from '../images/icons';
+import { Header } from '../common/header';
 
 export type ProfileProps = {
   name: string;
@@ -29,13 +29,10 @@ export const ProfileHeader: FC<ProfileProps> = ({
 }) => (
   <View style={styles.profileContainer}>
     <View style={styles.profileHeader}>
-      <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
-        <BackIcon />
-      </TouchableOpacity>
-      <Text style={styles.headerTitle}>My Profile</Text>
+      <Header title="My Profile" onBackClick={onBackPress} />
     </View>
     <View style={styles.profileInfo}>
-      <LevelBadgeIcon />
+      <Image source={LevelBadgeIcon} style={styles.levelBadge} />
       <Text style={styles.pointsToNext}>
         {pointsToNextLevel} pts to Level {level + 1}
       </Text>
@@ -69,12 +66,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8',
   },
   profileContainer: {
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
   },
   profileHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    // padding: 16,
   },
   backButton: {
     marginRight: 16,
@@ -89,30 +86,9 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   levelBadge: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#FFC107',
-    borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-    // Add shadow for iOS
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    // Add shadow for Android
-    elevation: 5,
-  },
-  levelNumber: {
-    color: '#fff',
-    fontSize: 32,
-    fontWeight: 'bold',
-  },
-  levelLabel: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
+    width: 122,
+    height: 100,
+    marginTop: 16,
   },
   pointsToNext: {
     fontSize: 14,
@@ -129,7 +105,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#3D9D91',
     borderRadius: 10,
     padding: 15,
-    width: '100%',
+    // width: '100%',
+    flex: 1,
     justifyContent: 'space-between',
   },
   statItem: {

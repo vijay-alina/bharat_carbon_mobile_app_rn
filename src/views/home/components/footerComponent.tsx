@@ -6,17 +6,17 @@ import {TArticle} from '../types';
 const items: TArticle[] = [
   {
     imageUri: 'https://picsum.photos/200/300',
-    category: 'Article 1',
+    category: 'TECHNOLOGY',
     description: 'This is a description of article 1',
   },
   {
     imageUri: 'https://picsum.photos/200/300',
-    category: 'Article 1',
+    category: 'SPORTS',
     description: 'This is a description of article 1',
   },
   {
     imageUri: 'https://picsum.photos/200/300',
-    category: 'Article 1',
+    category: 'TECHNOLOGY',
     description: 'This is a description of article 1',
   },
 ];
@@ -35,7 +35,6 @@ const ListFooterContent = () => {
 const styles = StyleSheet.create({
   containerContainer: {
     paddingVertical: 10,
-    // marginBottom: 80,
   },
 });
 

@@ -1,4 +1,4 @@
-import { WaveycheckIcon, Leaficon, BagIcon, BicycleIcon, Bulb, HutIcon } from "../images/icons";
+import { WaveycheckIcon, Leaficon, BagIcon, BicycleIcon, Bulb, HutIcon, TapIcon } from "../images/icons";
 
 export const ClimateManifesto = {
     whatBeBelieve: {
@@ -66,3 +66,131 @@ export const ClimateManifesto = {
         ]
     },
 }
+
+export const Categories = [
+    {
+        id: '1',
+        label: 'Nutrition',
+        icon: require('../images/icons/tap_icon.png'),
+    },
+    {
+        id: '2',
+        label: 'Housing',
+        icon: require('../images/icons/tap_icon.png'),
+    },
+    {
+        id: '3',
+        label: 'Mobility',
+        icon: require('../images/icons/boy_with_bicycle.png'),
+    },
+    {
+        id: '4',
+        label: 'Goods',
+        icon: require('../images/icons/tap_icon.png'),
+    },
+    {
+        id: '5',
+        label: 'Home & Lifestyle',
+        icon: require('../images/icons/tap_icon.png'),
+    },
+]
+
+export const FoodData = [
+    {
+        name: 'Tofu Stir Fry',
+        points: 15
+    },
+    {
+        name: 'Quinoa Salad',
+        points: 12
+    },
+    {
+        name: 'Mixed Veg Curry',
+        points: 10
+    },
+    {
+        name: 'Oats & Almond Milk',
+        points: 14
+    },
+    {
+        name: 'Boiled Eggs',
+        points: 10
+    },
+    {
+        name: 'Paneer Wrap',
+        points: 12
+    },
+    {
+        name: 'Coconut Milk Smoothie',
+        points: 13
+    },
+    {
+        name: 'Hummus & Pita',
+        points: 11
+    },
+    {
+        name: 'Dal Khichdi',
+        points: 15
+    },
+    {
+        name: 'Fresh Fruit Bowl',
+        points: 10
+    },
+    {
+        name: 'Chia Pudding',
+        points: 13
+    },
+    {
+        name: 'Avocado Toast',
+        points: 14
+    },
+]
+
+// data/familyData.ts
+export const familyData = [
+    {
+        id: '1',
+        name: 'Sanjana Dutta',
+        relation: 'You',
+        points: 180,
+        co2Value: '29.4 kg',
+        co2Status: 'High',
+        statusColor: '#FFA500',
+    },
+    {
+        id: '2',
+        name: 'Dinesh Mehta',
+        relation: 'Father',
+        points: 140,
+        co2Value: '37.2 kg',
+        co2Status: 'Very High',
+        statusColor: '#FF4D4D',
+    },
+    {
+        id: '3',
+        name: 'Kavya Mehta',
+        relation: 'Daughter',
+        points: 115,
+        co2Value: '10.5 kg',
+        co2Status: 'Normal',
+        statusColor: '#28A745',
+    },
+    {
+        id: '4',
+        name: 'Akshay Swami',
+        relation: 'Sibling',
+        points: 0,
+        co2Value: '0 kg',
+        co2Status: '-',
+        statusColor: '#999',
+    },
+    {
+        id: '5',
+        name: 'Aarav Mehta',
+        relation: 'Son',
+        points: 55,
+        co2Value: '—',
+        co2Status: '-',
+        statusColor: '#999',
+    },
+];

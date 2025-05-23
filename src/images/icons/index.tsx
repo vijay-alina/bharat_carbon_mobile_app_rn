@@ -21,6 +21,8 @@ import Leaficon from './leaf_icon.svg';
 import HutIcon from './hut_icon.svg';
 import BicycleIcon from './bicycle_rider.svg';
 import Bulb from './bulb_icon.svg';
+import TapIcon from './tap_icon.png';
+import CameraIcon from './camera_icon.svg';
 
 export {
   BackIcon,
@@ -45,5 +47,7 @@ export {
   Leaficon,
   HutIcon,
   BicycleIcon,
-  Bulb
+  Bulb,
+  TapIcon,
+  CameraIcon
 };

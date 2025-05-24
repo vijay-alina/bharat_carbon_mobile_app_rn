@@ -270,7 +270,8 @@ const CreateProfileScreen: React.FC = () => {
           <CustomButton
             text={isSubmitting ? 'Saving Profile...' : 'Save Profile'}
             onPress={handleSubmit}
-            showIcon={!isSubmitting}
+            showIcon={true}
+            isRightIcon={true}
             iconName="arrow-forward"
             backgroundColor="#6B7280"
             style={styles.submitButton}

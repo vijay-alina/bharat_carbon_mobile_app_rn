@@ -264,14 +264,17 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   messageText: {
+    fontFamily: 'Montserrat-SemiBold',
     fontSize: 16,
-    color: '#FFFFFF',
+    color: Colors.White,
     textAlign: 'center',
     marginBottom: 8,
+    lineHeight: getLineHeight(16, 120),
   },
   emailText: {
+    fontFamily: 'Montserrat-Bold',
     fontSize: 16,
-    color: '#FFFFFF',
+    color: Colors.White,
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -285,11 +288,11 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.White,
     textAlign: 'center',
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#000000',
+    color: Colors.Black,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -300,12 +303,12 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   otpInputFilled: {
-    backgroundColor: '#4ECDC4',
-    color: '#FFFFFF',
+    backgroundColor: Colors.ThickGreenShades800,
+    color: Colors.White,
   },
   otpInputActive: {
     borderWidth: 2,
-    borderColor: '#4ECDC4',
+    borderColor: Colors.ThickGreenShades800,
   },
   timerContainer: {
     alignItems: 'center',
@@ -336,7 +339,7 @@ const styles = StyleSheet.create({
   messageNumber: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000000',
+    color: Colors.Black,
   },
   keyboardRow: {
     flexDirection: 'row',

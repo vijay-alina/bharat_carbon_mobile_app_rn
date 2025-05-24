@@ -10,6 +10,7 @@ import {
   TextStyle,
 } from 'react-native';
 import AerrowIconWithTail from '../images/icons/arrow_right_with_tail.svg';
+import { Colors } from '../constants/colors';
 
 interface CustomButtonProps {
   text: string;
@@ -42,7 +43,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 }) => {
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor }, style]}
+      style={[styles.button, { backgroundColor }, style, disabled && styles.disabled]}
       onPress={onPress}
       activeOpacity={0.8}
       disabled={disabled}
@@ -93,6 +94,9 @@ const styles = StyleSheet.create({
   icon: {
     marginLeft: 8,
   },
+  disabled: {
+    backgroundColor: Colors.GreyNeutrals,
+  }
 });
 
 export default CustomButton;

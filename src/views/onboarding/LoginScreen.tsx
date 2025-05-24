@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   SafeAreaView,
   StatusBar,
@@ -12,12 +11,12 @@ import {
   Platform,
   ScrollView,
   Keyboard,
-//   Dimensions,
   Alert,
   Image,
 } from 'react-native';
 import bharatCarbonImageWhite from '../../images/icons/bharat_carbon_image_white.png';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import CustomButton from '../../common/button';
 // const { width, height } = Dimensions.get('window');
 
 const LoginScreen = () => {
@@ -27,12 +26,18 @@ const LoginScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboardVisible(true);
-    });
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardVisible(false);
-    });
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
 
     return () => {
       keyboardDidHideListener?.remove();
@@ -40,10 +45,10 @@ const LoginScreen = () => {
     };
   }, []);
 
-//   const validateEmail = (value: string) => {
-//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     return emailRegex.test(value);
-//   };
+  //   const validateEmail = (value: string) => {
+  //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //     return emailRegex.test(value);
+  //   };
 
   const handleSendOTP = async () => {
     // if (!email.trim()) {
@@ -64,7 +69,7 @@ const LoginScreen = () => {
 
       // Navigate to OTP verification screen
       //@ts-ignore
-      navigation.navigate('OTPVerificationScreen', { email: email.trim() });
+      navigation.navigate('OTPVerificationScreen', {email: email.trim()});
     } catch (error) {
       Alert.alert('Error', 'Failed to send OTP. Please try again.');
     } finally {
@@ -74,26 +79,33 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
 
       <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80' }}
+        source={{
+          uri: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80',
+        }}
         style={styles.backgroundImage}
-        resizeMode="cover"
-      >
+        resizeMode="cover">
         <View style={styles.overlay} />
 
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardAvoidingView}
-        >
+          style={styles.keyboardAvoidingView}>
           <ScrollView
             contentContainerStyle={styles.scrollViewContent}
             showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-          >
+            keyboardShouldPersistTaps="handled">
             {/* Logo Section */}
-            <View style={[styles.logoSection, isKeyboardVisible && styles.logoSectionCompact]}>
+            <View
+              style={[
+                styles.logoSection,
+                isKeyboardVisible && styles.logoSectionCompact,
+              ]}>
               <Image source={bharatCarbonImageWhite} style={styles.image} />
             </View>
 
@@ -111,20 +123,15 @@ const LoginScreen = () => {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
-                //   autoCompleteType="email"
+                  //   autoCompleteType="email"
                   textContentType="emailAddress"
                 />
               </View>
-
-              <TouchableOpacity
-                style={[styles.sendOTPButton, isLoading && styles.sendOTPButtonDisabled]}
+              <CustomButton
+                text={isLoading ? 'Sending...' : 'Send OTP'}
                 onPress={handleSendOTP}
                 disabled={isLoading}
-              >
-                <Text style={styles.sendOTPButtonText}>
-                  {isLoading ? 'Sending...' : 'Send OTP'}
-                </Text>
-              </TouchableOpacity>
+              />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

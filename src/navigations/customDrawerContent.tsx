@@ -58,7 +58,9 @@ export const CustomDrawerContent = (
       <CustomDrawerItem
         icon={<UsersGroupIcon />}
         label="Family Sharing"
-        onPress={() => {}}
+        onPress={() => {
+          props.navigation.navigate("FamilySharing");
+        }}
       />
       <CustomDrawerItem
         icon={<UserIcon />}

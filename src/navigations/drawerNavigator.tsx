@@ -8,6 +8,7 @@ import {
   import CustomDrawerContent from './customDrawerContent';
   import { useNavigation } from '@react-navigation/native';
 import { TabNavigator } from './bottomTabNavigator';
+import FamilyOverviewScreen from '../views/addMember/FamilyOverviewScreen';
 
   export type DrawerParamList = {
     MainTabs: undefined;
@@ -85,56 +86,32 @@ import { TabNavigator } from './bottomTabNavigator';
         {/* Other screens remain the same */}
         <Drawer.Screen
           name="FamilySharing"
-          component={ProfileScreen}
-          options={{
-            drawerIcon: PersonIconWrapper,
-            drawerLabel: 'Family Sharing',
-          }}
+          component={FamilyOverviewScreen}
         />
 
         <Drawer.Screen
           name="Activities"
           component={ProfileScreen}
-          options={{
-            drawerIcon: PersonIconWrapper,
-            drawerLabel: 'Activities',
-          }}
         />
 
         <Drawer.Screen
           name="Challenge"
           component={ProfileScreen}
-          options={{
-            drawerIcon: PersonIconWrapper,
-            drawerLabel: 'Challenge',
-          }}
         />
 
         <Drawer.Screen
           name="RedeemPoints"
           component={ProfileScreen}
-          options={{
-            drawerIcon: PersonIconWrapper,
-            drawerLabel: 'Redeem Points',
-          }}
         />
 
         <Drawer.Screen
           name="FAQs"
           component={ProfileScreen}
-          options={{
-            drawerIcon: PersonIconWrapper,
-            drawerLabel: 'FAQs',
-          }}
         />
 
         <Drawer.Screen
           name="Notifications"
           component={ProfileScreen}
-          options={{
-            drawerIcon: PersonIconWrapper,
-            drawerLabel: 'Notifications',
-          }}
         />
       </Drawer.Navigator>
     );

@@ -8,4 +8,11 @@ export const Colors = {
     BlueShades500: '#E6ECF0',
     BlueShades900: '#011B2A',
     PrimaryGreenThick: '#20E2BD',
+    ThickGreenShades: '#0D5F4F',
+    OrangeNormal: '#FF832B',
+    OrangeShades: 'rgba(255, 131, 43, 0.2)',
+    RedNormal: 'rgba(218, 30, 40, 1)',
+    RedShades: 'rgba(218, 30, 40, 0.2)',
+    GreenNormal: 'rgba(36, 161, 72, 1)',
+    GreenShades: 'rgba(36, 161, 72, 0.2)',
 };

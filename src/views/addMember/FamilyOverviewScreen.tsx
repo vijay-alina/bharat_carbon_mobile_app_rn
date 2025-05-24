@@ -1,70 +1,77 @@
-// screens/FamilyOverviewScreen.tsx
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import {View, StyleSheet, FlatList, Dimensions} from 'react-native';
 import FamilyMemberCard from './components/FamilyMembersCard';
-import { familyData } from '../../constants/constants';
+import {familyData} from '../../constants/constants';
+import {Header} from '../../common/header';
+import CustomButton from '../../common/button';
+
+const screenWidth = Dimensions.get('window').width;
+const horizontalPadding = 16;
+const cardSpacing = 12;
+const availableWidth = screenWidth - horizontalPadding * 2;
+const cardWidth = (availableWidth - cardSpacing) / 2;
 
 const FamilyOverviewScreen = () => {
+  const renderItem = ({item, index}: {item: any; index: number}) => {
+    const isLeftColumn = index % 2 === 0;
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Family Overview</Text>
-
-            <FlatList
-                data={familyData}
-                keyExtractor={(item) => item.id}
-                numColumns={2}
-                columnWrapperStyle={styles.row}
-                contentContainerStyle={styles.listContent}
-                renderItem={({ item }) => (
-                    <FamilyMemberCard
-                        name={item.name}
-                        relation={item.relation}
-                        points={item.points}
-                        co2Value={item.co2Value}
-                        co2Status={item.co2Status}
-                        statusColor={item.statusColor}
-                    />
-                )}
-            />
-
-            <TouchableOpacity style={styles.addButton}>
-                <Text style={styles.addButtonText}>Add Member ⨁</Text>
-            </TouchableOpacity>
-        </View>
+      <View
+        style={[
+          styles.cardContainer,
+          // eslint-disable-next-line react-native/no-inline-styles
+          {
+            width: cardWidth,
+            marginRight: isLeftColumn ? cardSpacing : 0,
+          },
+        ]}>
+        <FamilyMemberCard
+          name={item.name}
+          relation={item.relation}
+          points={item.points}
+          co2Value={item.co2Value}
+          co2Status={item.co2Status}
+          avatar={item.avatar}
+        />
+      </View>
     );
+  };
+
+  return (
+    <View style={styles.container}>
+      <Header title="Family Overview" />
+      <FlatList
+        data={familyData}
+        keyExtractor={item => item.id}
+        numColumns={2}
+        contentContainerStyle={styles.listContent}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+      />
+      <CustomButton
+        text="Add Member"
+        onPress={() => {}}
+        style={styles.addButton}
+      />
+    </View>
+  );
 };
 
 export default FamilyOverviewScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        paddingTop: 50,
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: '600',
-        textAlign: 'center',
-        marginBottom: 16,
-    },
-    row: {
-        justifyContent: 'space-evenly',
-    },
-    listContent: {
-        paddingHorizontal: 16,
-        paddingBottom: 20,
-    },
-    addButton: {
-        backgroundColor: '#00C897',
-        borderRadius: 30,
-        paddingVertical: 16,
-        margin: 20,
-        alignItems: 'center',
-    },
-    addButtonText: {
-        color: '#fff',
-        fontWeight: '600',
-        fontSize: 16,
-    },
+  container: {
+    flex: 1,
+  },
+  listContent: {
+    paddingHorizontal: horizontalPadding,
+    paddingTop: 16,
+    paddingBottom: 20,
+  },
+  cardContainer: {
+    marginBottom: 16,
+  },
+  addButton: {
+    width: '90%',
+    alignSelf: 'center',
+  },
 });

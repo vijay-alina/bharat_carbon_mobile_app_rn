@@ -28,6 +28,7 @@ import TabHome from './tab_house.svg';
 import TabTarget from './tab_target.svg';
 import TabChartLine from './tab_chart_line.svg';
 import TabAward from './tab_award.svg';
+import PointsIcon from './points_icon.svg';
 
 export {
   BackIcon,
@@ -60,4 +61,5 @@ export {
   TabTarget,
   TabChartLine,
   TabAward,
+  PointsIcon,
 };

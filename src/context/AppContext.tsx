@@ -26,8 +26,8 @@ export const useAppContext = () => {
 
 export const AppProvider:React.FC<{children: ReactElement}> = ({ children }) => {
   const [appState, setAppState] = useState({
-    hasCompletedIntro: false,
-    hasCompletedOnboarding: false,
+    hasCompletedIntro: true,
+    hasCompletedOnboarding: true,
     isLoading: true,
   });
 

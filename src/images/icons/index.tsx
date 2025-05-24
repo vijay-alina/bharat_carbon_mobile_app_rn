@@ -25,9 +25,14 @@ import TapIcon from './tap_icon.png';
 import CameraIcon from './camera_icon.svg';
 import RedoIcon from './redo_icon.svg';
 import TabHome from './tab_house.svg';
+import TabHomeActive from './tab_house_active.svg';
 import TabTarget from './tab_target.svg';
+import TabTargetActive from './tab_target_active.svg';
 import TabChartLine from './tab_chart_line.svg';
+import TabChartLineActive from './tab_chart_line_active.svg';
 import TabAward from './tab_award.svg';
+import TabAwardActive from './tab_award_active.svg';
+import TabActiveIndicator from './tab_active_indicator.svg';
 import PointsIcon from './points_icon.svg';
 
 export {
@@ -58,8 +63,13 @@ export {
   CameraIcon,
   RedoIcon,
   TabHome,
+  TabHomeActive,
   TabTarget,
+  TabTargetActive,
   TabChartLine,
+  TabChartLineActive,
   TabAward,
+  TabAwardActive,
   PointsIcon,
+  TabActiveIndicator,
 };

@@ -2,8 +2,8 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Svg, {Path} from 'react-native-svg';
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { TabAward, TabChartLine, TabHome, TabTarget } from '../images/icons';
+import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
+import {TabActiveIndicator, TabAward, TabAwardActive, TabChartLine, TabChartLineActive, TabHome, TabHomeActive, TabTarget, TabTargetActive} from '../images/icons';
 
 const CustomTabBar = ({state, navigation}: BottomTabBarProps) => {
   const insets = useSafeAreaInsets();
@@ -57,33 +57,21 @@ const CustomTabBar = ({state, navigation}: BottomTabBarProps) => {
         <View style={styles.tabItemsContainer}>
           {state.routes.map((route, index) => {
             const isFocused = state.index === index;
-            // Center button is special
             const isCenter = index === 2;
 
-            // Determine which icon to show based on the route
             const getIcon = () => {
-              if (index === 0)
-                {return (
-                  <TabHome size={24} color={isFocused ? '#59B88D' : '#8E9AAF'} />
-                );}
-              if (index === 1)
-                {return (
-                  <TabTarget
-                    size={24}
-                    color={isFocused ? '#59B88D' : '#8E9AAF'}
-                  />
-                );}
-              if (index === 3)
-                {return (
-                  <TabChartLine
-                    size={24}
-                    color={isFocused ? '#59B88D' : '#8E9AAF'}
-                  />
-                );}
-              if (index === 4)
-                {return (
-                  <TabAward size={24} color={isFocused ? '#59B88D' : '#8E9AAF'} />
-                );}
+              if (index === 0) {
+                return isFocused ? <TabHomeActive /> : <TabHome />;
+              }
+              if (index === 1) {
+                return isFocused ? <TabTargetActive /> :  <TabTarget />;
+              }
+              if (index === 3) {
+                return isFocused ? <TabChartLineActive /> : <TabChartLine />;
+              }
+              if (index === 4) {
+                return isFocused ? <TabAwardActive /> : <TabAward />;
+              }
               return null;
             };
 
@@ -121,6 +109,7 @@ const CustomTabBar = ({state, navigation}: BottomTabBarProps) => {
                 style={styles.tabItem}
                 onPress={onPress}>
                 {getIcon()}
+                {isFocused ? <TabActiveIndicator /> : <View style={styles.height} />}
               </TouchableOpacity>
             );
           })}
@@ -137,7 +126,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
-
   },
   tabBarContainer: {
     position: 'relative',
@@ -185,6 +173,9 @@ const styles = StyleSheet.create({
     height: 20,
     backgroundColor: 'white',
     left: 8.5,
+  },
+  height: {
+    height: 10,
   },
 });
 

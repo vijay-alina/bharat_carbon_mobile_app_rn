@@ -8,11 +8,11 @@ import {
   import CustomDrawerContent from './customDrawerContent';
   import { useNavigation } from '@react-navigation/native';
 import { TabNavigator } from './bottomTabNavigator';
-import FamilyOverviewScreen from '../views/addMember/FamilyOverviewScreen';
+import { MemberStackNavigator } from './memberStackNavigator';
 
   export type DrawerParamList = {
     MainTabs: undefined;
-    FamilySharing: undefined;
+    MemberStackNavigator: undefined;
     Activities: undefined;
     Challenge: undefined;
     RedeemPoints: undefined;
@@ -72,7 +72,7 @@ import FamilyOverviewScreen from '../views/addMember/FamilyOverviewScreen';
           drawerType: 'back',
         }}
         //@ts-ignore
-        id="Drawer"  // Properly typed in newer React Navigation versions
+        id="Drawer"
         drawerContent={CustomDrawerContentWrapper}>
         <Drawer.Screen
           name="MainTabs"
@@ -85,8 +85,8 @@ import FamilyOverviewScreen from '../views/addMember/FamilyOverviewScreen';
 
         {/* Other screens remain the same */}
         <Drawer.Screen
-          name="FamilySharing"
-          component={FamilyOverviewScreen}
+          name="MemberStackNavigator"
+          component={MemberStackNavigator}
         />
 
         <Drawer.Screen

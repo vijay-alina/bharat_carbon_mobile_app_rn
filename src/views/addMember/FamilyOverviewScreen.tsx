@@ -4,6 +4,7 @@ import FamilyMemberCard from './components/FamilyMembersCard';
 import {familyData} from '../../constants/constants';
 import {Header} from '../../common/header';
 import CustomButton from '../../common/button';
+import { useNavigation } from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('window').width;
 const horizontalPadding = 16;
@@ -12,6 +13,16 @@ const availableWidth = screenWidth - horizontalPadding * 2;
 const cardWidth = (availableWidth - cardSpacing) / 2;
 
 const FamilyOverviewScreen = () => {
+    const navigation = useNavigation();
+
+    const handlePress = () => {
+        navigation.goBack();
+    };
+
+    const handleAddMemberClick = () => {
+        //@ts-ignore
+        navigation.navigate('AddNewMemberScreen');
+    }
   const renderItem = ({item, index}: {item: any; index: number}) => {
     const isLeftColumn = index % 2 === 0;
     return (
@@ -38,7 +49,7 @@ const FamilyOverviewScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header title="Family Overview" />
+      <Header title="Family Overview" onBackClick={handlePress} />
       <FlatList
         data={familyData}
         keyExtractor={item => item.id}
@@ -49,7 +60,7 @@ const FamilyOverviewScreen = () => {
       />
       <CustomButton
         text="Add Member"
-        onPress={() => {}}
+        onPress={handleAddMemberClick}
         style={styles.addButton}
       />
     </View>

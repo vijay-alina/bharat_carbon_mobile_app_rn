@@ -1,24 +1,28 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 type PaginationTopBarProps = {
   currentIndex?: number;
   totalSlides?: number;
   onSkip: () => void;
+  onDotPress: (index: number) => void;
 };
 
-const PaginationTopBar = ({ currentIndex = 0, totalSlides = 3, onSkip }: PaginationTopBarProps) => {
+const PaginationTopBar = ({
+  currentIndex = 0,
+  totalSlides = 3,
+  onSkip,
+  onDotPress,
+}: PaginationTopBarProps) => {
   return (
     <View style={styles.topBar}>
       {/* Dots */}
       <View style={styles.dotsContainer}>
         {[...Array(totalSlides)].map((_, index) => (
-          <View
+          <TouchableOpacity
             key={index}
-            style={[
-              styles.dot,
-              currentIndex === index && styles.activeDot,
-            ]}
+            style={[styles.dot, currentIndex === index && styles.activeDot]}
+            onPress={() => onDotPress(index)}
           />
         ))}
       </View>
@@ -33,29 +37,29 @@ const PaginationTopBar = ({ currentIndex = 0, totalSlides = 3, onSkip }: Paginat
 
 const styles = StyleSheet.create({
   topBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#024064",
-    width: "100%",
-    marginBottom: 20, // this creates the gap between image and card
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#024064',
+    width: '100%',
+    marginBottom: 20,
   },
   dotsContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   dot: {
     height: 8,
     width: 8,
     borderRadius: 4,
-    backgroundColor: "#5A7682", // dull gray-blue
+    backgroundColor: '#5A7682',
     marginRight: 6,
   },
   activeDot: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     width: 20,
   },
   skipText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
   },
 });

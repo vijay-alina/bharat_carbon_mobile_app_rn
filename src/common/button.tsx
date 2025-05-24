@@ -9,7 +9,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import AerrowIconWithTail from "../images/icons/arrow_right_with_tail.svg"
+import AerrowIconWithTail from '../images/icons/arrow_right_with_tail.svg';
 
 interface CustomButtonProps {
   text: string;
@@ -21,6 +21,9 @@ interface CustomButtonProps {
   iconColor?: string;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  isRightIcon?: boolean;
+  isLeftIcon?: boolean;
+  disabled?: boolean;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -33,18 +36,29 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   iconColor = '#fff',
   style,
   textStyle,
+  isRightIcon = false,
+  isLeftIcon = false,
+  disabled = false,
 }) => {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor }, style]}
       onPress={onPress}
       activeOpacity={0.8}
+      disabled={disabled}
     >
       <View style={styles.content}>
+      {showIcon && isLeftIcon && (
+            <AerrowIconWithTail
+                name={iconName}
+                color={iconColor}
+                style={styles.icon}
+            />
+        )}
         <Text style={[styles.text, { color: textColor }, textStyle]}>
           {text}
         </Text>
-        {showIcon && (
+        {showIcon && isRightIcon && (
             <AerrowIconWithTail
                 name={iconName}
                 color={iconColor}
@@ -72,6 +86,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
+    fontFamily: 'Montserrat-Medium',
     fontSize: 16,
     fontWeight: '600',
   },

@@ -1,13 +1,18 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, ViewStyle} from 'react-native';
 import {BackIcon, HomeIcon} from '../images/icons';
 import { getLineHeight } from '../utils/utils';
+import { Colors } from '../constants/colors';
+import { TextStyle } from 'react-native';
 
 type HeaderProps = {
   title?: string;
   isHomeScreen?: boolean;
   onBackClick?: () => void;
   onHomeClick?: () => void;
+  hasTransparentBackground?: boolean;
+  containerStyle?: ViewStyle;
+  textStyle?: TextStyle;
 };
 
 export const Header: React.FC<HeaderProps> = ({
@@ -15,13 +20,16 @@ export const Header: React.FC<HeaderProps> = ({
   isHomeScreen = false,
   onBackClick,
   onHomeClick,
+  hasTransparentBackground = false,
+  containerStyle,
+  textStyle = {color: Colors.Black},
 }) => {
   return (
-    <View style={styles.headerContainer}>
+    <View style={[styles.headerContainer, hasTransparentBackground && styles.transparentBackground, containerStyle]}>
       <TouchableOpacity onPress={onBackClick} style={styles.iconButton}>
         <BackIcon name="arrow-back" size={24} color="#000" />
       </TouchableOpacity>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={[styles.title, textStyle as TextStyle]}>{title}</Text>
       <View style={styles.rightContainer}>
         {isHomeScreen ? (
           <TouchableOpacity onPress={onHomeClick} style={styles.iconButton}>
@@ -46,6 +54,9 @@ const styles = StyleSheet.create({
     borderBottomStartRadius: 24,
     borderBottomEndRadius: 24,
   },
+  transparentBackground: {
+    backgroundColor: 'transparent',
+  },
   iconButton: {
     padding: 4,
   },
@@ -56,6 +67,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 1,
     lineHeight: getLineHeight(16, 120),
+    color: Colors.Black,
   },
   rightContainer: {
     width: 32, // Ensures same width as back button for proper alignment

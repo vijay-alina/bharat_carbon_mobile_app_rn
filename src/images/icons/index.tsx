@@ -23,6 +23,7 @@ import BicycleIcon from './bicycle_rider.svg';
 import Bulb from './bulb_icon.svg';
 import TapIcon from './tap_icon.png';
 import CameraIcon from './camera_icon.svg';
+import RedoIcon from './redo_icon.svg';
 
 export {
   BackIcon,
@@ -49,5 +50,6 @@ export {
   BicycleIcon,
   Bulb,
   TapIcon,
-  CameraIcon
+  CameraIcon,
+  RedoIcon
 };

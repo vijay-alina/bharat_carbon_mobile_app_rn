@@ -117,10 +117,11 @@ const OTPVerificationScreen = ({navigation, route}) => {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Navigate to main app or next screen
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'MainApp'}],
-      });
+    //   navigation.reset({
+    //     index: 0,
+    //     routes: [{name: 'MainApp'}],
+    //   });
+    navigation.navigate("CreateProfileScreen");
     } catch (error) {
       Alert.alert('Error', 'Invalid OTP. Please try again.');
       setOtp(['', '', '', '']);

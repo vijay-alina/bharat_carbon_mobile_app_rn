@@ -1,11 +1,11 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 import {ProfileHeader} from '../components/profileHeader';
-import { UserIcon, UsersGroupIcon } from '../images/icons';
+import {UserIcon, UsersGroupIcon} from '../images/icons';
 import CustomDrawerItem from './CustomDrawerItem';
 
 type ProfileProps = {
@@ -30,9 +30,15 @@ export const CustomDrawerContent = (
     ...rest
   } = props;
 
-
   return (
-    <DrawerContentScrollView {...rest} style={styles.container} contentContainerStyle={styles.contentContainerStyle}>
+    <DrawerContentScrollView
+      {...rest}
+      style={styles.container}
+      contentContainerStyle={styles.contentContainerStyle}
+      alwaysBounceVertical={false}
+      bounces={false}
+      showsVerticalScrollIndicator={false}>
+      <StatusBar backgroundColor="#FFFFFF" barStyle="light-content" />
       <ProfileHeader
         name={name}
         points={points}
@@ -44,15 +50,47 @@ export const CustomDrawerContent = (
           props.navigation.toggleDrawer();
         }}
       />
-      <CustomDrawerItem icon={<UserIcon />} label="My Profile" onPress={() => {}} />
-      <CustomDrawerItem icon={<UsersGroupIcon />} label="Family Sharing" onPress={() => {}} />
-      <CustomDrawerItem icon={<UserIcon />} label="Activities" onPress={() => {}} />
-      <CustomDrawerItem icon={<UserIcon />} label="Challenge" onPress={() => {}} />
-      <CustomDrawerItem icon={<UserIcon />} label="Redeem Points" onPress={() => {}} />
+      <CustomDrawerItem
+        icon={<UserIcon />}
+        label="My Profile"
+        onPress={() => {}}
+      />
+      <CustomDrawerItem
+        icon={<UsersGroupIcon />}
+        label="Family Sharing"
+        onPress={() => {}}
+      />
+      <CustomDrawerItem
+        icon={<UserIcon />}
+        label="Activities"
+        onPress={() => {}}
+      />
+      <CustomDrawerItem
+        icon={<UserIcon />}
+        label="Challenge"
+        onPress={() => {}}
+      />
+      <CustomDrawerItem
+        icon={<UserIcon />}
+        label="Redeem Points"
+        onPress={() => {}}
+      />
       <CustomDrawerItem icon={<UserIcon />} label="FAQs" onPress={() => {}} />
-      <CustomDrawerItem icon={<UserIcon />} label="Notification" onPress={() => {}} />
-      <CustomDrawerItem icon={<UserIcon />} label="Settings" onPress={() => {}} />
-      <CustomDrawerItem icon={<UserIcon />} label="Help Center" onPress={() => {}} />
+      <CustomDrawerItem
+        icon={<UserIcon />}
+        label="Notification"
+        onPress={() => {}}
+      />
+      <CustomDrawerItem
+        icon={<UserIcon />}
+        label="Settings"
+        onPress={() => {}}
+      />
+      <CustomDrawerItem
+        icon={<UserIcon />}
+        label="Help Center"
+        onPress={() => {}}
+      />
       <CustomDrawerItem icon={<UserIcon />} label="Logout" onPress={() => {}} />
       <View style={styles.gap} />
     </DrawerContentScrollView>
@@ -73,7 +111,7 @@ const styles = StyleSheet.create({
   },
   gap: {
     height: 16,
-  }
+  },
 });
 
 export default CustomDrawerContent;

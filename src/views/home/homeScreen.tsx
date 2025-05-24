@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import {View, StyleSheet, FlatList} from 'react-native';
 import ListHeaderContent from './components/headerContent';
 import VerticalClimateCard from './components/home-vertical-card';
 import ListFooterContent from './components/footerComponent';
-import { AddPlusIcon, FileUploadIcon } from '../../images/icons';
+import {AddPlusIcon, FileUploadIcon} from '../../images/icons';
+import {StatusBar} from 'react-native';
 
 const _item = {
   imageUri: require('../../images/icons/girl_with_phone.png'),
@@ -47,12 +48,13 @@ const list = [_item, _itemTwo, _itemThree, _itemFour];
 export const HomeScreen = () => {
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#E3F6F4" />
       <FlatList
         ListHeaderComponent={ListHeaderContent}
         data={list}
         numColumns={2}
         contentContainerStyle={styles.contentContainer}
-        renderItem={({ item, index }) => (
+        renderItem={({item, index}) => (
           <VerticalClimateCard
             key={index.toString()}
             imageUri={item.imageUri}
@@ -64,7 +66,7 @@ export const HomeScreen = () => {
           />
         )}
         ListFooterComponent={ListFooterContent}
-        ListFooterComponentStyle={{marginLeft: 10}}
+        ListFooterComponentStyle={styles.footerContainerStyle}
       />
     </View>
   );
@@ -76,7 +78,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
     justifyContent: 'center',
-    // marginBottom: 100,
     paddingBottom: 80,
   },
   contentContainer: {
@@ -122,5 +123,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 16,
+  },
+  footerContainerStyle: {
+    marginLeft: 10,
   },
 });

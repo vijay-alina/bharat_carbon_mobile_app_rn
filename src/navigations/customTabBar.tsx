@@ -2,8 +2,8 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Svg, {Path} from 'react-native-svg';
-import {Home, RefreshCcw, BarChart3, Award} from 'lucide-react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { TabAward, TabChartLine, TabHome, TabTarget } from '../images/icons';
 
 const CustomTabBar = ({state, navigation}: BottomTabBarProps) => {
   const insets = useSafeAreaInsets();
@@ -19,7 +19,7 @@ const CustomTabBar = ({state, navigation}: BottomTabBarProps) => {
     const circleRadius = 30;
 
     // Starting point
-    let path = `M0,0`;
+    let path = 'M0,0';
 
     // Draw line to the center start point
     path += `L${width / 2 - centerWidth / 2},0`;
@@ -63,27 +63,27 @@ const CustomTabBar = ({state, navigation}: BottomTabBarProps) => {
             // Determine which icon to show based on the route
             const getIcon = () => {
               if (index === 0)
-                return (
-                  <Home size={24} color={isFocused ? '#59B88D' : '#8E9AAF'} />
-                );
+                {return (
+                  <TabHome size={24} color={isFocused ? '#59B88D' : '#8E9AAF'} />
+                );}
               if (index === 1)
-                return (
-                  <RefreshCcw
+                {return (
+                  <TabTarget
                     size={24}
                     color={isFocused ? '#59B88D' : '#8E9AAF'}
                   />
-                );
+                );}
               if (index === 3)
-                return (
-                  <BarChart3
+                {return (
+                  <TabChartLine
                     size={24}
                     color={isFocused ? '#59B88D' : '#8E9AAF'}
                   />
-                );
+                );}
               if (index === 4)
-                return (
-                  <Award size={24} color={isFocused ? '#59B88D' : '#8E9AAF'} />
-                );
+                {return (
+                  <TabAward size={24} color={isFocused ? '#59B88D' : '#8E9AAF'} />
+                );}
               return null;
             };
 
@@ -95,7 +95,6 @@ const CustomTabBar = ({state, navigation}: BottomTabBarProps) => {
               });
 
               if (!isFocused && !event.defaultPrevented) {
-                console.log('navigation-route.name--', route.name);
                 navigation.navigate(route.name);
               }
             };
@@ -138,6 +137,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
+
   },
   tabBarContainer: {
     position: 'relative',
@@ -163,7 +163,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#59B88D',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: -30,
+    marginTop: -20,
+    borderWidth: 4,
+    borderColor: '#FFFFFF',
   },
   plusIcon: {
     width: 20,

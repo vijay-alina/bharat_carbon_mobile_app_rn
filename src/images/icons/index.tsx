@@ -24,6 +24,10 @@ import Bulb from './bulb_icon.svg';
 import TapIcon from './tap_icon.png';
 import CameraIcon from './camera_icon.svg';
 import RedoIcon from './redo_icon.svg';
+import TabHome from './tab_house.svg';
+import TabTarget from './tab_target.svg';
+import TabChartLine from './tab_chart_line.svg';
+import TabAward from './tab_award.svg';
 
 export {
   BackIcon,
@@ -51,5 +55,9 @@ export {
   Bulb,
   TapIcon,
   CameraIcon,
-  RedoIcon
+  RedoIcon,
+  TabHome,
+  TabTarget,
+  TabChartLine,
+  TabAward,
 };

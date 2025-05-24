@@ -40,10 +40,10 @@ const LoginScreen = () => {
     };
   }, []);
 
-  const validateEmail = (value: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(value);
-  };
+//   const validateEmail = (value: string) => {
+//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     return emailRegex.test(value);
+//   };
 
   const handleSendOTP = async () => {
     // if (!email.trim()) {

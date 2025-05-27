@@ -6,7 +6,9 @@ import { TabParamList } from './navigation.types';
 import { ChallengeScreen } from '../views/challenge/challengeScreen';
 import { AddScreen } from '../views/add/addScreen';
 import { StatsScreen } from '../views/stats/statsScreen';
-import FamilyOverviewScreen from '../views/addMember/FamilyOverviewScreen';
+// import FamilyOverviewScreen from '../views/addMember/FamilyOverviewScreen';
+// import SubscriptionScreen from '../views/allChallanges/SubcriptionScreen';
+import PaymentScreen from '../views/allChallanges/PaymentScreen';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -24,7 +26,7 @@ export const TabNavigator = () => {
       <Tab.Screen name="History" component={ChallengeScreen} />
       <Tab.Screen name="Add" component={AddScreen} />
       <Tab.Screen name="Stats" component={StatsScreen} />
-      <Tab.Screen name="Profile" component={FamilyOverviewScreen} />
+      <Tab.Screen name="Profile" component={PaymentScreen} />
     </Tab.Navigator>
   );
 };

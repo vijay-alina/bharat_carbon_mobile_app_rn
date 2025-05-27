@@ -202,23 +202,31 @@ export const introSteps = [
         description: 'Join, choose challenges, track impact, and earn rewards for sustainability.',
         image: require('../images/icons/save_earth.png'),
         backgroundColor: '#024064',
-        dimension: {width: 300, height: 232},
-      },
-      {
+        dimension: { width: 300, height: 232 },
+    },
+    {
         id: 2,
         title: 'Select Challenges & Take Eco-friendly Actions',
         description: 'Pick daily, weekly, monthly, or yearly tasks for sustainability.',
         image: require('../images/icons/earth_day.png'),
         backgroundColor: '#024064',
-        dimension: {width: 300, height: 281},
-      },
-      {
+        dimension: { width: 300, height: 281 },
+    },
+    {
         id: 3,
         title: 'Upload Bills \n & Earn Reward Points',
         description: 'Submit bills, save progress, complete tasks, and get rewarded.',
         image: require('../images/icons/receipt_and_checkout.png'),
         backgroundColor: '#024064',
-        dimension: {width: 300, height: 296},
-      },
+        dimension: { width: 300, height: 296 },
+    },
+];
+
+export const PaymentMethods = [
+    { id: '1', label: 'Phone Pay', icon: require('../images/icons/phonepe-icon.png') },
+    { id: '2', label: 'Google Pay', icon: require('../images/icons/googlePay.png') },
+    { id: '3', label: 'UPI', icon: require('../images/icons/upi.png') },
+    { id: '4', label: 'PayPal', icon: require('../images/icons/payPal.png') },
+    { id: '5', label: 'Apple Pay', icon: require('../images/icons/applePay.png') },
 ];
 

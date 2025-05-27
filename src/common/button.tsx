@@ -9,7 +9,6 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import AerrowIconWithTail from '../images/icons/arrow_right_with_tail.svg';
 import { Colors } from '../constants/colors';
 
 interface CustomButtonProps {
@@ -18,8 +17,8 @@ interface CustomButtonProps {
   backgroundColor?: string;
   textColor?: string;
   showIcon?: boolean;
-  iconName?: keyof typeof AerrowIconWithTail; // restricts to valid icon names
-  iconColor?: string;
+  iconComponent?: React.ElementType; // Can accept any component like Svg
+  iconProps?: Record<string, any>;   // Props to pass to the icon (e.g., name, color)
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   isRightIcon?: boolean;
@@ -33,8 +32,8 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   backgroundColor = '#009688',
   textColor = '#fff',
   showIcon = false,
-  iconName = 'arrow-forward',
-  iconColor = '#fff',
+  iconComponent: IconComponent,
+  iconProps = {},
   style,
   textStyle,
   isRightIcon = false,
@@ -49,22 +48,16 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       disabled={disabled}
     >
       <View style={styles.content}>
-      {showIcon && isLeftIcon && (
-            <AerrowIconWithTail
-                name={iconName}
-                color={iconColor}
-                style={styles.icon}
-            />
+        {showIcon && isLeftIcon && IconComponent && (
+          <IconComponent {...iconProps} style={styles.icon} />
         )}
+
         <Text style={[styles.text, { color: textColor }, textStyle]}>
           {text}
         </Text>
-        {showIcon && isRightIcon && (
-            <AerrowIconWithTail
-                name={iconName}
-                color={iconColor}
-                style={styles.icon}
-            />
+
+        {showIcon && isRightIcon && IconComponent && (
+          <IconComponent {...iconProps} style={styles.icon} />
         )}
       </View>
     </TouchableOpacity>
@@ -74,13 +67,12 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 const styles = StyleSheet.create({
   button: {
     borderRadius: 25,
-    paddingVertical: 12,
+    paddingVertical: 8,
     paddingHorizontal: 25,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 10,
     width: '100%',
-
   },
   content: {
     flexDirection: 'row',
@@ -96,7 +88,7 @@ const styles = StyleSheet.create({
   },
   disabled: {
     backgroundColor: Colors.GreyNeutrals,
-  }
+  },
 });
 
 export default CustomButton;

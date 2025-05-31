@@ -5,8 +5,7 @@ import { PaymentMethods } from '../../constants/constants';
 import { Header } from '../../common/header';
 import CustomButton from '../../common/button';
 import { Colors } from '../../constants/colors';
-import NutritionCard from './component/NutritionCard';
-import RadishImage from '../../images/icons/girl_with_phone.png'; // Example
+import VegetarianChallengeCard from './component/VegetarianChallengeCard';
 import ChallengeCompleteCard from './component/ChallengeCompleted';
 
 // type PaymentMethod = {
@@ -38,14 +37,9 @@ const PaymentScreen: React.FC = () => {
 
             />
 
-            <ChallengeCompleteCard
-                title="Challenge Complete!"
-                description="You successfully completed the 7-Day Vegetarian Challenge!"
-                points={100}
-                onShare={() => console.log('Share Achievement')}
-                onStartNew={() => console.log('Start New Challenge')}
-            />
 
+
+            {/* <VegetarianChallengeCard /> */}
 
             <CustomButton
                 text="Add Payment Method"

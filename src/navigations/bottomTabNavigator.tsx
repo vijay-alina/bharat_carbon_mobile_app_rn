@@ -9,6 +9,9 @@ import { StatsScreen } from '../views/stats/statsScreen';
 // import FamilyOverviewScreen from '../views/addMember/FamilyOverviewScreen';
 // import SubscriptionScreen from '../views/allChallanges/SubcriptionScreen';
 import PaymentScreen from '../views/allChallanges/PaymentScreen';
+import VegetarianChallengeScreen from '../views/allChallanges/VegetarianChallengeScreen';
+import OngoingChallengeScreen from '../views/allChallanges/OngoingChallengeScreen';
+import MemberProfileScreen from '../views/profile/MemberProfileScreen'
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -26,7 +29,7 @@ export const TabNavigator = () => {
       <Tab.Screen name="History" component={ChallengeScreen} />
       <Tab.Screen name="Add" component={AddScreen} />
       <Tab.Screen name="Stats" component={StatsScreen} />
-      <Tab.Screen name="Profile" component={PaymentScreen} />
+      <Tab.Screen name="Profile" component={MemberProfileScreen} />
     </Tab.Navigator>
   );
 };

@@ -15,6 +15,7 @@ export const Colors = {
     RedShades: 'rgba(218, 30, 40, 0.2)',
     GreenNormal: 'rgba(36, 161, 72, 1)',
     GreenNormalTwo: 'rgba(32, 172, 135, 0.3)',
+    GreenNormalThree: 'rgba(32, 172, 135,)',
     GreenShades: 'rgba(36, 161, 72, 0.2)',
     ThickGreenShades800: '#127C68',
     ThickGreenShades700: '#17a086',

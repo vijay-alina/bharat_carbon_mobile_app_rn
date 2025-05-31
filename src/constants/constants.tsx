@@ -230,3 +230,19 @@ export const PaymentMethods = [
     { id: '5', label: 'Apple Pay', icon: require('../images/icons/applePay.png') },
 ];
 
+export const challengeData = [
+  {
+    id: '1',
+    title: '3-Day Challenge',
+    description: 'A quick kickstart to plant-based living.',
+    reward: '30 Points',
+  },
+  {
+    id: '2',
+    title: '7-Day Challenge',
+    description: 'A full week of vegetarian meals.',
+    reward: '100 Points',
+  },
+  // Add more challenges here if needed
+];
+

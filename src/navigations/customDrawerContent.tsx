@@ -53,7 +53,9 @@ export const CustomDrawerContent = (
       <CustomDrawerItem
         icon={<UserIcon />}
         label="My Profile"
-        onPress={() => {}}
+        onPress={() => {
+          props.navigation.navigate('MyProfile');
+        }}
       />
       <CustomDrawerItem
         icon={<UsersGroupIcon />}

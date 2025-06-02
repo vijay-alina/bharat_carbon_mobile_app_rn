@@ -21,5 +21,7 @@ export const Colors = {
     ThickGreenShades700: '#17a086',
     GreyNeutrals: '#9496A1',
     LightGreen: '#20ac87',
-    DarkGreen: '#158769'
+    DarkGreen: '#158769',
+    Neutral200: '#D2D4DA',
+    Black2: '#170035',
 };

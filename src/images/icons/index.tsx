@@ -34,6 +34,14 @@ import TabAward from './tab_award.svg';
 import TabAwardActive from './tab_award_active.svg';
 import TabActiveIndicator from './tab_active_indicator.svg';
 import PointsIcon from './points_icon.svg';
+import EarnedPointsGreenIcon from './points_green.svg';
+import SchoolRankGreenIcon from './school_rank_green_icon.svg';
+import ClassRankGreenIcon from './class_rank_green_icon.svg';
+import MoreVerticalCircleIcon from './more_vertical_circle.svg';
+import NutritionAppleIcon from './ion_nutrition.svg';
+import MobilityCarIcon from './mingcute_car.svg';
+import HousingHomeIcon from './ion_home.svg';
+import LesiureBagIcon from './basil_shopping-bag-solid.svg';
 
 export {
   BackIcon,
@@ -72,4 +80,12 @@ export {
   TabAwardActive,
   PointsIcon,
   TabActiveIndicator,
+  EarnedPointsGreenIcon,
+  SchoolRankGreenIcon,
+  ClassRankGreenIcon,
+  MoreVerticalCircleIcon,
+  NutritionAppleIcon,
+  MobilityCarIcon,
+  HousingHomeIcon,
+  LesiureBagIcon,
 };

@@ -10,6 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import {TabNavigator} from './bottomTabNavigator';
 import {MemberStackNavigator} from './memberStackNavigator';
 import MyProfileScreen from '../views/drawerScreens/MyProfile/MyProfile';
+import ReedemPointsScreen from '../views/drawerScreens/ReedemPoints/ReedemPointsScreen';
 
 export type DrawerParamList = {
   MainTabs: undefined;
@@ -97,7 +98,7 @@ export const DrawerNavigator = () => {
 
       <Drawer.Screen name="Challenge" component={ProfileScreen} />
 
-      <Drawer.Screen name="RedeemPoints" component={ProfileScreen} />
+      <Drawer.Screen name="RedeemPoints" component={ReedemPointsScreen} />
 
       <Drawer.Screen name="FAQs" component={ProfileScreen} />
 

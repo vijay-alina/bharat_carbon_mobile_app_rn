@@ -1,5 +1,7 @@
 import { WaveycheckIcon, Leaficon, BagIcon, BicycleIcon, Bulb, HutIcon } from '../images/icons';
 
+
+
 export const ClimateManifesto = {
     whatBeBelieve: {
         title: 'What We Believe',
@@ -231,18 +233,21 @@ export const PaymentMethods = [
 ];
 
 export const challengeData = [
-  {
-    id: '1',
-    title: '3-Day Challenge',
-    description: 'A quick kickstart to plant-based living.',
-    reward: '30 Points',
-  },
-  {
-    id: '2',
-    title: '7-Day Challenge',
-    description: 'A full week of vegetarian meals.',
-    reward: '100 Points',
-  },
-  // Add more challenges here if needed
+    {
+        id: '1',
+        title: '3-Day Challenge',
+        description: 'A quick kickstart to plant-based living.',
+        reward: '30 Points',
+    },
+    {
+        id: '2',
+        title: '7-Day Challenge',
+        description: 'A full week of vegetarian meals.',
+        reward: '100 Points',
+    },
+    // Add more challenges here if needed
 ];
+
+
+
 

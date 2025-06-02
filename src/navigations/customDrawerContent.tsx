@@ -77,7 +77,9 @@ export const CustomDrawerContent = (
       <CustomDrawerItem
         icon={<UserIcon />}
         label="Redeem Points"
-        onPress={() => {}}
+        onPress={() => {
+          props.navigation.navigate('RedeemPoints');
+        }}
       />
       <CustomDrawerItem icon={<UserIcon />} label="FAQs" onPress={() => {}} />
       <CustomDrawerItem

@@ -24,4 +24,5 @@ export const Colors = {
     DarkGreen: '#158769',
     Neutral200: '#D2D4DA',
     Black2: '#170035',
+    LightGreen600:'#91c577'
 };

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import {
   Image,
 } from 'react-native';
 import bharatCarbonImageWhite from '../../images/icons/bharat_carbon_image_white.png';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../../common/button';
 // const { width, height } = Dimensions.get('window');
 
@@ -69,7 +69,7 @@ const LoginScreen = () => {
 
       // Navigate to OTP verification screen
       //@ts-ignore
-      navigation.navigate('OTPVerificationScreen', {email: email.trim()});
+      navigation.navigate('OTPVerificationScreen', { email: email.trim() });
     } catch (error) {
       Alert.alert('Error', 'Failed to send OTP. Please try again.');
     } finally {
@@ -96,11 +96,10 @@ const LoginScreen = () => {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.keyboardAvoidingView}>
-          <ScrollView
+          {/* <ScrollView
             contentContainerStyle={styles.scrollViewContent}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled">
-            {/* Logo Section */}
             <View
               style={[
                 styles.logoSection,
@@ -109,7 +108,6 @@ const LoginScreen = () => {
               <Image source={bharatCarbonImageWhite} style={styles.image} />
             </View>
 
-            {/* Login Form Section */}
             <View style={styles.formSection}>
               <Text style={styles.title}>Log In with Email</Text>
 
@@ -123,17 +121,52 @@ const LoginScreen = () => {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
-                  //   autoCompleteType="email"
+                    autoCompleteType="email"
                   textContentType="emailAddress"
                 />
               </View>
-              <CustomButton
-                text={isLoading ? 'Sending...' : 'Send OTP'}
-                onPress={handleSendOTP}
-                disabled={isLoading}
-              />
+               
             </View>
-          </ScrollView>
+           
+          </ScrollView> */}
+
+          <View style={styles.middleSection}>
+            <View
+              // style={[
+              //   styles.logoSection,
+              //   isKeyboardVisible && styles.logoSectionCompact,
+              // ]}
+              >
+              <Image source={bharatCarbonImageWhite} style={styles.image} />
+                <View style={styles.formSection}>
+              <Text style={styles.title}>Log In with Email</Text>
+
+              <View >
+                <TextInput
+                  style={styles.emailInput}
+                  placeholder="Enter your email"
+                  placeholderTextColor="#8A8A8A"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                    // autoCompleteType="email"
+                  textContentType="emailAddress"
+                />
+              </View>
+               
+            </View>
+            </View>
+           
+          </View>
+          <View style={styles.buttonContainer}>
+            <CustomButton
+              text={isLoading ? 'Sending...' : 'Send OTP'}
+              onPress={handleSendOTP}
+              disabled={isLoading}
+            />
+          </View>
         </KeyboardAvoidingView>
       </ImageBackground>
     </SafeAreaView>
@@ -157,8 +190,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollViewContent: {
-    flexGrow: 1,
-    justifyContent: 'space-between',
+
+    justifyContent: 'center',
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 40,
@@ -210,6 +243,7 @@ const styles = StyleSheet.create({
   formSection: {
     marginTop: 'auto',
     paddingBottom: 20,
+
   },
   title: {
     fontSize: 32,
@@ -218,9 +252,9 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     textAlign: 'left',
   },
-  inputContainer: {
-    marginBottom: 30,
-  },
+  // inputContainer: {
+  //   marginBottom: 30,
+  // },
   emailInput: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
@@ -263,7 +297,21 @@ const styles = StyleSheet.create({
   image: {
     width: 170,
     height: 70,
+    marginBottom: 20,
   },
+  buttonContainer: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 20,
+    paddingHorizontal: 20,
+    paddingBottom: Platform.OS === 'ios' ? 20 : 0,
+  },
+  middleSection: {
+    flex: 0.8,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  }
 });
 
 export default LoginScreen;

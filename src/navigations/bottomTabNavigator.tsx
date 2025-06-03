@@ -13,6 +13,7 @@ import VegetarianChallengeScreen from '../views/allChallanges/VegetarianChalleng
 import OngoingChallengeScreen from '../views/allChallanges/OngoingChallengeScreen';
 import MemberProfileScreen from '../views/profile/MemberProfileScreen'
 import HousingDataForm from '../views/add/HousingDataForm';
+import LeaderboardScreen from '../views/Leaderboard/LeaderboardScreen';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -31,7 +32,7 @@ export const TabNavigator = () => {
       {/* <Tab.Screen name="Add" component={AddScreen} /> */}
       <Tab.Screen name="Add" component={HousingDataForm} />
       <Tab.Screen name="Stats" component={StatsScreen} />
-      <Tab.Screen name="Profile" component={MemberProfileScreen} />
+      <Tab.Screen name="Profile" component={LeaderboardScreen} />
     </Tab.Navigator>
   );
 };

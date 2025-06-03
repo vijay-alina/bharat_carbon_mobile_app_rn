@@ -24,6 +24,8 @@ interface CustomButtonProps {
   isRightIcon?: boolean;
   isLeftIcon?: boolean;
   disabled?: boolean;
+  borderColor?: string;
+  borderWidth?: number;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -39,10 +41,19 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   isRightIcon = false,
   isLeftIcon = false,
   disabled = false,
+  borderColor,
+  borderWidth,
 }) => {
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor }, style, disabled && styles.disabled]}
+      style={[
+        styles.button,
+        { backgroundColor },
+        borderColor && { borderColor },
+        borderWidth !== undefined && { borderWidth },
+        style,
+        disabled && styles.disabled,
+      ]}
       onPress={onPress}
       activeOpacity={0.8}
       disabled={disabled}
@@ -80,7 +91,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Montserrat-Medium',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
   },
   icon: {

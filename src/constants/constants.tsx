@@ -249,5 +249,7 @@ export const challengeData = [
 ];
 
 
+export const winnerTypeFilters = ['Today', 'Weekly', 'Monthly', 'All-Time'];
+
 
 

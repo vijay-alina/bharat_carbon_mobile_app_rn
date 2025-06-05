@@ -1,6 +1,6 @@
 // components/FamilyMemberCard.tsx
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import avatarPlaceholder from '../../../images/icons/avatar_placeholder.png';
 import dividerImage from '../../../images/icons/divider.png';
 
@@ -16,6 +16,7 @@ interface FamilyMemberCardProps {
   co2Value: string;
   co2Status: string;
   avatar?: any; // image source
+  onPress?: () => void;
 }
 
 const getStatus = (status: string) => {
@@ -41,10 +42,11 @@ const FamilyMemberCard = ({
   co2Value,
   co2Status,
   avatar,
+  onPress,
 }: FamilyMemberCardProps) => {
   const avatarUri = avatar ? {uri: avatar} : avatarPlaceholder;
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} activeOpacity={0.4} onPress={onPress}>
       <Image source={avatarUri} style={styles.avatar} />
       <View style={styles.pointsContainer}>
         <PointsComponent points={points} />
@@ -54,7 +56,7 @@ const FamilyMemberCard = ({
       <Image source={dividerImage} style={styles.divider} />
       <Co2ValueComponent co2Value={co2Value} />
       <StatusComponent status={getStatus(co2Status)} />
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginLeft: 8,
+    marginRight: 8,
   },
   disabled: {
     backgroundColor: Colors.GreyNeutrals,

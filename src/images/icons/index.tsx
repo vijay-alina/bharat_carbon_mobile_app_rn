@@ -46,6 +46,8 @@ import ListLightIcon from './list_light_icon.svg';
 import ListDarkIcon from './list_dark_icon.svg';
 import CalendarLightIcon from './calendar_light_icon.svg';
 import CalendarDarkIcon from './calendar_dark_icon.svg';
+import EditPencilIcon from './edit_pencil_icon.svg';
+import TrashIcon from './trash_icon.svg';
 
 export {
   BackIcon,
@@ -96,4 +98,6 @@ export {
   ListDarkIcon,
   CalendarLightIcon,
   CalendarDarkIcon,
+  EditPencilIcon,
+  TrashIcon,
 };

@@ -40,5 +40,7 @@ export const Colors = {
   MediumPurple: '#6750A3',
   Black3: '#3D3D3D',
   Gray3: '#828282',
+  BlueShades300: '#557F97',
+  RedDark: '#FF4D4F',
 
 };

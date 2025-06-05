@@ -18,7 +18,7 @@ export const Colors = {
   GreenNormalThree: 'rgba(32, 172, 135,)',
   GreenShades: 'rgba(36, 161, 72, 0.2)',
   ThickGreenShades800: '#127C68',
-  ThickGreenShades700: '#17a086',
+  ThickGreenShades700: '#17A086',
   GreyNeutrals: '#9496A1',
   LightGreen: '#20ac87',
   DarkGreen: '#158769',

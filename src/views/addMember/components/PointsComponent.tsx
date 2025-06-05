@@ -4,15 +4,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import {PointsIcon} from '../../../images/icons';
 
 type TPointsProps = {
-  points: number;
+  points: string;
 };
 
 const PointsComponent: React.FC<TPointsProps> = ({points}) => {
   return (
+    // eslint-disable-next-line react-native/no-inline-styles
     <LinearGradient colors={['#FFE73A', '#FFE73A', '#FDCC4D']} style={{borderRadius: 20}}>
       <View style={styles.container}>
         <PointsIcon />
-        <Text>{`${points} points`}</Text>
+        <Text>{`${points}`}</Text>
       </View>
     </LinearGradient>
   );

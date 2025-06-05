@@ -12,7 +12,7 @@ import StatusComponent, {Status} from './StatusComponent';
 interface FamilyMemberCardProps {
   name: string;
   relation: string;
-  points: number;
+  points: string;
   co2Value: string;
   co2Status: string;
   avatar?: any; // image source

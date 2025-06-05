@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,9 @@ import {
   Platform,
   UIManager,
 } from 'react-native';
+import {Header} from '../../common/header';
+import {useNavigation} from '@react-navigation/native';
+import { Colors } from '../../constants/colors';
 
 if (Platform.OS === 'android') {
   UIManager.setLayoutAnimationEnabledExperimental &&
@@ -18,13 +21,14 @@ if (Platform.OS === 'android') {
 
 const tabs = ['General', 'Points & Rewards', 'Activities & Logs'] as const;
 
-type TabKey = typeof tabs[number];
+type TabKey = (typeof tabs)[number];
 
 const faqData: Record<TabKey, FAQItem[]> = {
   General: [
     {
       question: 'What is this app about?',
-      answer: 'This app helps you track your daily lifestyle choices and understand their environmental impact in terms of CO₂ emissions.',
+      answer:
+        'This app helps you track your daily lifestyle choices and understand their environmental impact in terms of CO₂ emissions.',
     },
     {
       question: 'How do I get started?',
@@ -63,6 +67,7 @@ type FAQItem = {
 };
 
 export default function FAQScreen() {
+  const navigation = useNavigation();
   const [selectedTab, setSelectedTab] = useState<TabKey>('General');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -70,34 +75,39 @@ export default function FAQScreen() {
 
   useEffect(() => {
     const data = faqData[selectedTab].filter(item =>
-      item.question.toLowerCase().includes(searchQuery.toLowerCase())
+      item.question.toLowerCase().includes(searchQuery.toLowerCase()),
     );
     setFilteredData(data);
   }, [searchQuery, selectedTab]);
 
-interface ToggleExpand {
+  interface ToggleExpand {
     (index: number): void;
-}
+  }
 
-const toggleExpand: ToggleExpand = (index: number) => {
+  const toggleExpand: ToggleExpand = (index: number) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpandedIndex((prev: number | null) => (prev === index ? null : index));
-};
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Frequently Asked Questions</Text>
-
-      {/* Search Input */}
-      <TextInput
-        placeholder="Search"
-        placeholderTextColor="#aaa"
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-        style={styles.searchInput}
+      <Header
+        title="FAQs"
+        onBackClick={() => {
+          navigation.goBack();
+        }}
+        isHomeScreen={true}
       />
-
-      {/* Tabs */}
+      <Text style={styles.heading}>Frequently Asked Questions</Text>
+      <View style={styles.searchInputContainer}>
+        <TextInput
+          placeholder="Search"
+          placeholderTextColor="#aaa"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          style={styles.searchInput}
+        />
+      </View>
       <View style={styles.tabsContainer}>
         {tabs.map(tab => (
           <TouchableOpacity
@@ -110,34 +120,31 @@ const toggleExpand: ToggleExpand = (index: number) => {
               setSelectedTab(tab);
               setExpandedIndex(null);
               setSearchQuery('');
-            }}
-          >
+            }}>
             <Text
               style={[
                 styles.tabText,
                 selectedTab === tab && styles.activeTabText,
-              ]}
-            >
+              ]}>
               {tab}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
-
-      {/* FAQ List */}
       <FlatList
         data={filteredData}
         keyExtractor={(_item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: 20 }}
-        renderItem={({ item, index }: { item: FAQItem; index: number }) => (
+        contentContainerStyle={{paddingBottom: 20}}
+        renderItem={({item, index}: {item: FAQItem; index: number}) => (
           <TouchableOpacity
             onPress={() => toggleExpand(index)}
             style={styles.accordionItem}
-            activeOpacity={0.9}
-          >
+            activeOpacity={0.9}>
             <View style={styles.accordionHeader}>
               <Text style={styles.questionText}>{item.question}</Text>
-              <Text style={{ fontSize: 16 }}>{expandedIndex === index ? '▲' : '▼'}</Text>
+              <Text style={{fontSize: 16}}>
+                {expandedIndex === index ? '▲' : '▼'}
+              </Text>
             </View>
             {expandedIndex === index && (
               <Text style={styles.answerText}>{item.answer}</Text>
@@ -153,14 +160,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9fafb',
-    paddingHorizontal: 16,
-    paddingTop: 40,
   },
   heading: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 12,
     color: '#1e293b',
+    marginHorizontal: 16,
+    marginVertical: 16,
+  },
+  searchInputContainer: {
+    marginHorizontal: 16,
   },
   searchInput: {
     height: 42,
@@ -176,15 +186,16 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     flexWrap: 'wrap',
     gap: 8,
+    marginHorizontal: 16,
   },
   tabButton: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: Colors.White,
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 20,
   },
   activeTabButton: {
-    backgroundColor: '#10b981',
+    backgroundColor: Colors.ThickGreenShades700,
   },
   tabText: {
     color: '#111827',
@@ -194,12 +205,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   accordionItem: {
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     padding: 14,
-    borderRadius: 10,
+    // borderRadius: 10,
     marginBottom: 8,
-    borderColor: '#e5e7eb',
-    borderWidth: 1,
+    // borderColor: '#e5e7eb',
+    // borderWidth: 1,
   },
   accordionHeader: {
     flexDirection: 'row',

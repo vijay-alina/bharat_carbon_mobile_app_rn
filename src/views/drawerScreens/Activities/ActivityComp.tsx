@@ -97,7 +97,7 @@ const ActivityComp = (props: ActivityCompProps) => {
           <Image source={AvatarPlaceholder} style={styles.avatar} />
           <Text style={styles.nameText}>{props.name}</Text>
         </View>
-        <PointsComponent points={100} />
+        <PointsComponent points={'+ 20'} />
       </View>
     </View>
   );

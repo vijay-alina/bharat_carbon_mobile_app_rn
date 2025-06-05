@@ -11,6 +11,7 @@ import {TabNavigator} from './bottomTabNavigator';
 import {MemberStackNavigator} from './memberStackNavigator';
 import MyProfileScreen from '../views/drawerScreens/MyProfile/MyProfile';
 import ReedemPointsScreen from '../views/drawerScreens/ReedemPoints/ReedemPointsScreen';
+import ActivitiesScreen from '../views/drawerScreens/Activities/Activities';
 
 export type DrawerParamList = {
   MainTabs: undefined;
@@ -94,7 +95,7 @@ export const DrawerNavigator = () => {
 
       <Drawer.Screen name="MyProfile" component={MyProfileScreen} />
 
-      <Drawer.Screen name="Activities" component={ProfileScreen} />
+      <Drawer.Screen name="Activities" component={ActivitiesScreen} />
 
       <Drawer.Screen name="Challenge" component={ProfileScreen} />
 

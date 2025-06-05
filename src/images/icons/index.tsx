@@ -42,6 +42,10 @@ import NutritionAppleIcon from './ion_nutrition.svg';
 import MobilityCarIcon from './mingcute_car.svg';
 import HousingHomeIcon from './ion_home.svg';
 import LesiureBagIcon from './basil_shopping-bag-solid.svg';
+import ListLightIcon from './list_light_icon.svg';
+import ListDarkIcon from './list_dark_icon.svg';
+import CalendarLightIcon from './calendar_light_icon.svg';
+import CalendarDarkIcon from './calendar_dark_icon.svg';
 
 export {
   BackIcon,
@@ -88,4 +92,8 @@ export {
   MobilityCarIcon,
   HousingHomeIcon,
   LesiureBagIcon,
+  ListLightIcon,
+  ListDarkIcon,
+  CalendarLightIcon,
+  CalendarDarkIcon,
 };

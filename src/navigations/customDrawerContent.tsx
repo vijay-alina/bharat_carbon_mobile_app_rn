@@ -65,6 +65,13 @@ export const CustomDrawerContent = (
         }}
       />
       <CustomDrawerItem
+        icon={<UsersGroupIcon />}
+        label="FAQs"
+        onPress={() => {
+          props.navigation.navigate('FAQs');
+        }}
+      />
+      <CustomDrawerItem
         icon={<UserIcon />}
         label="Activities"
         onPress={() => {

@@ -3,15 +3,7 @@ import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/b
 import CustomTabBar from './customTabBar';
 import { HomeScreen } from '../views/home/homeScreen';
 import { TabParamList } from './navigation.types';
-import { ChallengeScreen } from '../views/challenge/challengeScreen';
-import { AddScreen } from '../views/add/addScreen';
 import { StatsScreen } from '../views/stats/statsScreen';
-// import FamilyOverviewScreen from '../views/addMember/FamilyOverviewScreen';
-// import SubscriptionScreen from '../views/allChallanges/SubcriptionScreen';
-import PaymentScreen from '../views/allChallanges/PaymentScreen';
-import VegetarianChallengeScreen from '../views/allChallanges/VegetarianChallengeScreen';
-import OngoingChallengeScreen from '../views/allChallanges/OngoingChallengeScreen';
-import MemberProfileScreen from '../views/profile/MemberProfileScreen'
 import HousingDataForm from '../views/add/HousingDataForm';
 import LeaderboardScreen from '../views/Leaderboard/LeaderboardScreen';
 import { ChallengeStackNavigator } from './challengeStackNavigator';
@@ -30,8 +22,13 @@ export const TabNavigator = () => {
       }}>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="History" component={ChallengeStackNavigator} />
-      {/* <Tab.Screen name="Add" component={AddScreen} /> */}
-      <Tab.Screen name="Add" component={HousingDataForm} />
+      <Tab.Screen name="Add" component={HousingDataForm} listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            //@ts-ignore
+            navigation.navigate('UploadDataScreen');
+          },
+        })} />
       <Tab.Screen name="Stats" component={StatsScreen} />
       <Tab.Screen name="Profile" component={LeaderboardScreen} />
     </Tab.Navigator>

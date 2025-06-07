@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.White,
     borderBottomStartRadius: 24,
     borderBottomEndRadius: 24,
-    paddingTop: 40,
+    // paddingTop: 40,
   },
   transparentBackground: {
     backgroundColor: 'transparent',

@@ -1,8 +1,8 @@
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import {IntroStackNavigator} from './introStackNavigator';
-import {DrawerNavigator} from './drawerNavigator';
 import {OnboardingStackNavigator} from './onboardingStackNavigator';
 import {useAppContext} from '../context/AppContext';
+import { RootStackNavigator } from './rootStackNavigator';
 
 export const AppNavigator = () => {
   const {hasCompletedIntro, hasCompletedOnboarding, isLoading} =
@@ -25,7 +25,7 @@ export const AppNavigator = () => {
     return <OnboardingStackNavigator />;
   }
 
-  return <DrawerNavigator />;
+  return <RootStackNavigator />;
 };
 
 const styles = StyleSheet.create({

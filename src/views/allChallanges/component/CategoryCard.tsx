@@ -7,7 +7,9 @@ import {
   Image,
   ImageSourcePropType,
 } from 'react-native';
-import { LinearGradient } from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient'; 
+import { Colors } from '../../../constants/colors';
+
 interface CategoryCardProps {
   label: string;
   subText?: string;
@@ -24,27 +26,35 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   onPress,
 }) => {
   const CardContent = (
-    <View style={[styles.cardContent]}>
+    <View style={styles.cardContent}>
       <Image source={icon} style={styles.icon} />
       <View style={styles.textContainer}>
         <Text style={[styles.label, isSelected && styles.labelSelected]}>
           {label}
         </Text>
-        <Text style={styles.subText}>{subText}</Text>
+        <Text style={[styles.subText, isSelected && styles.subTextSelected]}>
+          {subText}
+        </Text>
       </View>
-      <View style={[styles.radio, isSelected && styles.radioSelected]} />
+      <View
+        style={[
+          styles.radioWrapper,
+          isSelected && styles.radioWrapperSelected,
+        ]}
+      >
+        <View style={[styles.radio, isSelected && styles.radioSelected]} />
+      </View>
     </View>
   );
 
   return (
-    <>
     <TouchableOpacity onPress={onPress} activeOpacity={0.85}>
       {isSelected ? (
         <LinearGradient
           colors={['#147D6F', '#0A524C']}
           style={styles.cardGradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
         >
           {CardContent}
         </LinearGradient>
@@ -52,16 +62,14 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         <View style={styles.cardDefault}>{CardContent}</View>
       )}
     </TouchableOpacity>
-    
-    </>
   );
 };
 
 const styles = StyleSheet.create({
   cardDefault: {
-    height: 100,
+    height: 110,
     backgroundColor: '#fff',
-    borderRadius: 12,
+    borderRadius: 15,
     padding: 16,
     marginBottom: 12,
     elevation: 2,
@@ -69,8 +77,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardGradient: {
-    height: 100,
-    borderRadius: 12,
+    height: 110,
+    borderRadius: 15,
     padding: 16,
     marginBottom: 12,
     elevation: 2,
@@ -78,9 +86,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardContent: {
-    gap: 16,
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 16,
   },
   icon: {
     width: 60,
@@ -92,7 +100,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   label: {
-    fontWeight: 'bold',
+    fontFamily: 'Montserrat-Bold',
     fontSize: 16,
     color: '#000',
   },
@@ -100,12 +108,26 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   subText: {
-    color: '#888',
+    color: Colors.GreyNeutrals,
+  },
+  subTextSelected: {
+    color: '#eee',
+  },
+  radioWrapper: {
+    width: 26,
+    height: 26,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  radioWrapperSelected: {
+    borderWidth: 2,
+    borderColor: '#fff', // Ring color
   },
   radio: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     borderWidth: 2,
     borderColor: '#ccc',
   },

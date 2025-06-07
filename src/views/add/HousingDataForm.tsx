@@ -132,7 +132,7 @@ const HousingDataScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      {/* <StatusBar barStyle="dark-content" backgroundColor="#fff" /> */}
       
       {/* Header */}
       <View style={styles.header}>

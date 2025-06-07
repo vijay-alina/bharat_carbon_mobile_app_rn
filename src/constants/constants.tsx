@@ -1,4 +1,4 @@
-import { CalendarEvent } from '../components/Calendar';
+import {CalendarEvent} from '../components/Calendar';
 import {
   WaveycheckIcon,
   Leaficon,
@@ -11,6 +11,7 @@ import {
   CalendarLightIcon,
   CalendarDarkIcon,
 } from '../images/icons';
+import {TAppTask} from '../types';
 
 export const ClimateManifesto = {
   whatBeBelieve: {
@@ -340,60 +341,102 @@ export const activities = [
 ];
 
 export const sampleEvents: CalendarEvent[] = [
-    {
-      date: 1,
-      events: [
-        { color: '#FF6B6B', type: 'dot' },
-        { color: '#4ECDC4', type: 'dot' },
-      ]
-    },
-    {
-      date: 2,
-      events: [
-        { color: '#45B7D1', type: 'dot' },
-        { color: '#96CEB4', type: 'dot' },
-        { color: '#FFEAA7', type: 'dot' },
-      ]
-    },
-    {
-      date: 3,
-      events: [
-        { color: '#FF6B6B', type: 'dot' },
-        { color: '#4ECDC4', type: 'dot' },
-      ]
-    },
-    {
-      date: 5,
-      events: [
-        { color: '#96CEB4', type: 'dot' },
-      ]
-    },
-    {
-      date: 6,
-      events: [
-        { color: '#FF6B6B', type: 'dot' },
-        { color: '#4ECDC4', type: 'dot' },
-      ]
-    },
-    {
-      date: 8,
-      events: [
-        { color: '#96CEB4', type: 'dot' },
-      ]
-    },
-    {
-      date: 9,
-      events: [
-        { color: '#45B7D1', type: 'dot' },
-        { color: '#96CEB4', type: 'dot' },
-        { color: '#FF6B6B', type: 'dot' },
-      ]
-    },
-    {
-      date: 12,
-      events: [
-        { color: '#45B7D1', type: 'dot' },
-        { color: '#4ECDC4', type: 'dot' },
-      ]
-    },
-  ];
+  {
+    date: 1,
+    events: [
+      {color: '#FF6B6B', type: 'dot'},
+      {color: '#4ECDC4', type: 'dot'},
+    ],
+  },
+  {
+    date: 2,
+    events: [
+      {color: '#45B7D1', type: 'dot'},
+      {color: '#96CEB4', type: 'dot'},
+      {color: '#FFEAA7', type: 'dot'},
+    ],
+  },
+  {
+    date: 3,
+    events: [
+      {color: '#FF6B6B', type: 'dot'},
+      {color: '#4ECDC4', type: 'dot'},
+    ],
+  },
+  {
+    date: 5,
+    events: [{color: '#96CEB4', type: 'dot'}],
+  },
+  {
+    date: 6,
+    events: [
+      {color: '#FF6B6B', type: 'dot'},
+      {color: '#4ECDC4', type: 'dot'},
+    ],
+  },
+  {
+    date: 8,
+    events: [{color: '#96CEB4', type: 'dot'}],
+  },
+  {
+    date: 9,
+    events: [
+      {color: '#45B7D1', type: 'dot'},
+      {color: '#96CEB4', type: 'dot'},
+      {color: '#FF6B6B', type: 'dot'},
+    ],
+  },
+  {
+    date: 12,
+    events: [
+      {color: '#45B7D1', type: 'dot'},
+      {color: '#4ECDC4', type: 'dot'},
+    ],
+  },
+];
+
+export const aboutAppTasks: TAppTask[] = [
+  {
+    title: 'Welcome to\nBharat Carbon 👋',
+    description:
+      'Start your journey toward a sustainable\nlifestyle. Let’s take a quick tour!',
+    buttonText: 'Start Tour',
+  },
+  {
+    title: 'Your Dashboard',
+    description:
+      'Track your CO₂ savings, view zones\n(Green/Blue/Red), and monitor\nweekly progress.',
+    buttonText: 'Next',
+  },
+  {
+    title: 'Add Data',
+    description:
+      'Log your daily actions like meals,\ntravel, energy use, and earn points!',
+    buttonText: 'Next',
+  },
+  {
+    title: 'Explore Challenges',
+    description:
+      'Complete eco-friendly challenges to\nboost your impact and climb the\nleaderboard!',
+    buttonText: 'Next',
+  },
+  {
+    title: 'Family Impact',
+    description:
+      'Add family members and track\neveryone’s contributions together.',
+    buttonText: 'Next',
+  },
+  {
+    title: 'Your Profile',
+    description:
+      'See your badges, stats, and soon\nredeem your points for rewards!',
+    buttonText: 'Next',
+  },
+  {
+    title: 'All Set to Go!',
+    description:
+      'You’re ready to take climate action.\nStart logging and making a\ndifference today.',
+    buttonText: 'Get Started',
+    buttonText2: 'View Dashboard',
+  },
+];

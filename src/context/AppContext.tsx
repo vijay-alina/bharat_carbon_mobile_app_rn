@@ -7,7 +7,9 @@ export interface IAppContext {
     completeIntro: () => void;
     completeOnboarding: () => void;
     completeNotesViewed: () => void;
+    completeTouchTour: () => void;
     isNotesViewed: boolean;
+    isTouchTourComplete: boolean;
 }
 
 const AppContext = createContext<IAppContext>({
@@ -17,7 +19,9 @@ const AppContext = createContext<IAppContext>({
     completeIntro: () => {},
     completeOnboarding: () => {},
     completeNotesViewed: () => {},
+    completeTouchTour: () => {},
     isNotesViewed: false,
+    isTouchTourComplete: false,
 });
 
 export const useAppContext = () => {
@@ -34,6 +38,7 @@ export const AppProvider:React.FC<{children: ReactElement}> = ({ children }) => 
     hasCompletedOnboarding: true,
     isLoading: true,
     isNotesViewed: false,
+    isTouchTourComplete: false,
   });
 
   // Simulate loading saved state (in real app, load from AsyncStorage)
@@ -78,11 +83,18 @@ export const AppProvider:React.FC<{children: ReactElement}> = ({ children }) => 
     setAppState(newState);
   };
 
+  const completeTouchTour = async () => {
+    const newState = { ...appState, isTouchTourComplete: true };
+    setAppState(newState);
+  };
+
   const resetApp = async () => {
     const newState = {
       hasCompletedIntro: false,
       hasCompletedOnboarding: false,
       isLoading: false,
+      isNotesViewed: false,
+      isTouchTourComplete: false,
     };
     setAppState(newState);
     // In real app: await AsyncStorage.removeItem('appState');
@@ -93,6 +105,7 @@ export const AppProvider:React.FC<{children: ReactElement}> = ({ children }) => 
     completeIntro,
     completeOnboarding,
     completeNotesViewed,
+    completeTouchTour,
     resetApp,
   };
 

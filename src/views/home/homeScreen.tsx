@@ -2,12 +2,10 @@ import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
-  // FlatList,
-  // SafeAreaView,
   Text,
   TouchableOpacity,
   ScrollView,
-  Button,
+  Image,
 } from 'react-native';
 import ListHeaderContent from './components/headerContent';
 import VerticalClimateCard from './components/home-vertical-card';
@@ -15,10 +13,11 @@ import ListFooterContent from './components/footerComponent';
 import {AddPlusIcon, FileUploadIcon} from '../../images/icons';
 import {Colors} from '../../constants/colors';
 import {DEVICE_WIDTH, getLineHeight} from '../../utils/utils';
-// import OnboardingModal from './components/OnboardingModal';
 import Modal from 'react-native-modal';
 import LinearGradient from 'react-native-linear-gradient';
 import {aboutAppTasks} from '../../constants/constants';
+import EarthWithCheckImage from '../../images/icons/earth_with_check.png';
+import {useAppContext} from '../../context/AppContext';
 
 const _item = {
   imageUri: require('../../images/icons/girl_with_phone.png'),
@@ -57,31 +56,48 @@ const _itemFour = {
   gradientColors: ['#17a086', '#083a31'],
   icon: null,
 };
-const list = [_item, _itemTwo, _itemThree, _itemFour];
+// const list = [_item, _itemTwo, _itemThree, _itemFour];
 const list1 = [_item, _itemTwo];
 const list2 = [_itemThree, _itemFour];
 
 export const HomeScreen = () => {
-  const [modalVisible, setModalVisible] = useState(true);
+  const {completeNotesViewed, isNotesViewed} = useAppContext();
   const [currentStep, setCurrentStep] = useState(0);
   const GRADIENT_COLORS = ['#E8FFE8', '#80A380'];
   const PLAIN_COLORS = ['#FFFFFF', '#FFFFFF'];
   const gradientColors = currentStep === 0 ? GRADIENT_COLORS : PLAIN_COLORS;
 
   const getButtonWrapperStyle = () => {
-    if(currentStep === 0) {
+    if (currentStep === 0) {
       return styles.buttWrapper;
-    } else if(currentStep > 0 && currentStep <= 5) {
+    } else if (currentStep > 0 && currentStep <= 5) {
       return styles.buttWrapper2;
     }
     return styles.buttWrapper3;
   };
 
   const handleNextClick = () => {
-    if (currentStep > 5) {
-      setModalVisible(false);
-    } else {
+    if (currentStep <= 5) {
       setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleGetStartedClick = () => {
+    completeNotesViewed();
+    // TODO: Open Touch Tour Guide here.
+  };
+
+  const handleViewDashboardClick = () => {
+    completeNotesViewed();
+  };
+
+  const getDescriptionTextStyle = () => {
+    if (currentStep === 0) {
+      return styles.descriptionText;
+    } else if (currentStep > 0 && currentStep <= 5) {
+      return styles.descriptionText2;
+    } else {
+      return styles.descriptionText3;
     }
   };
 
@@ -130,25 +146,60 @@ export const HomeScreen = () => {
         </TouchableOpacity>
       </View>
       <ListFooterContent />
-      <View style={{height: 60}} />
-      <Modal isVisible={modalVisible}>
+      <View style={styles.height} />
+      <Modal
+        isVisible={!isNotesViewed}
+        animationIn="fadeIn"
+        animationInTiming={300}
+        animationOut="fadeOut"
+        animationOutTiming={300}>
         <LinearGradient
           colors={gradientColors}
-          style={styles.modalContentContainer}>
-          <Text style={styles.titleText}>
+          style={
+            currentStep === 6
+              ? styles.modalContentContainer2
+              : styles.modalContentContainer
+          }>
+          <Text
+            style={[
+              styles.titleText,
+              currentStep > 0 && {color: Colors.PrimaryBlue},
+            ]}>
             {aboutAppTasks[currentStep].title}
           </Text>
-          <Text style={styles.descriptionText}>
+          <Text style={getDescriptionTextStyle()}>
             {aboutAppTasks[currentStep].description}
           </Text>
+          {currentStep === 6 && (
+            <Image source={EarthWithCheckImage} style={styles.earth} />
+          )}
           <View style={getButtonWrapperStyle()}>
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={handleNextClick}>
-              <Text style={styles.buttonText2}>
-                {aboutAppTasks[currentStep].buttonText}
-              </Text>
-            </TouchableOpacity>
+            {currentStep === 6 ? (
+              <>
+                <TouchableOpacity
+                  style={styles.filledButtonContainer}
+                  onPress={handleGetStartedClick}>
+                  <Text style={styles.buttonText2}>
+                    {aboutAppTasks[currentStep].buttonText}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.outlinedButtonContainer}
+                  onPress={handleViewDashboardClick}>
+                  <Text style={styles.buttonText3}>
+                    {aboutAppTasks[currentStep].buttonText2}
+                  </Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={handleNextClick}>
+                <Text style={styles.buttonText2}>
+                  {aboutAppTasks[currentStep].buttonText}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </LinearGradient>
       </Modal>
@@ -183,6 +234,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     paddingBottom: 80,
   },
+  height: {height: 60},
   contentContainer: {
     alignItems: 'center',
   },
@@ -255,6 +307,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     padding: 24,
   },
+  modalContentContainer2: {
+    borderRadius: 20,
+    backgroundColor: Colors.White,
+    alignItems: 'center',
+    padding: 24,
+  },
   titleText: {
     color: Colors.ThickGreenShades800,
     fontFamily: 'Montserrat-Medium',
@@ -271,6 +329,23 @@ const styles = StyleSheet.create({
     lineHeight: getLineHeight(14, 150),
     marginBottom: 16,
   },
+  descriptionText2: {
+    color: Colors.BlueShades300,
+    fontFamily: 'Montserrat',
+    fontSize: 14,
+    fontWeight: '500',
+    lineHeight: getLineHeight(14, 150),
+    marginBottom: 16,
+  },
+  descriptionText3: {
+    color: Colors.BlueShades300,
+    fontFamily: 'Montserrat',
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: getLineHeight(14, 150),
+    marginBottom: 16,
+    textAlign: 'center',
+  },
   buttWrapper: {
     width: '100%',
     flexDirection: 'row',
@@ -283,7 +358,7 @@ const styles = StyleSheet.create({
   },
   buttWrapper3: {
     width: '100%',
-    flexDirection: 'row',
+    // flexDirection: 'row',
     justifyContent: 'center',
   },
   buttonContainer: {
@@ -293,11 +368,37 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.PrimaryBlue,
     alignItems: 'center',
   },
+  filledButtonContainer: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    backgroundColor: Colors.PrimaryBlue,
+    alignItems: 'center',
+  },
+  outlinedButtonContainer: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    alignItems: 'center',
+    marginTop: 10,
+  },
   buttonText2: {
     color: Colors.White,
     fontFamily: 'Montserrat',
     fontSize: 14,
     fontWeight: '600',
     lineHeight: getLineHeight(14, 120),
+  },
+  buttonText3: {
+    color: Colors.PrimaryBlue,
+    fontFamily: 'Montserrat',
+    fontSize: 14,
+    fontWeight: '600',
+    lineHeight: getLineHeight(14, 120),
+  },
+  earth: {
+    width: 170,
+    height: 132,
   },
 });

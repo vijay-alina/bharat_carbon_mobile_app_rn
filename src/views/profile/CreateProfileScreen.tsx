@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 import React, {useState} from 'react';
 import {
   View,
@@ -116,6 +117,8 @@ const CreateProfileScreen: React.FC = () => {
   // };
 
   const handleSubmit = async () => {
+    //@ts-ignore
+    return navigation.navigate('ClimateManifestoScreen');
     const isValid = await validateForm();
 
     if (!isValid) {

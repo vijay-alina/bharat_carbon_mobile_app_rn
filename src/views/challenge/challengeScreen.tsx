@@ -2,11 +2,19 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import GradientChallengeCard from './components/challengeCard';
 import {Header} from '../../common/header';
 import {getLineHeight} from '../../utils/utils';
+import { useNavigation } from '@react-navigation/native';
 
 export const ChallengeScreen = () => {
+  const navigation = useNavigation();
+
+  const handleOnClick = () => {
+    //@ts-ignore
+    navigation.navigate('ChallengeList');
+  };
+
   return (
     <View style={styles.container}>
-      <Header title="Challenges" isHomeScreen={true} />
+      <Header title="Challenges" isHomeScreen={true} onBackClick={() => navigation.goBack()} />
       <Text style={styles.title}>Choose Your Challenge Category</Text>
       <Text style={styles.description}>
         Pick an area of your life to reduce carbon impact and earn points!
@@ -21,14 +29,16 @@ export const ChallengeScreen = () => {
           title="Housing Challenges"
           description="Save water, energy, and reduce home waste."
           keywords="Energy Saving, Waste Reduction"
+          onPress={handleOnClick}
         />
         <GradientChallengeCard
           pointsText="Earn up to"
           offerType="30 points/trip"
           imageUri={require('../../images/icons/boy_with_bicycle.png')}
-          title="Housing Challenges"
-          description="Save water, energy, and reduce home waste."
-          keywords="Energy Saving, Waste Reduction"
+          title="Mobility Challenges"
+          description="Choose eco-friendly ways to travel."
+          keywords="Walk, Cycle, Public Transport, EV"
+          onPress={handleOnClick}
         />
       </ScrollView>
     </View>

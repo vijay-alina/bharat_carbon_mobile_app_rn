@@ -1,10 +1,9 @@
-// SubscriptionCard.js
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient'; // or 'expo-linear-gradient' if using Expo
+import { View, Text, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { Colors } from '../../../constants/colors';
 import CustomButton from '../../../common/button';
-import AerrowIconWithTail from '../images/icons/arrow_right_with_tail.svg';
+import AerrowIconWithTail from '../../../images/icons/arrow_right_with_tail.svg';
 
 type SubscriptionCardProps = {
     price: number;
@@ -35,10 +34,10 @@ const SubscriptionCard = ({ price, onPress }: SubscriptionCardProps) => {
 
 
             <CustomButton
-                text="Continue"
-                onPress={() => console.log('Pressed')}
-                backgroundColor="#4CAF50"
-                textColor="#fff"
+                text="Subscribe Now to Continue"
+                onPress={onPress}
+                backgroundColor="#FFFFFF"
+                textColor="#000"
                 showIcon
                 iconComponent={AerrowIconWithTail}
                 iconProps={{ width: 20, height: 20, fill: '#fff' }}

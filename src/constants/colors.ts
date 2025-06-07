@@ -19,6 +19,7 @@ export const Colors = {
   GreenShades: 'rgba(36, 161, 72, 0.2)',
   ThickGreenShades800: '#127C68',
   ThickGreenShades700: '#17A086',
+  ThickGreenShades900: '#0D5F4F',
   GreyNeutrals: '#9496A1',
   LightGreen: '#20ac87',
   DarkGreen: '#158769',
@@ -42,5 +43,7 @@ export const Colors = {
   Gray3: '#828282',
   BlueShades300: '#557F97',
   RedDark: '#FF4D4F',
+  Neutrals900: '#101223',
+  Neutrals800: '#101223',
 
 };

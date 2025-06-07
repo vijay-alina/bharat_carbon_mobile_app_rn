@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   ImageSourcePropType,
+  TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {StarIcon} from '../../../images/icons';
@@ -20,6 +21,7 @@ type GradientChallengeCardProps = {
   title: string;
   description: string;
   keywords: string;
+  onPress: () => void;
 };
 
 const GradientChallengeCard: React.FC<GradientChallengeCardProps> = ({
@@ -29,23 +31,26 @@ const GradientChallengeCard: React.FC<GradientChallengeCardProps> = ({
   title,
   description,
   keywords,
+  onPress,
 }) => {
   return (
-    <LinearGradient colors={['#17a086', '#083a31']} style={styles.card}>
-      <View style={styles.pointsContainer}>
-        <Image source={StarIcon} style={styles.star} />
-        <View>
-          <Text style={styles.pointsText}>{pointsText}</Text>
-          <Text style={styles.offerType}>{offerType}</Text>
+    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
+      <LinearGradient colors={['#17a086', '#083a31']} style={styles.card}>
+        <View style={styles.pointsContainer}>
+          <Image source={StarIcon} style={styles.star} />
+          <View>
+            <Text style={styles.pointsText}>{pointsText}</Text>
+            <Text style={styles.offerType}>{offerType}</Text>
+          </View>
         </View>
-      </View>
 
-      <Image source={imageUri} style={styles.image} resizeMode="contain" />
+        <Image source={imageUri} style={styles.image} resizeMode="contain" />
 
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
-      <Text style={styles.keywords}>{keywords}</Text>
-    </LinearGradient>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.description}>{description}</Text>
+        <Text style={styles.keywords}>{keywords}</Text>
+      </LinearGradient>
+    </TouchableOpacity>
   );
 };
 

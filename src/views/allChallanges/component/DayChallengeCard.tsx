@@ -29,7 +29,7 @@ const ChallengeCard: React.FC<ChallengeCardProps> = ({ title, description, rewar
       <CustomButton
         text="Get Started"
         onPress={handlePress}
-        backgroundColor={Colors.GreenNormal}
+        backgroundColor={Colors.ThickGreenShades700}
         textColor="#fff"
       />
     </View>

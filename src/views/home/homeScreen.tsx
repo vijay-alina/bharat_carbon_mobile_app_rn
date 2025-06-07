@@ -1,11 +1,20 @@
-import React from 'react';
-import {View, StyleSheet, FlatList, SafeAreaView} from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  // FlatList,
+  // SafeAreaView,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import ListHeaderContent from './components/headerContent';
 import VerticalClimateCard from './components/home-vertical-card';
 import ListFooterContent from './components/footerComponent';
 import {AddPlusIcon, FileUploadIcon} from '../../images/icons';
-import {StatusBar} from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import {Colors} from '../../constants/colors';
+import {DEVICE_WIDTH, getLineHeight} from '../../utils/utils';
+import OnboardingModal from './components/OnboardingModal';
 
 const _item = {
   imageUri: require('../../images/icons/girl_with_phone.png'),
@@ -44,13 +53,61 @@ const _itemFour = {
   gradientColors: ['#17a086', '#083a31'],
   icon: null,
 };
-const list = [_item, _itemTwo, _itemThree, _itemFour];
+const list = [_item, _itemTwo,_itemThree, _itemFour];
+const list1 = [_item, _itemTwo];
+const list2 = [_itemThree, _itemFour];
 
 export const HomeScreen = () => {
-
+  const [modalVisible, setModalVisible] = useState(true);
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
+    <ScrollView style={styles.container}>
+      <ListHeaderContent />
+      <View style={{width: DEVICE_WIDTH, flexDirection: 'row', flexWrap: 'wrap'}}>
+      {list1.map((item, index) => (
+        <VerticalClimateCard
+          key={index.toString()}
+          imageUri={item.imageUri}
+          title={item.title}
+          subtitle={item.subtitle}
+          buttonText={item.buttonText}
+          gradientColors={item.gradientColors}
+          icon={item.icon}
+        />
+      ))}
+      </View>
+      <View style={styles.sectionDividerContainer}>
+        <Text style={styles.labelText}>Explore Challenges</Text>
+        <TouchableOpacity>
+          <Text style={styles.viewAllText}>View All</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={{width: DEVICE_WIDTH, flexDirection: 'row', flexWrap: 'wrap'}}>
+      {list2.map((item, index) => (
+        <VerticalClimateCard
+          key={index.toString()}
+          imageUri={item.imageUri}
+          title={item.title}
+          subtitle={item.subtitle}
+          buttonText={item.buttonText}
+          gradientColors={item.gradientColors}
+          icon={item.icon}
+        />
+      ))}
+      </View>
+      <View style={styles.sectionDividerContainer}>
+        <Text style={styles.labelText}>Recommended Articles</Text>
+        <TouchableOpacity>
+          <Text style={styles.viewAllText}>View All</Text>
+        </TouchableOpacity>
+      </View>
+      <ListFooterContent />
+      <View style={{height: 60}} />
+      <OnboardingModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
+      {/* <FlatList
         ListHeaderComponent={ListHeaderContent}
         data={list}
         numColumns={2}
@@ -68,8 +125,8 @@ export const HomeScreen = () => {
         )}
         ListFooterComponent={ListFooterContent}
         ListFooterComponentStyle={styles.footerContainerStyle}
-      />
-    </SafeAreaView>
+      /> */}
+    </ScrollView>
   );
 };
 
@@ -77,8 +134,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
     paddingBottom: 80,
   },
   contentContainer: {
@@ -127,5 +184,24 @@ const styles = StyleSheet.create({
   },
   footerContainerStyle: {
     marginLeft: 10,
+  },
+  sectionDividerContainer: {
+    width: DEVICE_WIDTH * 0.9,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    paddingVertical: 12,
+  },
+  labelText: {
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 14,
+    color: Colors.BlueShades900,
+    lineHeight: getLineHeight(14, 120),
+  },
+  viewAllText: {
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 12,
+    color: Colors.ThickGreenShades700,
   },
 });

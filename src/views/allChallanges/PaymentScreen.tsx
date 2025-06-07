@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, SafeAreaView } from 'react-native';
 import PaymentOption from './component/PaymentOptionCard';
@@ -7,6 +8,9 @@ import CustomButton from '../../common/button';
 import { Colors } from '../../constants/colors';
 import VegetarianChallengeCard from './component/VegetarianChallengeCard';
 import ChallengeCompleteCard from './component/ChallengeCompleted';
+import { useNavigation } from '@react-navigation/native';
+import { useAppContext } from '../../context/AppContext';
+import { AddGreenIcon } from '../../images/icons';
 
 // type PaymentMethod = {
 //     id: string;
@@ -17,11 +21,13 @@ import ChallengeCompleteCard from './component/ChallengeCompleted';
 
 
 const PaymentScreen: React.FC = () => {
+    const navigation = useNavigation();
+    const {completeOnboarding} = useAppContext();
     const [selectedId, setSelectedId] = useState<string | null>(null);
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header title='Choose Payment Method' />
+            <Header title="Choose Payment Method" />
             <FlatList
                 data={PaymentMethods}
                 keyExtractor={(item) => item.id}
@@ -43,13 +49,25 @@ const PaymentScreen: React.FC = () => {
 
             <CustomButton
                 text="Add Payment Method"
-                onPress={() => console.log('Pressed')}
+                onPress={() => {
+                    completeOnboarding();
+                }}
                 backgroundColor={Colors.GreenNormalTwo}
                 textColor={Colors.ThickGreenShades700}
                 showIcon
-                // iconComponent={AerrowIconWithTail}
+                isLeftIcon={true}
+                iconComponent={AddGreenIcon}
                 iconProps={{ width: 20, height: 20, fill: '#fff' }}
             // isRightIcon
+            />
+            <CustomButton
+                text={"Accept & Continue"}
+                onPress={() => { }}
+                // showIcon={!isSubmitting}
+                backgroundColor="#17a086"
+                textColor='#fff'
+                textStyle={{ fontFamily: 'Montserrat-Bold', fontSize: 16 }}
+                style={styles.submitButton}
             />
             {/* <CustomButton
                 text={"Add Payment Method"}

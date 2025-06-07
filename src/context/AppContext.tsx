@@ -6,6 +6,8 @@ export interface IAppContext {
     isLoading: boolean;
     completeIntro: () => void;
     completeOnboarding: () => void;
+    completeNotesViewed: () => void;
+    isNotesViewed: boolean;
 }
 
 const AppContext = createContext<IAppContext>({
@@ -14,6 +16,8 @@ const AppContext = createContext<IAppContext>({
     isLoading: true,
     completeIntro: () => {},
     completeOnboarding: () => {},
+    completeNotesViewed: () => {},
+    isNotesViewed: false,
 });
 
 export const useAppContext = () => {
@@ -29,6 +33,7 @@ export const AppProvider:React.FC<{children: ReactElement}> = ({ children }) => 
     hasCompletedIntro: true,
     hasCompletedOnboarding: true,
     isLoading: true,
+    isNotesViewed: false,
   });
 
   // Simulate loading saved state (in real app, load from AsyncStorage)
@@ -68,6 +73,11 @@ export const AppProvider:React.FC<{children: ReactElement}> = ({ children }) => 
     // In real app: await AsyncStorage.setItem('appState', JSON.stringify(newState));
   };
 
+  const completeNotesViewed = async () => {
+    const newState = { ...appState, isNotesViewed: true };
+    setAppState(newState);
+  };
+
   const resetApp = async () => {
     const newState = {
       hasCompletedIntro: false,
@@ -82,6 +92,7 @@ export const AppProvider:React.FC<{children: ReactElement}> = ({ children }) => 
     ...appState,
     completeIntro,
     completeOnboarding,
+    completeNotesViewed,
     resetApp,
   };
 

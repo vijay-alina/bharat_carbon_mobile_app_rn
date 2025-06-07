@@ -14,6 +14,7 @@ import OngoingChallengeScreen from '../views/allChallanges/OngoingChallengeScree
 import MemberProfileScreen from '../views/profile/MemberProfileScreen'
 import HousingDataForm from '../views/add/HousingDataForm';
 import LeaderboardScreen from '../views/Leaderboard/LeaderboardScreen';
+import { ChallengeStackNavigator } from './challengeStackNavigator';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -28,7 +29,7 @@ export const TabNavigator = () => {
         tabBarShowLabel: false,
       }}>
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="History" component={ChallengeScreen} />
+      <Tab.Screen name="History" component={ChallengeStackNavigator} />
       {/* <Tab.Screen name="Add" component={AddScreen} /> */}
       <Tab.Screen name="Add" component={HousingDataForm} />
       <Tab.Screen name="Stats" component={StatsScreen} />

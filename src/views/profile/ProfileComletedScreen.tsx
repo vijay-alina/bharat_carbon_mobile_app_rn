@@ -6,12 +6,20 @@ import HomeIcon from '../../images/icons/home_icon.svg';
 import {Colors} from '../../constants/colors';
 import {getLineHeight} from '../../utils/utils';
 import {useAppContext} from '../../context/AppContext';
+import { useNavigation } from '@react-navigation/native';
 
 const ProfileCompletedScreen = () => {
+  const navigation = useNavigation();
+
   const {completeOnboarding} = useAppContext();
 
   const handleClick = () => {
     completeOnboarding();
+  };
+
+  const handleLetsStartClick = () => {
+    //@ts-ignore
+    navigation.navigate('SubscriptionScreen');
   };
 
   return (
@@ -28,7 +36,7 @@ const ProfileCompletedScreen = () => {
           You've personalized your journey and committed to the Climate
           Manifesto. You're ready to make a difference!
         </Text>
-        <TouchableOpacity style={styles.button} onPress={handleClick}>
+        <TouchableOpacity style={styles.button} onPress={handleLetsStartClick}>
           <HomeIcon />
           <Text style={styles.buttonText}> Let's Get Started</Text>
         </TouchableOpacity>

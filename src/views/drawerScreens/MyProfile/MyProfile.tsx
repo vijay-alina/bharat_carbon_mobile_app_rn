@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   ImageBackground,
@@ -8,25 +8,31 @@ import {
   Text,
   ScrollView,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import BgImage from '../../../images/icons/background_image.png';
 import AvatarPlaceholder from '../../../images/icons/avatar_placeholder.png';
 import LevelBadgeImage from '../../../images/icons/level_badge_icon.png';
-import { Header } from '../../../common/header';
-import { Colors } from '../../../constants/colors';
+import {Header} from '../../../common/header';
+import {Colors} from '../../../constants/colors';
 import RankComponent from './RankComponent';
 import StatisticsItemComp from './StatisticsItemComp';
 import BadgeComp from './BadgeComp';
-import { DEVICE_WIDTH } from '../../../utils/utils';
+import {DEVICE_WIDTH} from '../../../utils/utils';
 import ChallengeComp from '../../../components/ChallengeComp';
 import LinearGradient from 'react-native-linear-gradient';
-import LeafIcon from '../../../images/icons/class_rank_green_icon.svg'
-import Verticaldevider from '../../../images/icons/vertical_divider.png'
+import LeafIcon from '../../../images/icons/class_rank_green_icon.svg';
+import Verticaldevider from '../../../images/icons/vertical_divider.png';
 import Divider from '../../../images/icons/divider.png';
-import PointsIcon from '../../../images/icons/phonepe-icon.png'
+import PointsIcon from '../../../images/icons/phonepe-icon.png';
+import {useAppDispatch, useAppSelector} from '../../../hooks/hooks';
+import {fetchUser} from '../../../features/user/userThunks';
 
 const MyProfileScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.user);
+
+  console.log(user);
 
   const handleBackClick = () => {
     navigation.goBack();
@@ -47,6 +53,11 @@ const MyProfileScreen = () => {
   //   }, []),
   // );
 
+  useEffect(() => {
+    dispatch(fetchUser('1'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -56,13 +67,12 @@ const MyProfileScreen = () => {
         <SafeAreaView style={styles.content}>
           <ScrollView
             contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-          >
+            showsVerticalScrollIndicator={false}>
             <Header
               isHomeScreen={false}
               title="My Profile"
               hasTransparentBackground={true}
-              textStyle={{ color: Colors.White }}
+              textStyle={{color: Colors.White}}
               onBackClick={handleBackClick}
             />
             <View style={styles.avatarContainer}>
@@ -70,7 +80,11 @@ const MyProfileScreen = () => {
             </View>
             <Image source={LevelBadgeImage} style={styles.levelBadge} />
             <Text style={styles.nameText}>Akshay Swami</Text>
-            <RankComponent earnedPoints={545} schoolRank={123} classRank={467} />
+            <RankComponent
+              earnedPoints={545}
+              schoolRank={123}
+              classRank={467}
+            />
             <View style={styles.statRowContainer}>
               {[1, 2, 3, 4].map((_, i) => (
                 <StatisticsItemComp
@@ -90,7 +104,7 @@ const MyProfileScreen = () => {
                 />
               ))}
             </View>
-            <View style={{marginVertical:10}}>
+            <View style={{marginVertical: 10}}>
               <ChallengeComp
                 icon={require('../../../images/icons/badge_green_eater.png')}
                 header="Save Water Challenge"
@@ -102,8 +116,8 @@ const MyProfileScreen = () => {
               <Text style={styles.title}>Your Family's Green Impact</Text>
               <LinearGradient
                 colors={[Colors.LightGreen, Colors.DarkGreen]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
                 style={styles.statContainer}>
                 <View style={styles.leftStat}>
                   <LeafIcon width={24} height={24} />
@@ -112,7 +126,7 @@ const MyProfileScreen = () => {
                 </View>
                 <Image
                   source={Verticaldevider}
-                  style={{ width: 3, height: 60, }}
+                  style={{width: 3, height: 60}}
                 />
                 <View style={styles.leftStat}>
                   <LeafIcon width={24} height={24} />
@@ -124,18 +138,31 @@ const MyProfileScreen = () => {
                 <Image source={AvatarPlaceholder} style={styles.avatar} />
                 <Text style={styles.cardTitle}>Aarav Mehta</Text>
                 <Text style={styles.cardDescription}>Brother</Text>
-                <Image source={Divider} style={{ width: 100, height: 2, marginVertical: 10 }} />
+                <Image
+                  source={Divider}
+                  style={{width: 100, height: 2, marginVertical: 10}}
+                />
                 <View style={styles.cardPointsRow}>
-                  <Text style={styles.cardPointsDescription}>Points earned</Text>
+                  <Text style={styles.cardPointsDescription}>
+                    Points earned
+                  </Text>
                   <View style={styles.cardPointsContainer}>
-                    <Image source={PointsIcon} style={{ width: 12, height: 12 }} />
+                    <Image
+                      source={PointsIcon}
+                      style={{width: 12, height: 12}}
+                    />
                     <Text style={styles.cardPointsText}>480 Pts</Text>
                   </View>
                 </View>
-                <View style={[styles.cardPointsRow, { marginTop: 5 }]}>
-                  <Text style={styles.cardPointsDescription}>Emissions (CO2e)</Text>
-                  <View style={[styles.cardPointsContainer,]}>
-                    <Image source={PointsIcon} style={{ width: 12, height: 12 }} />
+                <View style={[styles.cardPointsRow, {marginTop: 5}]}>
+                  <Text style={styles.cardPointsDescription}>
+                    Emissions (CO2e)
+                  </Text>
+                  <View style={[styles.cardPointsContainer]}>
+                    <Image
+                      source={PointsIcon}
+                      style={{width: 12, height: 12}}
+                    />
                     <Text style={styles.cardPointsText}>29.3 kg</Text>
                   </View>
                 </View>
@@ -213,33 +240,30 @@ const styles = StyleSheet.create({
   lowerContainer: {
     alignItems: 'flex-start',
     width: '100%',
-    padding: 20
+    padding: 20,
   },
   title: {
     fontSize: 20,
     fontFamily: 'Montserrat-Bold',
     marginVertical: 20,
-    textAlign: 'left'
+    textAlign: 'left',
   },
   statContainer: {
-
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 10,
     paddingVertical: 20,
     borderRadius: 16,
-
   },
   leftStat: {
     width: DEVICE_WIDTH * 0.45,
-    alignItems: "center"
-
+    alignItems: 'center',
   },
   statDescription: {
     fontSize: 12,
     fontFamily: 'Montserrat-Regular',
-    color: Colors.White
+    color: Colors.White,
   },
   statTitle: {
     fontSize: 16,
@@ -248,7 +272,7 @@ const styles = StyleSheet.create({
   },
   card: {
     marginTop: 20,
-    width: "50%",
+    width: '50%',
     height: 220,
     backgroundColor: Colors.White,
     borderRadius: 16,
@@ -256,12 +280,11 @@ const styles = StyleSheet.create({
     borderColor: Colors.Neutral200,
     alignItems: 'center',
     padding: 10,
-
   },
   cardTitle: {
     fontSize: 16,
     fontFamily: 'Montserrat-Bold',
-    marginTop: 10
+    marginTop: 10,
   },
   cardDescription: {
     fontFamily: 'Montserrat-SemiBold',

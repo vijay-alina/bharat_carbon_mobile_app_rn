@@ -15,9 +15,8 @@ import * as yup from 'yup';
 import CustomInput from '../../common/input';
 import CustomButton from '../../common/button';
 import {Header} from '../../common/header';
-import {CameraIcon} from '../../images/icons';
-import {useNavigation} from '@react-navigation/native';
-
+import { CameraIcon } from '../../images/icons';
+import { useNavigation } from '@react-navigation/native';
 
 // Yup validation schema
 const validationSchema = yup.object().shape({
@@ -276,7 +275,7 @@ const CreateProfileScreen: React.FC = () => {
             onPress={handleSubmit}
             showIcon={true}
             isRightIcon={true}
-            // iconName="arrow-forward"
+            iconName="arrow-forward"
             backgroundColor="#6B7280"
             style={styles.submitButton}
           />

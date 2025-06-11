@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import CategoryCard from './component/CategoryCard';
-import {Categories} from '../../constants/constants';
+import { Categories } from '../../constants/constants';
 import CustomButton from '../../common/button';
-import {Header} from '../../common/header';
+import { Header } from '../../common/header';
 import { useNavigation } from '@react-navigation/native';
 
 const UploadDataScreen = () => {
   const navigation = useNavigation();
   const [selectedId, setSelectedId] = useState<string | null>('1');
 
-  const renderItem = ({item}: any) => (
+  const renderItem = ({ item }: any) => (
     <CategoryCard
       label={item.label}
       icon={item.icon as any}
@@ -21,7 +21,7 @@ const UploadDataScreen = () => {
 
   return (
     <>
-      <Header title="Upload Data" onBackClick={() => {navigation.goBack();}} />
+      <Header title="Upload Data" onBackClick={() => { navigation.goBack(); }} />
       <View style={styles.container}>
         <Text style={styles.title}>Upload Your Climate Action Proof</Text>
         <Text style={styles.description}>
@@ -34,13 +34,16 @@ const UploadDataScreen = () => {
           data={Categories}
           renderItem={renderItem}
           keyExtractor={item => item.id}
-          contentContainerStyle={{paddingBottom: 20}}
+          contentContainerStyle={{ paddingBottom: 20 }}
           showsVerticalScrollIndicator={false}
         />
         <View style={styles.btnContainer}>
           <CustomButton
             text={'Proceed to input'}
-            onPress={() => {}}
+            onPress={() => {
+              //@ts-ignore
+              navigation.navigate('ChallengeFormSelectionScreen');
+            }}
             backgroundColor="#17a086"
             style={styles.submitButton}
             textStyle={styles.buttonTextStyle}

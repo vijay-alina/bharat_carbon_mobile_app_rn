@@ -4,7 +4,12 @@ import {
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
-import CustomButton from '../../common/button';
+import CustomButton from '../../../../common/button';
+import AddIcon from '../../../../images/icons/add_plus.svg'
+import ConsumItemList from './ConsumeItemList'
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import GalleryaddIcon from '../../../../images/icons/gallery-add.svg';
+import { Camera, CameraDevice, useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
 
 const mockItems = [
     { name: 'Tofu Stir Fry', points: 18, tag: 'Repeat' },
@@ -13,13 +18,22 @@ const mockItems = [
     { name: 'Other Items', points: 0 },
 ];
 
-const MealFormScreen = () => {
+type RootStackParamList = {
+    NutritionForm: undefined;
+    ConsumItemList: undefined;
+};
+
+const NutritionForm = () => {
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const [date, setDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
     const [mealType, setMealType] = useState('Breakfast');
     const [mealStyle, setMealStyle] = useState('Vegetarian');
     const [selectedItems, setSelectedItems] = useState(mockItems);
     const [description, setDescription] = useState('');
+    const [openCamera, setOpenCamera] = useState(false);
+    const { hasPermission, requestPermission } = useCameraPermission()
+    const device = useCameraDevice('back')
 
     const handleDateChange = (_: any, selected?: Date) => {
         const currentDate = selected || date;
@@ -32,6 +46,17 @@ const MealFormScreen = () => {
         updated.splice(index, 1);
         setSelectedItems(updated);
     };
+
+    const handleOpenCamera = async () => {
+        if (!hasPermission) {
+            const result = await requestPermission();
+            if (result) {
+                setOpenCamera(true);
+            }
+        } else {
+            setOpenCamera(true);
+        }
+    }
 
     const renderItem = ({ item, index }: any) => (
         <View style={styles.itemContainer}>
@@ -80,8 +105,9 @@ const MealFormScreen = () => {
 
             {/* Meal Items */}
             <Text style={styles.label}>Select Items Consumed</Text>
-            <TouchableOpacity style={styles.inputBox}>
+            <TouchableOpacity style={styles.inputBox} onPress={() => navigation.navigate('ConsumItemList')}>
                 <Text>Add items</Text>
+                <AddIcon width={20} height={20} fill="#007AFF" />
             </TouchableOpacity>
 
             <FlatList
@@ -92,12 +118,21 @@ const MealFormScreen = () => {
 
             {/* Description */}
             <Text style={styles.label}>Add Description</Text>
-            <TextInput
-                placeholder="Note (Optional)"
-                value={description}
-                onChangeText={setDescription}
-                style={styles.inputBox}
-            />
+            <View style={styles.inputWithIcon}>
+                <View style={styles.inputWrapperBox}>
+                    <TextInput
+                        placeholder="Note (Optional)"
+                        value={description}
+                        onChangeText={setDescription}
+                        style={styles.inputBox}
+                    />
+                </View>
+                <TouchableOpacity style={styles.buttonBox} onPress={() => { handleOpenCamera() }}>
+                    <GalleryaddIcon width={24} height={24} />
+                </TouchableOpacity>
+
+            </View>
+
 
             <Text style={styles.note}>Earn 10 points by uploading a picture!</Text>
 
@@ -105,10 +140,15 @@ const MealFormScreen = () => {
                 text={"Submit"}
                 onPress={() => { }}
                 // showIcon={!isSubmitting}
-                iconName="arrow-forward"
+                // iconName="arrow-forward"
                 backgroundColor="#17a086"
                 style={styles.submitButton}
             />
+            { device && <Camera
+                style={StyleSheet.absoluteFill}
+                device={device as CameraDevice}
+                isActive={true}
+            />}
         </View>
     );
 };
@@ -133,6 +173,8 @@ const styles = StyleSheet.create({
         marginTop: 12
     },
     inputBox: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         backgroundColor: '#fff',
         borderRadius: 8,
         padding: 12,
@@ -196,6 +238,21 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         paddingVertical: 16,
     },
+    inputWithIcon: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 4,
+    },
+    inputWrapperBox: {
+        width: '87%',
+    },
+    buttonBox: {
+        padding: 8,
+        backgroundColor: '#fff',
+        marginBottom: 8,
+        borderRadius: 8,
+    }
 });
 
-export default MealFormScreen;
+export default NutritionForm;

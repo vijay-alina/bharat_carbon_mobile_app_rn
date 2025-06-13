@@ -1,13 +1,24 @@
 export interface User {
-  id: number;
-  userId: number;
-  title: string;
-  completed: boolean;
-  // Add other user fields as needed
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobileNumber: string;
+  schoolCollegeId: string;
+  section: string;
+  year: string;
+  class: number;
+  location: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedOn: string | null;
+  __v: number;
 }
 
 export interface UserState {
-  data: User | null;
+  user: User | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }

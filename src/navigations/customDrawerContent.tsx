@@ -1,5 +1,5 @@
 import React from 'react';
-import {StatusBar, StyleSheet, View} from 'react-native';
+import {Alert, StatusBar, StyleSheet, View} from 'react-native';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
@@ -7,6 +7,9 @@ import {
 import {ProfileHeader} from '../components/profileHeader';
 import {UserIcon, UsersGroupIcon} from '../images/icons';
 import CustomDrawerItem from './CustomDrawerItem';
+import {setAccessToken} from '../utils/auth';
+import {CommonActions} from '@react-navigation/native';
+import {useAppContext} from '../context/AppContext';
 
 type ProfileProps = {
   name: string;
@@ -30,99 +33,119 @@ export const CustomDrawerContent = (
     ...rest
   } = props;
 
+  const {handleLogout} = useAppContext();
+  const logout = () => {
+    try {
+      console.log('logout');
+      handleLogout();
+      Alert.alert('Logged out successfully');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   return (
-    <DrawerContentScrollView
-      {...rest}
-      style={styles.container}
-      contentContainerStyle={styles.contentContainerStyle}
-      alwaysBounceVertical={false}
-      bounces={false}
-      showsVerticalScrollIndicator={false}>
-      <StatusBar backgroundColor="#FFFFFF" barStyle="light-content" />
-      <ProfileHeader
-        name={name}
-        points={points}
-        pointsToNextLevel={pointsToNextLevel}
-        level={level}
-        classRank={classRank}
-        schoolRank={schoolRank}
-        onBackPress={() => {
-          props.navigation.toggleDrawer();
-        }}
-      />
-      <CustomDrawerItem
-        icon={<UserIcon />}
-        label="My Profile"
-        onPress={() => {
-          props.navigation.navigate('MyProfile');
-        }}
-      />
-      <CustomDrawerItem
-        icon={<UsersGroupIcon />}
-        label="Family Sharing"
-        onPress={() => {
-          props.navigation.navigate('MemberStackNavigator');
-        }}
-      />
-      <CustomDrawerItem
-        icon={<UsersGroupIcon />}
-        label="FAQs"
-        onPress={() => {
-          props.navigation.navigate('FAQs');
-        }}
-      />
-      <CustomDrawerItem
-        icon={<UserIcon />}
-        label="Activities"
-        onPress={() => {
-          props.navigation.navigate('Activities');
-        }}
-      />
-      <CustomDrawerItem
-        icon={<UserIcon />}
-        label="Challenge"
-        onPress={() => {}}
-      />
-      <CustomDrawerItem
-        icon={<UserIcon />}
-        label="Redeem Points"
-        onPress={() => {
-          props.navigation.navigate('RedeemPoints');
-        }}
-      />
-      <CustomDrawerItem icon={<UserIcon />} label="FAQs" onPress={() => {}} />
-      <CustomDrawerItem
-        icon={<UserIcon />}
-        label="Notification"
-        onPress={() => {}}
-      />
-      <CustomDrawerItem
-        icon={<UserIcon />}
-        label="Settings"
-        onPress={() => {}}
-      />
-      <CustomDrawerItem
-        icon={<UserIcon />}
-        label="Help Center"
-        onPress={() => {}}
-      />
-      <CustomDrawerItem icon={<UserIcon />} label="Logout" onPress={() => {}} />
-      <View style={styles.gap} />
-    </DrawerContentScrollView>
+    <View style={styles.mainContainer}>
+      <DrawerContentScrollView
+        {...rest}
+        style={styles.container}
+        contentContainerStyle={styles.contentContainerStyle}
+        showsVerticalScrollIndicator={false}>
+        <StatusBar backgroundColor="#FFFFFF" barStyle="light-content" />
+        <ProfileHeader
+          name={name}
+          points={points}
+          pointsToNextLevel={pointsToNextLevel}
+          level={level}
+          classRank={classRank}
+          schoolRank={schoolRank}
+          onBackPress={() => {
+            props.navigation.toggleDrawer();
+          }}
+        />
+        <View style={styles.itemsContainer}>
+          <CustomDrawerItem
+            icon={<UserIcon />}
+            label="My Profile"
+            onPress={() => {
+              props.navigation.navigate('MyProfile');
+            }}
+          />
+          <CustomDrawerItem
+            icon={<UsersGroupIcon />}
+            label="Family Sharing"
+            onPress={() => {
+              props.navigation.navigate('MemberStackNavigator');
+            }}
+          />
+          <CustomDrawerItem
+            icon={<UsersGroupIcon />}
+            label="FAQs"
+            onPress={() => {
+              props.navigation.navigate('FAQs');
+            }}
+          />
+          <CustomDrawerItem
+            icon={<UserIcon />}
+            label="Activities"
+            onPress={() => {
+              props.navigation.navigate('Activities');
+            }}
+          />
+          <CustomDrawerItem
+            icon={<UserIcon />}
+            label="Challenge"
+            onPress={() => {}}
+          />
+          <CustomDrawerItem
+            icon={<UserIcon />}
+            label="Redeem Points"
+            onPress={() => {
+              props.navigation.navigate('RedeemPoints');
+            }}
+          />
+          <CustomDrawerItem
+            icon={<UserIcon />}
+            label="Notification"
+            onPress={() => {}}
+          />
+          <CustomDrawerItem
+            icon={<UserIcon />}
+            label="Settings"
+            onPress={() => {}}
+          />
+          <CustomDrawerItem
+            icon={<UserIcon />}
+            label="Help Center"
+            onPress={() => {}}
+          />
+          <CustomDrawerItem
+            icon={<UserIcon />}
+            label="Logout"
+            onPress={logout}
+          />
+        </View>
+        <View style={styles.gap} />
+      </DrawerContentScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#f8f8f8',
+  },
   container: {
     flex: 1,
     backgroundColor: '#f8f8f8',
-    padding: 0,
   },
   contentContainerStyle: {
-    paddingTop: 0,
-    paddingBottom: 0,
-    paddingStart: 0,
-    paddingEnd: 0,
+    flexGrow: 1,
+    paddingBottom: 20,
+  },
+  itemsContainer: {
+    paddingVertical: 10,
   },
   gap: {
     height: 16,

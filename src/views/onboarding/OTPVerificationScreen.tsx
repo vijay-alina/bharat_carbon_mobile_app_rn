@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {
   View,
   Text,
@@ -12,78 +12,103 @@ import {
   Platform,
   Keyboard,
   Alert,
+  ScrollView,
 } from 'react-native';
 import {Header} from '../../common/header';
 import {Colors} from '../../constants/colors';
 import CustomButton from '../../common/button';
 import {getLineHeight} from '../../utils/utils';
 import {RedoIcon} from '../../images/icons';
+import {useAppDispatch, useAppSelector} from '../../hooks/hooks';
+import {otpGet, otpVerify} from '../../features/user/userThunks';
+import {CommonActions, useFocusEffect} from '@react-navigation/native';
 
-const OTPVerificationScreen = ({navigation, route}) => {
+const OTPVerificationScreen = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) => {
   const [otp, setOtp] = useState(['', '', '', '']);
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showCustomKeyboard, setShowCustomKeyboard] = useState(false);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [activeInputIndex, setActiveInputIndex] = useState(0);
 
-  const inputRefs = useRef([]);
+  const inputRefs = useRef<TextInput[]>([]);
   const email = route?.params?.email || 'user@abcschool.edu';
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.user);
+
+  console.log('user', user);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       () => {
-        setShowCustomKeyboard(true);
+        setKeyboardVisible(true);
       },
     );
     const keyboardDidHideListener = Keyboard.addListener(
       'keyboardDidHide',
       () => {
-        setShowCustomKeyboard(false);
+        setKeyboardVisible(false);
       },
     );
 
     return () => {
-      keyboardDidHideListener?.remove();
       keyboardDidShowListener?.remove();
+      keyboardDidHideListener?.remove();
     };
   }, []);
 
   useEffect(() => {
-    if (timer > 0) {
-      const interval = setInterval(() => {
+    let interval: NodeJS.Timeout;
+    if (timer > 0 && !canResend) {
+      interval = setInterval(() => {
         setTimer(prev => prev - 1);
       }, 1000);
-      return () => clearInterval(interval);
-    } else {
+    } else if (timer === 0) {
       setCanResend(true);
     }
-  }, [timer]);
 
-  const handleOtpChange = (value, index) => {
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [timer, canResend]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      inputRefs.current[0]?.focus();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleOtpChange = (value: string, index: number) => {
     if (value.length > 1) {
       return;
-    } // Prevent multiple characters
+    }
 
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Auto focus next input
     if (value !== '' && index < 3) {
       inputRefs.current[index + 1]?.focus();
       setActiveInputIndex(index + 1);
     }
   };
 
-  const handleKeyPress = (key, index) => {
+  const handleKeyPress = (key: string, index: number) => {
     if (key === 'Backspace' && otp[index] === '' && index > 0) {
       inputRefs.current[index - 1]?.focus();
       setActiveInputIndex(index - 1);
     }
   };
-
   const handleResendOTP = async () => {
     if (!canResend) {
       return;
@@ -92,17 +117,22 @@ const OTPVerificationScreen = ({navigation, route}) => {
     setTimer(30);
     setCanResend(false);
     setOtp(['', '', '', '']);
+    setActiveInputIndex(0);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await dispatch(otpGet(email)).unwrap();
       Alert.alert('Success', 'OTP has been resent to your email');
+      setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 100);
     } catch (error) {
       Alert.alert('Error', 'Failed to resend OTP');
     }
   };
 
   const handleVerifyOTP = async () => {
+    console.log('otp');
+    Keyboard.dismiss();
     const otpString = otp.join('');
 
     if (otpString.length !== 4) {
@@ -113,15 +143,13 @@ const OTPVerificationScreen = ({navigation, route}) => {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Navigate to main app or next screen
-    //   navigation.reset({
-    //     index: 0,
-    //     routes: [{name: 'MainApp'}],
-    //   });
-    navigation.navigate("CreateProfileScreen");
+      await dispatch(
+        otpVerify({
+          email,
+          otp: otpString,
+        }),
+      ).unwrap();
+      navigation.navigate('CreateProfileScreen');
     } catch (error) {
       Alert.alert('Error', 'Invalid OTP. Please try again.');
       setOtp(['', '', '', '']);
@@ -130,6 +158,17 @@ const OTPVerificationScreen = ({navigation, route}) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setOtp(['', '', '', '']);
+    }, []),
+  );
+
+  const headerStyle = {
+    ...styles.headerContainer,
+    ...(keyboardVisible && styles.headerKeyboardVisible),
   };
 
   return (
@@ -150,66 +189,86 @@ const OTPVerificationScreen = ({navigation, route}) => {
 
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardAvoidingView}>
+          style={styles.keyboardAvoidingView}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}>
           <Header
             hasTransparentBackground={true}
             title="OTP Verification"
-            containerStyle={{marginTop: 44}}
+            containerStyle={headerStyle}
             textStyle={{color: Colors.White}}
+            onBackClick={() => navigation.goBack()}
           />
-          <View style={styles.content}>
-            <View style={styles.messageContainer}>
-              <Text style={styles.messageText}>
-                We have sent a verification code to
-              </Text>
-              <Text style={styles.emailText}>{email}</Text>
+
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled">
+            <View
+              style={[
+                styles.content,
+                keyboardVisible && styles.contentKeyboardVisible,
+              ]}>
+              <View style={styles.messageContainer}>
+                <Text style={styles.messageText}>
+                  We have sent a verification code to
+                </Text>
+                <Text style={styles.emailText}>{email}</Text>
+              </View>
+
+              <View style={styles.otpContainer}>
+                {otp.map((digit, index) => (
+                  <TextInput
+                    key={index}
+                    ref={(ref: TextInput | null) => {
+                      if (ref) {
+                        inputRefs.current[index] = ref;
+                      }
+                    }}
+                    style={[
+                      styles.otpInput,
+                      digit !== '' && styles.otpInputFilled,
+                      activeInputIndex === index && styles.otpInputActive,
+                    ]}
+                    value={digit}
+                    onChangeText={value => handleOtpChange(value, index)}
+                    onKeyPress={({nativeEvent}) =>
+                      handleKeyPress(nativeEvent.key, index)
+                    }
+                    onFocus={() => setActiveInputIndex(index)}
+                    keyboardType="numeric"
+                    maxLength={1}
+                    selectTextOnFocus
+                    autoFocus={index === 0}
+                  />
+                ))}{' '}
+              </View>
+
+              <View style={styles.timerContainer}>
+                {canResend ? (
+                  <TouchableOpacity onPress={handleResendOTP}>
+                    <View style={styles.resendContainer}>
+                      <RedoIcon />
+                      <Text style={styles.resendText}>Resend OTP</Text>
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Text style={styles.timerText}>Resend OTP in {timer}s</Text>
+                )}
+              </View>
+
+              <CustomButton
+                text={isLoading ? 'Verifying...' : 'Verify & Continue'}
+                onPress={handleVerifyOTP}
+                disabled={isLoading}
+                style={styles.verifyButton}
+              />
             </View>
-            <View style={styles.otpContainer}>
-              {otp.map((digit, index) => (
-                <TextInput
-                  key={index}
-                  ref={ref => (inputRefs.current[index] = ref)}
-                  style={[
-                    styles.otpInput,
-                    digit !== '' && styles.otpInputFilled,
-                    activeInputIndex === index && styles.otpInputActive,
-                  ]}
-                  value={digit}
-                  onChangeText={value => handleOtpChange(value, index)}
-                  onKeyPress={({nativeEvent}) =>
-                    handleKeyPress(nativeEvent.key, index)
-                  }
-                  onFocus={() => setActiveInputIndex(index)}
-                  keyboardType="numeric"
-                  maxLength={1}
-                  selectTextOnFocus
-                />
-              ))}
-            </View>
-            <View style={styles.timerContainer}>
-              {canResend ? (
-                <TouchableOpacity onPress={handleResendOTP}>
-                  <View style={styles.resendContainer}>
-                    <RedoIcon />
-                    <Text style={styles.resendText}>Resend OTP</Text>
-                  </View>
-                </TouchableOpacity>
-              ) : (
-                <Text style={styles.timerText}>Resend OTP in {timer}</Text>
-              )}
-            </View>
-            <CustomButton
-              text={isLoading ? 'Verifying...' : 'Verify & Continue'}
-              onPress={handleVerifyOTP}
-              disabled={isLoading}
-            />
-          </View>
+          </ScrollView>
         </KeyboardAvoidingView>
       </ImageBackground>
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -226,38 +285,24 @@ const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 20,
+  headerContainer: {
+    marginTop: 44,
   },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+  headerKeyboardVisible: {
+    marginTop: 20,
   },
-  backButtonText: {
-    fontSize: 24,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-  },
-  headerTitle: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    textAlign: 'center',
-  },
-  headerSpacer: {
-    width: 40,
+  scrollContent: {
+    flexGrow: 1,
   },
   content: {
     flex: 1,
     paddingHorizontal: 20,
     justifyContent: 'center',
+    minHeight: 400,
+  },
+  contentKeyboardVisible: {
+    justifyContent: 'flex-start',
+    paddingTop: 20,
   },
   messageContainer: {
     alignItems: 'center',
@@ -280,8 +325,9 @@ const styles = StyleSheet.create({
   },
   otpContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
     marginBottom: 30,
   },
   otpInput: {
@@ -293,6 +339,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: Colors.Black,
+    marginHorizontal: 8,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -328,6 +375,47 @@ const styles = StyleSheet.create({
     lineHeight: getLineHeight(14, 120),
     marginLeft: 8,
   },
+  resendContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  verifyButton: {
+    marginTop: 20,
+  },
+  // Remove unused styles
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    paddingBottom: 20,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backButtonText: {
+    fontSize: 24,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  headerTitle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    textAlign: 'center',
+  },
+  headerSpacer: {
+    width: 40,
+  },
+  messageNumber: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: Colors.Black,
+  },
   keyboardModal: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -335,11 +423,6 @@ const styles = StyleSheet.create({
   keyboardModalOverlay: {
     flex: 1,
     backgroundColor: 'transparent',
-  },
-  messageNumber: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.Black,
   },
   keyboardRow: {
     flexDirection: 'row',
@@ -373,10 +456,6 @@ const styles = StyleSheet.create({
     color: '#666666',
     marginTop: -4,
   },
-  resendContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  }
 });
 
 export default OTPVerificationScreen;

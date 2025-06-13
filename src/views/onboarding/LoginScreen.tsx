@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -15,8 +15,10 @@ import {
   Image,
 } from 'react-native';
 import bharatCarbonImageWhite from '../../images/icons/bharat_carbon_image_white.png';
-import { useNavigation } from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import CustomButton from '../../common/button';
+import {useAppDispatch} from '../../hooks/hooks';
+import {otpGet} from '../../features/user/userThunks';
 // const { width, height } = Dimensions.get('window');
 
 const LoginScreen = () => {
@@ -24,6 +26,7 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -45,37 +48,42 @@ const LoginScreen = () => {
     };
   }, []);
 
-  //   const validateEmail = (value: string) => {
-  //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //     return emailRegex.test(value);
-  //   };
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value);
+  };
 
   const handleSendOTP = async () => {
-    // if (!email.trim()) {
-    //   Alert.alert('Error', 'Please enter your email address');
-    //   return;
-    // }
+    Keyboard.dismiss();
+    if (!email.trim()) {
+      Alert.alert('Error', 'Please enter your email address');
+      return;
+    }
 
-    // if (!validateEmail(email.trim())) {
-    //   Alert.alert('Error', 'Please enter a valid email address');
-    //   return;
-    // }
+    if (!validateEmail(email.trim())) {
+      Alert.alert('Error', 'Please enter a valid email address');
+      return;
+    }
 
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Navigate to OTP verification screen
+      await dispatch(otpGet(email.trim())).unwrap();
       //@ts-ignore
-      navigation.navigate('OTPVerificationScreen', { email: email.trim() });
+      navigation.navigate('OTPVerificationScreen', {email: email.trim()});
     } catch (error) {
+      console.error('Error sending OTP: login ', error);
       Alert.alert('Error', 'Failed to send OTP. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      setEmail('');
+    }, []),
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -132,33 +140,31 @@ const LoginScreen = () => {
 
           <View style={styles.middleSection}>
             <View
-              // style={[
-              //   styles.logoSection,
-              //   isKeyboardVisible && styles.logoSectionCompact,
-              // ]}
-              >
+            // style={[
+            //   styles.logoSection,
+            //   isKeyboardVisible && styles.logoSectionCompact,
+            // ]}
+            >
               <Image source={bharatCarbonImageWhite} style={styles.image} />
-                <View style={styles.formSection}>
-              <Text style={styles.title}>Log In with Email</Text>
+              <View style={styles.formSection}>
+                <Text style={styles.title}>Log In with Email</Text>
 
-              <View >
-                <TextInput
-                  style={styles.emailInput}
-                  placeholder="Enter your email"
-                  placeholderTextColor="#8A8A8A"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
+                <View>
+                  <TextInput
+                    style={styles.emailInput}
+                    placeholder="Enter your email"
+                    placeholderTextColor="#8A8A8A"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
                     // autoCompleteType="email"
-                  textContentType="emailAddress"
-                />
+                    textContentType="emailAddress"
+                  />
+                </View>
               </View>
-               
             </View>
-            </View>
-           
           </View>
           <View style={styles.buttonContainer}>
             <CustomButton
@@ -190,7 +196,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollViewContent: {
-
     justifyContent: 'center',
     paddingHorizontal: 20,
     paddingTop: 60,
@@ -243,7 +248,6 @@ const styles = StyleSheet.create({
   formSection: {
     marginTop: 'auto',
     paddingBottom: 20,
-
   },
   title: {
     fontSize: 32,
@@ -311,7 +315,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
     marginBottom: 20,
-  }
+  },
 });
 
 export default LoginScreen;

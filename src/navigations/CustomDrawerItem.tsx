@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import { ChevronRightIcon } from '../images/icons';
-import { Colors } from '../constants/colors';
+import {ChevronRightIcon} from '../images/icons';
+import {Colors} from '../constants/colors';
 
 type DrawerItemProps = {
   icon: React.ReactNode;
@@ -9,7 +9,11 @@ type DrawerItemProps = {
   onPress: () => void;
 };
 
-const CustomDrawerItem: React.FC<DrawerItemProps> = ({icon, label, onPress}) => {
+const CustomDrawerItem: React.FC<DrawerItemProps> = ({
+  icon,
+  label,
+  onPress,
+}) => {
   return (
     <TouchableOpacity
       style={styles.container}
@@ -28,7 +32,6 @@ const CustomDrawerItem: React.FC<DrawerItemProps> = ({icon, label, onPress}) => 
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     marginHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
@@ -37,6 +40,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 10,
     marginTop: 12,
+    minHeight: 56,
   },
   constentLeftContainer: {
     flexDirection: 'row',
@@ -54,4 +58,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomDrawerItem; // Export the component
+export default CustomDrawerItem;

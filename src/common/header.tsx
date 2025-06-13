@@ -1,9 +1,15 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, ViewStyle} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 import {BackIcon, HomeIcon} from '../images/icons';
-import { getLineHeight } from '../utils/utils';
-import { Colors } from '../constants/colors';
-import { TextStyle } from 'react-native';
+import {getLineHeight} from '../utils/utils';
+import {Colors} from '../constants/colors';
+import {TextStyle} from 'react-native';
 
 type HeaderProps = {
   title?: string;
@@ -13,6 +19,7 @@ type HeaderProps = {
   hasTransparentBackground?: boolean;
   containerStyle?: ViewStyle;
   textStyle?: TextStyle;
+  disableBackButton?: boolean;
 };
 
 export const Header: React.FC<HeaderProps> = ({
@@ -23,12 +30,21 @@ export const Header: React.FC<HeaderProps> = ({
   hasTransparentBackground = false,
   containerStyle,
   textStyle = {color: Colors.Black},
+  disableBackButton,
 }) => {
   return (
-    <View style={[styles.headerContainer, hasTransparentBackground && styles.transparentBackground, containerStyle]}>
-      <TouchableOpacity onPress={onBackClick} style={styles.iconButton}>
-        <BackIcon name="arrow-back" size={24} color="#000" />
-      </TouchableOpacity>
+    <View
+      style={[
+        styles.headerContainer,
+        hasTransparentBackground && styles.transparentBackground,
+        containerStyle,
+      ]}>
+      {disableBackButton ? null : (
+        <TouchableOpacity onPress={onBackClick} style={styles.iconButton}>
+          <BackIcon name="arrow-back" size={24} color="#000" />
+        </TouchableOpacity>
+      )}
+
       <Text style={[styles.title, textStyle as TextStyle]}>{title}</Text>
       <View style={styles.rightContainer}>
         {isHomeScreen ? (

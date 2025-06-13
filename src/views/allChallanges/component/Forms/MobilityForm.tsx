@@ -5,31 +5,29 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import CustomButton from '../../../../common/button';
-import AddIcon from '../../../../images/icons/add_plus.svg'
-import ConsumItemList from './ConsumeItemList'
+import { Colors } from '../../../../constants/colors';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import GalleryaddIcon from '../../../../images/icons/gallery-add.svg';
 import { Camera, CameraDevice, useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
+import { ScrollView } from 'react-native';
+import CalenderIcon from '../../../../images/icons/Calendar_Days.svg'
+import MapIcon from '../../../../images/icons/Map_Pin.svg'
 
-const mockItems = [
-    { name: 'Tofu Stir Fry', points: 18, tag: 'Repeat' },
-    { name: 'Quinoa Salad', points: 20 },
-    { name: 'Paneer Wrap', points: 22, tag: 'High' },
-    { name: 'Other Items', points: 0 },
-];
+
 
 type RootStackParamList = {
-    NutritionForm: undefined;
+    MobilityForm: undefined;
     ConsumItemList: undefined;
 };
 
-const NutritionForm = () => {
+const MobilityForm = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const [date, setDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
     const [mealType, setMealType] = useState('Breakfast');
     const [mealStyle, setMealStyle] = useState('Vegetarian');
-    const [selectedItems, setSelectedItems] = useState(mockItems);
+    const [startLocation, setStartLocation] = useState('');
+    const [endLocation, setEndLocation] = useState('');
     const [description, setDescription] = useState('');
     const [openCamera, setOpenCamera] = useState(false);
     const [photoUri, setPhotoUri] = useState<string | null>(null);
@@ -42,11 +40,7 @@ const NutritionForm = () => {
         setDate(currentDate);
     };
 
-    const handleRemove = (index: number) => {
-        const updated = [...selectedItems];
-        updated.splice(index, 1);
-        setSelectedItems(updated);
-    };
+
 
     const handleOpenCamera = async () => {
         if (!hasPermission) {
@@ -65,57 +59,79 @@ const NutritionForm = () => {
             {item.tag && <Text style={styles.tag}>{item.tag}</Text>}
             <Text style={styles.points}>{item.points} pts</Text>
             <TextInput placeholder="gm" style={styles.inputSmall} />
-            <TouchableOpacity onPress={() => handleRemove(index)}>
+            {/* <TouchableOpacity onPress={() => handleRemove(index)}>
                 <Text style={styles.remove}>×</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     );
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.header}>What did you eat today?</Text>
+        <ScrollView style={styles.container}>
+            <Text style={styles.header}>Track Your Mobility</Text>
 
-            {/* Date Picker */}
             <Text style={styles.label}>Select Date</Text>
             <TouchableOpacity style={styles.inputBox} onPress={() => setShowPicker(true)}>
                 <Text>{date.toLocaleDateString('en-GB')}</Text>
+                <CalenderIcon width={24} height={24} />
             </TouchableOpacity>
             {showPicker && (
                 <DateTimePicker value={date} mode="date" display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={handleDateChange} />
             )}
 
-            {/* Meal Type */}
-            <Text style={styles.label}>Select Meal Type</Text>
+            <Text style={styles.label}>How Did You Travel?</Text>
             <View style={styles.pickerBox}>
                 <Picker selectedValue={mealType} onValueChange={setMealType}>
-                    <Picker.Item label="Breakfast" value="Breakfast" />
-                    <Picker.Item label="Lunch" value="Lunch" />
-                    <Picker.Item label="Dinner" value="Dinner" />
+                    <Picker.Item label="Public Transport" value="Breakfast" />
+                    <Picker.Item label="By Car" value="Lunch" />
+                    <Picker.Item label="Two wheeler" value="Dinner" />
                 </Picker>
             </View>
 
-            {/* Meal Style */}
-            <Text style={styles.label}>Choose Meal Style</Text>
+            <Text style={styles.label}>Trip Type</Text>
             <View style={styles.pickerBox}>
                 <Picker selectedValue={mealStyle} onValueChange={setMealStyle}>
-                    <Picker.Item label="Vegetarian" value="Vegetarian" />
-                    <Picker.Item label="Non-Vegetarian" value="Non-Vegetarian" />
-                    <Picker.Item label="Vegan" value="Vegan" />
+                    <Picker.Item label="One-way" value="Vegetarian" />
+                    <Picker.Item label="Two-way" value="Non-Vegetarian" />
                 </Picker>
             </View>
 
-            {/* Meal Items */}
-            <Text style={styles.label}>Select Items Consumed</Text>
-            <TouchableOpacity style={styles.inputBox} onPress={() => navigation.navigate('ConsumItemList')}>
-                <Text>Add items</Text>
-                <AddIcon width={20} height={20} fill="#007AFF" />
-            </TouchableOpacity>
+            <View style={styles.rowContainer}>
+                <View style={styles.locationBox}>
+                    <Text style={styles.label}>Start Location</Text>
+                   <View style={styles.inputWithLocationIcon}>
+                     <TextInput
+                        placeholder="Add location"
+                        style={styles.inputBox}
+                        value={startLocation}
+                        onChangeText={setStartLocation}
+                    />
+                    <MapIcon width={20} height={20} />
+                   </View>
+                </View>
 
-            <FlatList
-                data={selectedItems}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
+                <View style={styles.locationBox}>
+                    <Text style={styles.label}>End Location</Text>
+                   <View style={styles.inputWithLocationIcon}>
+                     <TextInput
+                        placeholder="Add location"
+                        style={styles.inputBox}
+                        value={endLocation}
+                        onChangeText={setEndLocation}
+                    />
+                    <MapIcon width={20} height={20} />
+                   </View>
+                </View>
+            </View>
+
+            <Text style={styles.label}>Distance Traveled (Km)</Text>
+            <TextInput
+                placeholder="Note (Optional)"
+                value={description}
+                onChangeText={setDescription}
+                style={styles.inputBox}
             />
+
+
 
             {/* Description */}
             <Text style={styles.label}>Add Description</Text>
@@ -134,23 +150,27 @@ const NutritionForm = () => {
 
             </View>
 
-
             <Text style={styles.note}>Earn 10 points by uploading a picture!</Text>
+
+            <View style={styles.instructionsCard}>
+                <Text style={styles.cardHeading}>Want to earn more points?</Text>
+                <Text style={styles.cardPoints}>. Try cycling to short distance</Text>
+                <Text style={styles.cardPoints}>. Opt for public transport for busy route</Text>
+                <Text style={styles.cardPoints}>. Share rides whenever possible</Text>
+            </View>
 
             <CustomButton
                 text={"Submit"}
                 onPress={() => { }}
-                // showIcon={!isSubmitting}
-                // iconName="arrow-forward"
                 backgroundColor="#17a086"
                 style={styles.submitButton}
             />
-            { openCamera && device && <Camera
+            {openCamera && device && <Camera
                 style={StyleSheet.absoluteFill}
                 device={device as CameraDevice}
                 isActive={true}
             />}
-        </View>
+        </ScrollView>
     );
 };
 
@@ -162,16 +182,20 @@ const styles = StyleSheet.create({
         flex: 1
     },
     header: {
-        fontWeight: '600',
         fontSize: 18,
-        marginBottom: 16
+        marginBottom: 16,
+        fontFamily: 'Montserrat-Bold',
+        color: Colors.Black2
     },
-
     label: {
-
+        marginBottom: 4,
+        marginTop: 12,
+        fontFamily: 'Montserrat-Medium',
+        color: Colors.Black3
+    },
+    smallLabel: {
         fontWeight: '500',
         marginBottom: 4,
-        marginTop: 12
     },
     inputBox: {
         flexDirection: 'row',
@@ -196,7 +220,6 @@ const styles = StyleSheet.create({
     itemContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-
         backgroundColor: '#fff',
         padding: 10,
         borderRadius: 8,
@@ -225,7 +248,8 @@ const styles = StyleSheet.create({
     note: {
         fontSize: 12,
         color: '#007AFF',
-        marginTop: 8
+        marginTop: 8,
+        fontFamily: 'Montserrat-SemiBold',
     },
     submitBtn: {
         backgroundColor: '#00B386',
@@ -253,7 +277,41 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         marginBottom: 8,
         borderRadius: 8,
+    },
+    rowContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 10
+    },
+    locationBox: {
+        flex: 1,
+        marginTop: 8
+    },
+    instructionsCard: {
+        backgroundColor: Colors.LightGreenShades100,
+        padding: 16,
+        borderRadius: 8,
+        marginTop: 16,
+    },
+    cardHeading: {
+        fontSize: 16,
+        fontFamily: 'Montserrat-Bold',
+        color: Colors.BlueShades300,
+    },
+    cardPoints: {
+        fontSize: 14,
+        fontFamily: 'Montserrat-Medium',
+        color: Colors.BlueShades300,
+        marginTop: 4,
+    },
+    inputWithLocationIcon:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        paddingHorizontal: 8,
     }
 });
 
-export default NutritionForm;
+export default MobilityForm;

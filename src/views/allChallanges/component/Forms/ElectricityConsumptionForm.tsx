@@ -19,11 +19,11 @@ const mockItems = [
 ];
 
 type RootStackParamList = {
-    NutritionForm: undefined;
+    ElectricityConsumptionForm: undefined;
     ConsumItemList: undefined;
 };
 
-const NutritionForm = () => {
+const ElectricityConsumptionForm = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const [date, setDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
@@ -256,4 +256,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default NutritionForm;
+export default ElectricityConsumptionForm;

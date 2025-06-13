@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import {
-    View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Button, Platform
+    View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Button, Platform,
+    Image,
+    ScrollView
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
@@ -10,7 +12,8 @@ import ConsumItemList from './ConsumeItemList'
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import GalleryaddIcon from '../../../../images/icons/gallery-add.svg';
 import { Camera, CameraDevice, useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
-
+import CalenderIcon from '../../../../images/icons/Calendar_Days.svg'
+import { Colors } from '../../../../constants/colors';
 const mockItems = [
     { name: 'Tofu Stir Fry', points: 18, tag: 'Repeat' },
     { name: 'Quinoa Salad', points: 20 },
@@ -23,7 +26,7 @@ type RootStackParamList = {
     ConsumItemList: undefined;
 };
 
-const NutritionForm = () => {
+const GoodsForm = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const [date, setDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
@@ -72,20 +75,20 @@ const NutritionForm = () => {
     );
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <Text style={styles.header}>What did you eat today?</Text>
 
             {/* Date Picker */}
             <Text style={styles.label}>Select Date</Text>
             <TouchableOpacity style={styles.inputBox} onPress={() => setShowPicker(true)}>
                 <Text>{date.toLocaleDateString('en-GB')}</Text>
+                <CalenderIcon width={20} height={20} />
             </TouchableOpacity>
             {showPicker && (
                 <DateTimePicker value={date} mode="date" display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={handleDateChange} />
             )}
 
-            {/* Meal Type */}
-            <Text style={styles.label}>Select Meal Type</Text>
+            <Text style={styles.label}>Choose goods</Text>
             <View style={styles.pickerBox}>
                 <Picker selectedValue={mealType} onValueChange={setMealType}>
                     <Picker.Item label="Breakfast" value="Breakfast" />
@@ -94,28 +97,24 @@ const NutritionForm = () => {
                 </Picker>
             </View>
 
-            {/* Meal Style */}
-            <Text style={styles.label}>Choose Meal Style</Text>
+            <Text style={styles.label}>Clothe Type</Text>
             <View style={styles.pickerBox}>
                 <Picker selectedValue={mealStyle} onValueChange={setMealStyle}>
-                    <Picker.Item label="Vegetarian" value="Vegetarian" />
+                    <Picker.Item label="Cotton Kurta" value="Vegetarian" />
                     <Picker.Item label="Non-Vegetarian" value="Non-Vegetarian" />
                     <Picker.Item label="Vegan" value="Vegan" />
                 </Picker>
             </View>
 
-            {/* Meal Items */}
-            <Text style={styles.label}>Select Items Consumed</Text>
-            <TouchableOpacity style={styles.inputBox} onPress={() => navigation.navigate('ConsumItemList')}>
-                <Text>Add items</Text>
-                <AddIcon width={20} height={20} fill="#007AFF" />
-            </TouchableOpacity>
-
-            <FlatList
-                data={selectedItems}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
+            <Text style={styles.label}>Amount Spent INR</Text>
+            <TextInput
+                placeholder="1500"
+                value={description}
+                onChangeText={setDescription}
+                style={styles.inputBox}
             />
+
+           
 
             {/* Description */}
             <Text style={styles.label}>Add Description</Text>
@@ -136,7 +135,25 @@ const NutritionForm = () => {
 
 
             <Text style={styles.note}>Earn 10 points by uploading a picture!</Text>
-
+            <View style={styles.instructionsCard}>
+                            <Text style={styles.cardHeading}>Smart Green Move</Text>
+                            <Text style={styles.cardPoints}>Next time, tryrenting rarely used item to save money & emission</Text>
+                        </View>
+            {photoUri && (
+                <View style={{ marginTop: 10 }}>
+                    <Text style={styles.label}>Attached photo</Text>
+                    <View style={{
+                        backgroundColor: '#fff', padding: 10,
+                        borderRadius: 8, marginBottom: 8
+                    }}>
+                        <Image
+                            source={{ uri: 'file://' + photoUri }}
+                            style={{ width: '100%', height: 200, borderRadius: 8 }}
+                            resizeMode="contain"
+                        />
+                    </View>
+                </View>
+            )}
             <CustomButton
                 text={"Submit"}
                 onPress={() => { }}
@@ -145,12 +162,12 @@ const NutritionForm = () => {
                 backgroundColor="#17a086"
                 style={styles.submitButton}
             />
-            { openCamera && device && <Camera
+            {openCamera && device && <Camera
                 style={StyleSheet.absoluteFill}
                 device={device as CameraDevice}
                 isActive={true}
             />}
-        </View>
+        </ScrollView>
     );
 };
 
@@ -162,16 +179,17 @@ const styles = StyleSheet.create({
         flex: 1
     },
     header: {
-        fontWeight: '600',
-        fontSize: 18,
-        marginBottom: 16
+         fontSize: 18,
+        marginBottom: 16,
+        fontFamily: 'Montserrat-Bold',
+        color: Colors.Black2
     },
 
     label: {
-
-        fontWeight: '500',
-        marginBottom: 4,
-        marginTop: 12
+      marginBottom: 4,
+        marginTop: 12,
+        fontFamily: 'Montserrat-Medium',
+        color: Colors.Black3
     },
     inputBox: {
         flexDirection: 'row',
@@ -223,9 +241,10 @@ const styles = StyleSheet.create({
         marginLeft: 8
     },
     note: {
-        fontSize: 12,
+       fontSize: 12,
         color: '#007AFF',
-        marginTop: 8
+        marginTop: 8,
+        fontFamily: 'Montserrat-SemiBold',
     },
     submitBtn: {
         backgroundColor: '#00B386',
@@ -253,7 +272,24 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         marginBottom: 8,
         borderRadius: 8,
-    }
+    },
+     instructionsCard: {
+            backgroundColor: Colors.LightGreenShades100,
+            padding: 16,
+            borderRadius: 8,
+            marginTop: 16,
+        },
+        cardHeading: {
+            fontSize: 16,
+            fontFamily: 'Montserrat-Bold',
+            color: Colors.BlueShades300,
+        },
+        cardPoints: {
+            fontSize: 14,
+            fontFamily: 'Montserrat-Medium',
+            color: Colors.BlueShades300,
+            marginTop: 4,
+        },
 });
 
-export default NutritionForm;
+export default GoodsForm;

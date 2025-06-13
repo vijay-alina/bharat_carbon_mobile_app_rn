@@ -304,7 +304,7 @@ const CreateProfileScreen: React.FC = () => {
             onPress={handleSubmit}
             showIcon={true}
             isRightIcon={true}
-            iconName="arrow-forward"
+            // iconName="arrow-forward"
             backgroundColor="#6B7280"
             style={styles.submitButton}
           />

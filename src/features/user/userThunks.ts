@@ -1,5 +1,10 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {getOtp, getUserById, profileUpdate, verifyOtp} from '../../services/userService';
+import {
+  getOtp,
+  getUserById,
+  profileUpdate,
+  verifyOtp,
+} from '../../services/userService';
 
 export const fetchUser = createAsyncThunk(
   'user/fetchUser',

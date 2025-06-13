@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, StatusBar, StyleSheet, View} from 'react-native';
 import {
-  DrawerContentComponentProps,
+  DrawerContentComponentProps, 
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 import {ProfileHeader} from '../components/profileHeader';

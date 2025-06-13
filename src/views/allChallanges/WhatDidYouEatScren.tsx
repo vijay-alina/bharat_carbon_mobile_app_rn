@@ -10,8 +10,7 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-// import { Ionicons } from '@expo/vector-icons';
-
+import GalleryaddIcon from '../../images/icons/gallery-add.svg'
 const WhatDidYouEatScrenForm = () => {
     const [date, setDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -83,13 +82,15 @@ const WhatDidYouEatScrenForm = () => {
             {/* Description Input */}
             <Text style={styles.label}>Add Description</Text>
             <View style={styles.inputWithIcon}>
+                <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.textInput}
-                    placeholder="Note (Optional)"
+                    placeholder="Note (Optional) jjj"
                     value={description}
                     onChangeText={setDescription}
                 />
-                {/* <Ionicons name="image-outline" size={20} /> */}
+                </View>
+               <GalleryaddIcon width={20} height={20} />
             </View>
 
             {/* Hint Text */}
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     inputWithIcon: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: 'red',
         borderRadius: 8,
         padding: 12,
         marginBottom: 16,
@@ -131,11 +132,16 @@ const styles = StyleSheet.create({
     placeholder: {
         color: '#888',
     },
+     inputContainer:{
+        width: '60%',
+        backgroundColor: 'green'
+    },
     textInput: {
-        flex: 1,
+        // flex: 1,
         marginRight: 8,
         color: '#333',
     },
+   
     note: {
         fontSize: 12,
         color: '#007AFF',

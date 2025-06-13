@@ -32,6 +32,7 @@ export const IntroScreen: React.FC = () => {
     if (currentIndex < introSteps.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
+      console.log('Completed Intro');
       completeIntro();
     }
   };

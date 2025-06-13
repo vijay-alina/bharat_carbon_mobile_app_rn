@@ -1,5 +1,5 @@
 /* eslint-disable no-unreachable */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -10,16 +10,21 @@ import {
   Text,
   StatusBar,
   SafeAreaView,
+  BackHandler,
 } from 'react-native';
 import * as yup from 'yup';
 import CustomInput from '../../common/input';
 import CustomButton from '../../common/button';
 import {Header} from '../../common/header';
-import { CameraIcon } from '../../images/icons';
-import { useNavigation } from '@react-navigation/native';
+import {CameraIcon} from '../../images/icons';
+import {useNavigation} from '@react-navigation/native';
+import {useAppContext} from '../../context/AppContext';
+import {useAppDispatch, useAppSelector} from '../../hooks/hooks';
+import {updateProfile} from '../../features/user/userThunks';
 
 // Yup validation schema
 const validationSchema = yup.object().shape({
+  id: yup.string().required('ID is required'),
   firstName: yup
     .string()
     .required('First name is required')
@@ -30,7 +35,7 @@ const validationSchema = yup.object().shape({
     .required('Last name is required')
     .min(2, 'Last name must be at least 2 characters')
     .trim(),
-  phoneNumber: yup
+  mobileNumber: yup
     .string()
     .required('Phone number is required')
     .matches(/^[+]?[\d\s\-()]{10,}$/, 'Please enter a valid phone number'),
@@ -41,7 +46,7 @@ const validationSchema = yup.object().shape({
     .lowercase()
     .trim(),
   schoolName: yup.string().required('School name is required').trim(),
-  className: yup.string().required('Class name is required').trim(),
+  class: yup.number().required('Class name is required'),
   location: yup.string().required('Location is required').trim(),
 });
 
@@ -53,28 +58,31 @@ interface ValidationErrors {
 
 const CreateProfileScreen: React.FC = () => {
   const navigation = useNavigation();
+  const {completeOnboarding} = useAppContext();
+  const [backPressedOnce, setBackPressedOnce] = useState(false);
+  const student = useAppSelector(state => state.user.user);
+  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<ProfileFormData>({
-    firstName: '',
-    lastName: '',
-    phoneNumber: '',
-    email: '',
-    schoolName: '',
-    className: '',
-    location: '',
+    id: student?._id || '',
+    firstName: student?.firstName || '',
+    lastName: student?.lastName || '',
+    mobileNumber: student?.mobileNumber || '',
+    email: student?.email || '',
+    schoolName: student?.schoolCollegeId || '',
+    class: student?.class || 0,
+    location: student?.location || '',
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  console.log('student', student);
+
   const handleInputChange = (field: keyof ProfileFormData, value: string) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value,
+      [field]: field === 'class' ? parseInt(value) || 0 : value,
     }));
-
-    // Optional: Real-time validation on blur/change
-    // Uncomment below for real-time validation
-    // validateField(field, value);
   };
 
   const validateForm = async (): Promise<boolean> => {
@@ -98,7 +106,7 @@ const CreateProfileScreen: React.FC = () => {
 
   // const validateField = async (field: keyof ProfileFormData, value: string) => {
   //   try {
-  //     await validationSchema.validateAt(field, { [field]: value });
+  //     await validationSchema.validateAt(field, {[field]: value});
   //     // Clear error for this field if validation passes
   //     if (errors[field]) {
   //       setErrors(prev => ({
@@ -117,8 +125,8 @@ const CreateProfileScreen: React.FC = () => {
   // };
 
   const handleSubmit = async () => {
-    //@ts-ignore
-    return navigation.navigate('ClimateManifestoScreen');
+    // Remove this line: return navigation.navigate('ClimateManifestoScreen');
+
     const isValid = await validateForm();
 
     if (!isValid) {
@@ -129,14 +137,14 @@ const CreateProfileScreen: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Transform data according to schema (trim, lowercase, etc.)
       const validatedData = await validationSchema.validate(formData, {
         abortEarly: false,
         stripUnknown: true,
       });
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('Validated form data:', validatedData);
+
+      await dispatch(updateProfile(validatedData)).unwrap();
 
       console.log('Validated form data:', validatedData);
 
@@ -146,17 +154,20 @@ const CreateProfileScreen: React.FC = () => {
           onPress: () => {
             // Reset form
             setFormData({
+              id: '',
               firstName: '',
               lastName: '',
-              phoneNumber: '',
+              mobileNumber: '',
               email: '',
               schoolName: '',
-              className: '',
+              class: 0,
               location: '',
             });
             setErrors({});
+            // Navigate to next screen in onboarding flow OR complete onboarding
             //@ts-ignore
             navigation.navigate('ClimateManifestoScreen');
+            // OR if this is the last step: completeOnboarding();
           },
         },
       ]);
@@ -175,11 +186,28 @@ const CreateProfileScreen: React.FC = () => {
     ]);
   };
 
+  useEffect(() => {
+    const backAction = () => {
+      setBackPressedOnce(true);
+      completeOnboarding();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+    return () => backHandler.remove();
+  }, [backPressedOnce, completeOnboarding]); // Add
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <SafeAreaView>
-        <Header title="Create Profile" containerStyle={styles.containerStyle} />
+        <Header
+          title="Create Profile"
+          containerStyle={styles.containerStyle}
+          disableBackButton={true}
+        />
         <View style={styles.content}>
           <TouchableOpacity
             style={styles.imageContainer}
@@ -222,14 +250,14 @@ const CreateProfileScreen: React.FC = () => {
             </View>
             <CustomInput
               label="Phone Number"
-              value={formData.phoneNumber}
-              onChangeText={value => handleInputChange('phoneNumber', value)}
+              value={formData.mobileNumber}
+              onChangeText={value => handleInputChange('mobileNumber', value)}
               placeholder="78122 45690"
               keyboardType="phone-pad"
               leftElement={<Text style={styles.countryCode}>+91</Text>}
             />
-            {errors.phoneNumber && (
-              <Text style={styles.errorText}>{errors.phoneNumber}</Text>
+            {errors.mobileNumber && (
+              <Text style={styles.errorText}>{errors.mobileNumber}</Text>
             )}
             <CustomInput
               label="Email Address"
@@ -253,12 +281,13 @@ const CreateProfileScreen: React.FC = () => {
             )}
             <CustomInput
               label="Class Name"
-              value={formData.className}
-              onChangeText={value => handleInputChange('className', value)}
-              placeholder="Grade 7"
+              value={formData.class === 0 ? '' : formData.class.toString()}
+              onChangeText={value => handleInputChange('class', value)}
+              placeholder="7"
+              keyboardType="numeric"
             />
-            {errors.className && (
-              <Text style={styles.errorText}>{errors.className}</Text>
+            {errors.class && (
+              <Text style={styles.errorText}>{errors.class}</Text>
             )}
             <CustomInput
               label="Location"
@@ -275,7 +304,7 @@ const CreateProfileScreen: React.FC = () => {
             onPress={handleSubmit}
             showIcon={true}
             isRightIcon={true}
-            iconName="arrow-forward"
+            // iconName="arrow-forward"
             backgroundColor="#6B7280"
             style={styles.submitButton}
           />
@@ -284,7 +313,6 @@ const CreateProfileScreen: React.FC = () => {
     </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

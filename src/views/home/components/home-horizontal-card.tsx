@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
-import { Colors } from '../../../constants/colors';
-import { getLineHeight } from '../../../utils/utils';
-import { EcoPlantImage } from '../../../images/icons';
+import {Colors} from '../../../constants/colors';
+import {getLineHeight} from '../../../utils/utils';
+import {EcoPlantImage} from '../../../images/icons';
 
 const HomeHorizontalCard = () => (
   <View style={styles.card}>

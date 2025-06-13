@@ -12,6 +12,8 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import SplashScreen from 'react-native-splash-screen';
 import {AppProvider} from './src/context/AppContext';
 import {AppNavigator} from './src/navigations/appNavigator';
+import {Provider} from 'react-redux';
+import store from './src/app/store';
 
 function App(): React.JSX.Element {
   useEffect(() => {
@@ -19,15 +21,17 @@ function App(): React.JSX.Element {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
-      <SafeAreaProvider>
-        <AppProvider>
-          <NavigationContainer>
-            <AppNavigator />
-          </NavigationContainer>
-        </AppProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <Provider store={store}>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <SafeAreaProvider>
+          <AppProvider>
+            <NavigationContainer>
+              <AppNavigator />
+            </NavigationContainer>
+          </AppProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </Provider>
   );
 }
 

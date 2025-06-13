@@ -1,27 +1,36 @@
-import React, { createContext, useContext, useState, useEffect, ReactElement } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactElement,
+} from 'react';
 
 export interface IAppContext {
-    hasCompletedIntro: boolean;
-    hasCompletedOnboarding: boolean;
-    isLoading: boolean;
-    completeIntro: () => void;
-    completeOnboarding: () => void;
-    completeNotesViewed: () => void;
-    completeTouchTour: () => void;
-    isNotesViewed: boolean;
-    isTouchTourComplete: boolean;
+  hasCompletedIntro: boolean;
+  hasCompletedOnboarding: boolean;
+  isLoading: boolean;
+  completeIntro: () => void;
+  completeOnboarding: () => void;
+  completeNotesViewed: () => void;
+  completeTouchTour: () => void;
+  isNotesViewed: boolean;
+  isTouchTourComplete: boolean;
+  handleLogout: () => void;
 }
 
 const AppContext = createContext<IAppContext>({
-    hasCompletedIntro: false,
-    hasCompletedOnboarding: false,
-    isLoading: true,
-    completeIntro: () => {},
-    completeOnboarding: () => {},
-    completeNotesViewed: () => {},
-    completeTouchTour: () => {},
-    isNotesViewed: false,
-    isTouchTourComplete: false,
+  hasCompletedIntro: false,
+  hasCompletedOnboarding: false,
+  isLoading: true,
+  completeIntro: () => {},
+  completeOnboarding: () => {},
+  completeNotesViewed: () => {},
+  completeTouchTour: () => {},
+  isNotesViewed: false,
+  isTouchTourComplete: false,
+  handleLogout: () => {},
 });
 
 export const useAppContext = () => {
@@ -32,10 +41,10 @@ export const useAppContext = () => {
   return context;
 };
 
-export const AppProvider:React.FC<{children: ReactElement}> = ({ children }) => {
+export const AppProvider: React.FC<{children: ReactElement}> = ({children}) => {
   const [appState, setAppState] = useState({
-    hasCompletedIntro: true,
-    hasCompletedOnboarding: true,
+    hasCompletedIntro: false,
+    hasCompletedOnboarding: false,
     isLoading: true,
     isNotesViewed: false,
     isTouchTourComplete: false,
@@ -45,21 +54,15 @@ export const AppProvider:React.FC<{children: ReactElement}> = ({ children }) => 
   useEffect(() => {
     const loadAppState = async () => {
       try {
-        // In a real app, you would load from AsyncStorage:
-        // const savedState = await AsyncStorage.getItem('appState');
-        // if (savedState) {
-        //   setAppState({ ...JSON.parse(savedState), isLoading: false });
-        // } else {
-        //   setAppState(prev => ({ ...prev, isLoading: false }));
-        // }
-
-        // For demo purposes, simulate loading
-        setTimeout(() => {
-          setAppState(prev => ({ ...prev, isLoading: false }));
-        }, 1000);
+        const savedState = await AsyncStorage.getItem('appState');
+        if (savedState) {
+          setAppState({...JSON.parse(savedState), isLoading: false});
+        } else {
+          setAppState(prev => ({...prev, isLoading: false}));
+        }
       } catch (error) {
         console.error('Error loading app state:', error);
-        setAppState(prev => ({ ...prev, isLoading: false }));
+        setAppState(prev => ({...prev, isLoading: false}));
       }
     };
 
@@ -67,24 +70,31 @@ export const AppProvider:React.FC<{children: ReactElement}> = ({ children }) => 
   }, []);
 
   const completeIntro = async () => {
-    const newState = { ...appState, hasCompletedIntro: true };
+    const newState = {...appState, hasCompletedIntro: true};
     setAppState(newState);
-    // In real app: await AsyncStorage.setItem('appState', JSON.stringify(newState));
+    await AsyncStorage.setItem('appState', JSON.stringify(newState));
   };
 
   const completeOnboarding = async () => {
-    const newState = { ...appState, hasCompletedOnboarding: true };
+    const newState = {...appState, hasCompletedOnboarding: true};
     setAppState(newState);
-    // In real app: await AsyncStorage.setItem('appState', JSON.stringify(newState));
+    await AsyncStorage.setItem('appState', JSON.stringify(newState));
+  };
+
+  const handleLogout = async () => {
+    const newState = {...appState, hasCompletedOnboarding: false};
+    setAppState(newState);
+    await AsyncStorage.setItem('appState', JSON.stringify(newState));
   };
 
   const completeNotesViewed = async () => {
-    const newState = { ...appState, isNotesViewed: true };
+    const newState = {...appState, isNotesViewed: true};
     setAppState(newState);
+    await AsyncStorage.setItem('appState', JSON.stringify(newState));
   };
 
   const completeTouchTour = async () => {
-    const newState = { ...appState, isTouchTourComplete: true };
+    const newState = {...appState, isTouchTourComplete: true};
     setAppState(newState);
   };
 
@@ -107,11 +117,8 @@ export const AppProvider:React.FC<{children: ReactElement}> = ({ children }) => 
     completeNotesViewed,
     completeTouchTour,
     resetApp,
+    handleLogout,
   };
 
-  return (
-    <AppContext.Provider value={value}>
-      {children}
-    </AppContext.Provider>
-  );
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

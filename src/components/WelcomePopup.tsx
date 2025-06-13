@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, Modal, Text, TouchableOpacity } from 'react-native';
-import { BlurView } from '@react-native-community/blur';
+import {View, StyleSheet, Modal, Text, TouchableOpacity} from 'react-native';
+import {BlurView} from '@react-native-community/blur';
 
 type WelcomePopupProps = {
   visible: boolean;
   onStartTour: () => void;
 };
 
-const WelcomePopup = ({ visible, onStartTour }: WelcomePopupProps) => {
+const WelcomePopup = ({visible, onStartTour}: WelcomePopupProps) => {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <BlurView
@@ -18,9 +18,13 @@ const WelcomePopup = ({ visible, onStartTour }: WelcomePopupProps) => {
       />
       <View style={styles.centeredView}>
         <View style={styles.card}>
-          <Text style={styles.heading}>Welcome to{"\n"}<Text style={{ color: '#0B7557' }}>Bharat Carbon 👋</Text></Text>
+          <Text style={styles.heading}>
+            Welcome to{'\n'}
+            <Text style={{color: '#0B7557'}}>Bharat Carbon 👋</Text>
+          </Text>
           <Text style={styles.subText}>
-            Start your journey toward a sustainable lifestyle. Let's take a quick tour!
+            Start your journey toward a sustainable lifestyle. Let's take a
+            quick tour!
           </Text>
           <TouchableOpacity style={styles.button} onPress={onStartTour}>
             <Text style={styles.buttonText}>Start Tour</Text>

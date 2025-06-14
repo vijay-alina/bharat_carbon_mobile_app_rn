@@ -169,7 +169,11 @@ const LoginScreen = () => {
           <View style={styles.buttonContainer}>
             <CustomButton
               text={isLoading ? 'Sending...' : 'Send OTP'}
-              onPress={handleSendOTP}
+              // onPress={handleSendOTP}
+              onPress={() => {
+                //@ts-ignore
+                navigation.navigate('OTPVerificationScreen', {email: email.trim()});
+              }}
               disabled={isLoading}
             />
           </View>

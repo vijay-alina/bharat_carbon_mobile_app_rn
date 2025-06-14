@@ -301,7 +301,11 @@ const CreateProfileScreen: React.FC = () => {
           </View>
           <CustomButton
             text={isSubmitting ? 'Saving Profile...' : 'Save Profile'}
-            onPress={handleSubmit}
+            // onPress={handleSubmit}
+            onPress={() => {
+              //@ts-ignore
+              navigation.navigate('ClimateManifestoScreen');
+            }}
             showIcon={true}
             isRightIcon={true}
             // iconName="arrow-forward"

@@ -81,28 +81,33 @@ export const ClimateManifesto = {
 
 export const Categories = [
   {
-    id: '1',
+    id: 1,
     label: 'Nutrition',
+    heaaderLabel: 'What did you eat?',
     icon: require('../images/icons/tap_icon.png'),
   },
   {
-    id: '2',
+    id: 2,
     label: 'Housing',
+    heaaderLabel: 'Housing Data',
     icon: require('../images/icons/tap_icon.png'),
   },
   {
-    id: '3',
+    id: 3,
     label: 'Mobility',
+    heaaderLabel: 'Track Your Mobility',
     icon: require('../images/icons/boy_with_bicycle.png'),
   },
   {
-    id: '4',
+    id: 4,
     label: 'Goods',
+    heaaderLabel: 'Your Goods Usage',
     icon: require('../images/icons/tap_icon.png'),
   },
   {
-    id: '5',
-    label: 'Home & Lifestyle',
+    id: 5,
+    label: 'Leisure',
+    heaaderLabel: 'Your Leisure Activities',
     icon: require('../images/icons/tap_icon.png'),
   },
 ];

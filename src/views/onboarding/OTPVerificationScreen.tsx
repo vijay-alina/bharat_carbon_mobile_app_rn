@@ -22,6 +22,7 @@ import {RedoIcon} from '../../images/icons';
 import {useAppDispatch, useAppSelector} from '../../hooks/hooks';
 import {otpGet, otpVerify} from '../../features/user/userThunks';
 import {CommonActions, useFocusEffect} from '@react-navigation/native';
+import {useAppContext} from '../../context/AppContext';
 
 const OTPVerificationScreen = ({
   navigation,
@@ -39,6 +40,7 @@ const OTPVerificationScreen = ({
 
   const inputRefs = useRef<TextInput[]>([]);
   const email = route?.params?.email || 'user@abcschool.edu';
+  const {completeOnboarding} = useAppContext();
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.user);
 
@@ -149,7 +151,8 @@ const OTPVerificationScreen = ({
           otp: otpString,
         }),
       ).unwrap();
-      navigation.navigate('CreateProfileScreen');
+      completeOnboarding();
+      // navigation.navigate('CreateProfileScreen');
     } catch (error) {
       Alert.alert('Error', 'Invalid OTP. Please try again.');
       setOtp(['', '', '', '']);
@@ -240,7 +243,7 @@ const OTPVerificationScreen = ({
                     selectTextOnFocus
                     autoFocus={index === 0}
                   />
-                ))}{' '}
+                ))}
               </View>
 
               <View style={styles.timerContainer}>

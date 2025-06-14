@@ -1,12 +1,20 @@
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import {IntroStackNavigator} from './introStackNavigator';
 import {OnboardingStackNavigator} from './onboardingStackNavigator';
+import {SubscriptionStackNavigator} from './subscriptionStackNavigator';
+import {ProfileStackNavigator} from './profileStackNavigator';
+
 import {useAppContext} from '../context/AppContext';
-import { RootStackNavigator } from './rootStackNavigator';
+import {RootStackNavigator} from './rootStackNavigator';
 
 export const AppNavigator = () => {
-  const {hasCompletedIntro, hasCompletedOnboarding, isLoading} =
-    useAppContext();
+  const {
+    hasCompletedIntro,
+    hasCompletedOnboarding,
+    hasCompletedProfile,
+    hasCompletedSubscription,
+    isLoading,
+  } = useAppContext();
 
   if (isLoading) {
     return (
@@ -23,6 +31,14 @@ export const AppNavigator = () => {
 
   if (!hasCompletedOnboarding) {
     return <OnboardingStackNavigator />;
+  }
+
+  if (!hasCompletedProfile) {
+    return <ProfileStackNavigator />;
+  }
+
+  if (!hasCompletedSubscription) {
+    return <SubscriptionStackNavigator />;
   }
 
   return <RootStackNavigator />;

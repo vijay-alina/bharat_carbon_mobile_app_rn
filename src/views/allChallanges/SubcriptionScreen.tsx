@@ -13,7 +13,6 @@ type Props = {
 };
 
 const SubscriptionScreen = ({navigation}: Props) => {
-  const {completeOnboarding} = useAppContext();
   const handleSubscribe = () => {
     // Navigate or handle subscription logic here
     console.log('Subscribed!');

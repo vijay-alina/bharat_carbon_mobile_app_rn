@@ -6,20 +6,21 @@ import HomeIcon from '../../images/icons/home_icon.svg';
 import {Colors} from '../../constants/colors';
 import {getLineHeight} from '../../utils/utils';
 import {useAppContext} from '../../context/AppContext';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const ProfileCompletedScreen = () => {
   const navigation = useNavigation();
 
-  const {completeOnboarding} = useAppContext();
+  const {completeProfile} = useAppContext();
 
-  const handleClick = () => {
-    completeOnboarding();
-  };
+  // const handleClick = () => {
+  //   completeOnboarding();
+  // };
 
   const handleLetsStartClick = () => {
+    completeProfile();
     //@ts-ignore
-    navigation.navigate('SubscriptionScreen');
+    // navigation.navigate('SubscriptionScreen');
   };
 
   return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, StatusBar, StyleSheet, View} from 'react-native';
 import {
-  DrawerContentComponentProps, 
+  DrawerContentComponentProps,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 import {ProfileHeader} from '../components/profileHeader';
@@ -37,8 +37,18 @@ export const CustomDrawerContent = (
   const logout = () => {
     try {
       console.log('logout');
-      handleLogout();
-      Alert.alert('Logged out successfully');
+      Alert.alert('Logout', 'Are you Sure you want to logout?', [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            handleLogout();
+          },
+        },
+      ]);
     } catch (error) {
       console.error('Logout error:', error);
     }

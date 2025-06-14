@@ -1,29 +1,50 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {Header} from '../../common/header';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import LeisureForm from './component/Forms/LeisureForm';
 import NutritionForm from './component/Forms/NutritionForm';
-import { Header } from '../../common/header';
-import { useNavigation } from '@react-navigation/native';
+import HousingForm from './component/Forms/HousingForm';
 import MobilityForm from './component/Forms/MobilityForm';
 import GoodsForm from './component/Forms/GoodsForm';
-import HousingForm from './component/Forms/HousingForm';
-import HomeAndLifestyleForm from './component/Forms/LeisureForm';
-import LeisureForm from './component/Forms/LeisureForm';
-
 
 const ChallengeFormSelectionScreen = () => {
-    const navigation = useNavigation();
-    return (
-        <>
-        <Header title="What Did You Eat" onBackClick={() => {navigation.goBack()}} />
-            <View style={{ flex: 1, }}>
-                {/* <NutritionForm /> */}
-                {/* <MobilityForm /> */}
-                {/* <GoodsForm/> */}
-                {/* <HousingForm/> */}
-                <LeisureForm/>
-            </View>
-        </>
-    );
+  const route = useRoute();
+  //@ts-ignore
+  const {id, headerLabel} = route.params;
+  const navigation = useNavigation();
+
+  const showFormById = () => {
+    switch (id) {
+      case 1:
+        return <NutritionForm />;
+      case 2:
+        return <HousingForm />;
+      case 3:
+        return <MobilityForm />;
+      case 4:
+        return <GoodsForm />;
+      case 5:
+        return <LeisureForm />;
+    }
+  };
+  return (
+    <>
+      <Header
+        title={headerLabel}
+        onBackClick={() => {
+          navigation.goBack();
+        }}
+      />
+      <View style={styles.container}>{showFormById()}</View>
+    </>
+  );
 };
 
 export default ChallengeFormSelectionScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

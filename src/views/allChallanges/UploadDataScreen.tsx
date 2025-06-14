@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, FlatList} from 'react-native';
 import CategoryCard from './component/CategoryCard';
-import { Categories } from '../../constants/constants';
+import {Categories} from '../../constants/constants';
 import CustomButton from '../../common/button';
-import { Header } from '../../common/header';
-import { useNavigation } from '@react-navigation/native';
+import {Header} from '../../common/header';
+import {useNavigation} from '@react-navigation/native';
+import {TChallenge} from '../../types';
 
 const UploadDataScreen = () => {
   const navigation = useNavigation();
-  const [selectedId, setSelectedId] = useState<string | null>('1');
+  const [selectedChallenge, setSelectedChallenge] = useState<TChallenge>(
+    Categories[0],
+  );
 
-  const renderItem = ({ item }: any) => (
+  const renderItem = ({item}: any) => (
     <CategoryCard
       label={item.label}
       icon={item.icon as any}
-      isSelected={selectedId === item.id}
-      onPress={() => setSelectedId(item.id)}
+      isSelected={selectedChallenge.id === item.id}
+      onPress={() => setSelectedChallenge(item)}
     />
   );
 
   return (
     <>
-      <Header title="Upload Data" onBackClick={() => { navigation.goBack(); }} />
+      <Header
+        title="Upload Data"
+        onBackClick={() => {
+          navigation.goBack();
+        }}
+      />
       <View style={styles.container}>
         <Text style={styles.title}>Upload Your Climate Action Proof</Text>
         <Text style={styles.description}>
@@ -33,8 +41,8 @@ const UploadDataScreen = () => {
         <FlatList
           data={Categories}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
-          contentContainerStyle={{ paddingBottom: 20 }}
+          keyExtractor={item => item.id.toString()}
+          contentContainerStyle={styles.contentContainerStyle}
           showsVerticalScrollIndicator={false}
         />
         <View style={styles.btnContainer}>
@@ -42,7 +50,10 @@ const UploadDataScreen = () => {
             text={'Proceed to input'}
             onPress={() => {
               //@ts-ignore
-              navigation.navigate('ChallengeFormSelectionScreen');
+              navigation.navigate('ChallengeFormSelectionScreen', {
+                id: selectedChallenge.id,
+                headerLabel: selectedChallenge.heaaderLabel,
+              });
             }}
             backgroundColor="#17a086"
             style={styles.submitButton}
@@ -89,6 +100,9 @@ const styles = StyleSheet.create({
   },
   buttonTextStyle: {
     fontWeight: 'bold',
+  },
+  contentContainerStyle: {
+    paddingBottom: 20,
   },
 });
 

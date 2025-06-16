@@ -6,12 +6,16 @@ import CustomButton from '../../common/button';
 import {Header} from '../../common/header';
 import {useNavigation} from '@react-navigation/native';
 import {TChallenge} from '../../types';
+import {useAppSelector} from '../../hooks/hooks';
 
 const UploadDataScreen = () => {
   const navigation = useNavigation();
   const [selectedChallenge, setSelectedChallenge] = useState<TChallenge>(
     Categories[0],
   );
+  const housingData = useAppSelector(state => state.housingData.housingData);
+
+  console.log('housingData', housingData);
 
   const renderItem = ({item}: any) => (
     <CategoryCard

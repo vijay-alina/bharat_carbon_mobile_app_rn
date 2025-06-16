@@ -31,9 +31,12 @@ export const verifyOtp = async (payload: any): Promise<User> => {
   return response.data.data;
 };
 
-export const profileUpdate = async (payload: any): Promise<User> => {
+export const profileUpdate = async (
+  id: string,
+  payload: any,
+): Promise<User> => {
   console.log(payload);
-  const response = await apiClient.put(`/studentInfo/${payload.id}`, payload);
+  const response = await apiClient.put(`/studentInfo/${id}`, payload);
   console.log(response.data);
   return response.data.data;
 };

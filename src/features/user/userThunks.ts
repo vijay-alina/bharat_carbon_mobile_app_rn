@@ -50,7 +50,15 @@ export const updateProfile = createAsyncThunk(
   'user/updateProfile',
   async (payload: any, thunkAPI) => {
     try {
-      return await profileUpdate(payload);
+      const data = {
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        mobileNumber: payload.mobileNumber,
+        email: payload.email,
+        schoolCollegeId: payload.schoolName,
+        location: payload.location,
+      };
+      return await profileUpdate(payload.id, data);
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || 'Fetch failed',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -12,43 +12,44 @@ import UnCheckBoxIcon from '../../../../images/icons/checkbox_uncheck.svg';
 import SearchIcon from '../../../../images/icons/SearchIcon.svg';
 import CrossIcon from '../../../../images/icons/crossIcon.svg';
 import BedgeIcon from '../../../../images/icons/greenBedgeIcon.svg';
+import {useAppSelector} from '../../../../hooks/hooks';
 
 const foodItems = [
-  { name: 'Tofu Stir Fry', points: 15 },
-  { name: 'Quinoa Salad', points: 12 },
-  { name: 'Mixed Veg Curry', points: 10 },
-  { name: 'Oats & Almond Milk', points: 14 },
-  { name: 'Boiled Eggs', points: 10 },
-  { name: 'Paneer Wrap', points: 12 },
-  { name: 'Coconut Milk Smoothie', points: 13 },
-  { name: 'Hummus & Pita', points: 11 },
-  { name: 'Dal Khichdi', points: 15 },
-  { name: 'Fresh Fruit Bowl', points: 10 },
-  { name: 'Chia Pudding', points: 13 },
-  { name: 'Avocado Toast', points: 14 },
-  { name: 'Other', points: 0 },
+  {name: 'Tofu Stir Fry', points: 15},
+  {name: 'Quinoa Salad', points: 12},
+  {name: 'Mixed Veg Curry', points: 10},
+  {name: 'Oats & Almond Milk', points: 14},
+  {name: 'Boiled Eggs', points: 10},
+  {name: 'Paneer Wrap', points: 12},
+  {name: 'Coconut Milk Smoothie', points: 13},
+  {name: 'Hummus & Pita', points: 11},
+  {name: 'Dal Khichdi', points: 15},
+  {name: 'Fresh Fruit Bowl', points: 10},
+  {name: 'Chia Pudding', points: 13},
+  {name: 'Avocado Toast', points: 14},
+  {name: 'Other', points: 0},
 ];
 
 const ConsumItemList = () => {
   const [search, setSearch] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [customItem, setCustomItem] = useState('');
+  const foodItem = useAppSelector(state => state.dropdown.foodItem);
+
+  console.log('foodItem', foodItem);
 
   const handleSelect = (item: string) => {
     setSelectedItems(prev =>
-      prev.includes(item)
-        ? prev.filter(i => i !== item)
-        : [...prev, item]
+      prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item],
     );
     if (item === 'Other') setCustomItem('');
   };
 
-  const renderItem = ({ item }: { item: { name: string; points: number } }) => (
+  const renderItem = ({item}: {item: {name: string; points: number}}) => (
     <View>
       <TouchableOpacity
         style={styles.row}
-        onPress={() => handleSelect(item.name)}
-      >
+        onPress={() => handleSelect(item.name)}>
         <View style={styles.checkbox}>
           {selectedItems.includes(item.name) ? (
             <CheckBoxIcon width={20} height={20} />
@@ -103,7 +104,7 @@ const ConsumItemList = () => {
       {/* Food List */}
       <FlatList
         data={foodItems.filter(i =>
-          i.name.toLowerCase().includes(search.toLowerCase())
+          i.name.toLowerCase().includes(search.toLowerCase()),
         )}
         renderItem={renderItem}
         keyExtractor={item => item.name}

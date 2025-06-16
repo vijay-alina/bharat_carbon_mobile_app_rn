@@ -214,7 +214,7 @@ const CreateProfileScreen: React.FC = () => {
             onPress={handleImagePress}>
             <Image
               source={{
-                uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+                uri: student?.image,
               }}
               style={styles.profileImage}
             />
@@ -266,6 +266,7 @@ const CreateProfileScreen: React.FC = () => {
               placeholder="akshay@bharatcarbon.earth"
               keyboardType="email-address"
               autoCapitalize="none"
+              editable={false}
             />
             {errors.email && (
               <Text style={styles.errorText}>{errors.email}</Text>
@@ -275,6 +276,7 @@ const CreateProfileScreen: React.FC = () => {
               value={formData.schoolName}
               onChangeText={value => handleInputChange('schoolName', value)}
               placeholder="Green Valley High School"
+              editable={false}
             />
             {errors.schoolName && (
               <Text style={styles.errorText}>{errors.schoolName}</Text>
@@ -285,6 +287,7 @@ const CreateProfileScreen: React.FC = () => {
               onChangeText={value => handleInputChange('class', value)}
               placeholder="7"
               keyboardType="numeric"
+              editable={false}
             />
             {errors.class && (
               <Text style={styles.errorText}>{errors.class}</Text>
@@ -301,11 +304,11 @@ const CreateProfileScreen: React.FC = () => {
           </View>
           <CustomButton
             text={isSubmitting ? 'Saving Profile...' : 'Save Profile'}
-            // onPress={handleSubmit}
-            onPress={() => {
-              //@ts-ignore
-              navigation.navigate('ClimateManifestoScreen');
-            }}
+            onPress={handleSubmit}
+            // onPress={() => {
+            //   //@ts-ignore
+            //   navigation.navigate('ClimateManifestoScreen');
+            // }}
             showIcon={true}
             isRightIcon={true}
             // iconName="arrow-forward"

@@ -4,6 +4,7 @@ export interface User {
   lastName: string;
   email: string;
   mobileNumber: string;
+  image: string;
   schoolCollegeId: string;
   section: string;
   year: string;

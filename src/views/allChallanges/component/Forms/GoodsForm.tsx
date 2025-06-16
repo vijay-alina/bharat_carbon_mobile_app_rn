@@ -28,7 +28,7 @@ import CalenderIcon from '../../../../images/icons/Calendar_Days.svg';
 import {Colors} from '../../../../constants/colors';
 import {useAppDispatch, useAppSelector} from '../../../../hooks/hooks';
 import {fetchGoodsType} from '../../../../features/challenge/goods/goodsThunk';
-import { TGoodsType } from '../../../../features/challenge/goods/types';
+import { TGoodsType } from '../../../../features/challenge/types';
 const mockItems = [
   {name: 'Tofu Stir Fry', points: 18, tag: 'Repeat'},
   {name: 'Quinoa Salad', points: 20},
@@ -45,7 +45,7 @@ const GoodsForm = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [mealType, setMealType] = useState('Breakfast');
+  const [goodsType, setGoodsType] = useState('Breakfast');
   const [mealStyle, setMealStyle] = useState('Vegetarian');
   const [selectedItems, setSelectedItems] = useState(mockItems);
   const [description, setDescription] = useState('');
@@ -120,7 +120,7 @@ const GoodsForm = () => {
 
       <Text style={styles.label}>Choose goods</Text>
       <View style={styles.pickerBox}>
-        <Picker selectedValue={mealType} onValueChange={setMealType}>
+        <Picker selectedValue={goodsType} onValueChange={setGoodsType}>
             {goods.map((it:TGoodsType, i:number) => {
                 return <Picker.Item key={i.toString()} label={it.label} value={it.value} />;
             })}

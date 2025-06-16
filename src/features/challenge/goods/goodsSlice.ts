@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {TGoodsState, TGoodsTypeResponse} from './types';
+import {TGoodsState, TGoodsTypeResponse} from '../types';
 import { fetchGoodsType } from './goodsThunk';
 
 const initialState: TGoodsState = {

@@ -7,12 +7,14 @@ import {
   leisureActivityNameType,
   MealStyle,
   MealType,
+  TravelMode,
+  TripType,
   WaterSourceType,
 } from '../features/dropdown/dropdownType';
 import {Water} from '../features/housingData/housingDataType';
 
 export const foodItemList = async (): Promise<FoodItem[]> => {
-  const response = await apiClient.get(`/dropdown/foodItems`);
+  const response = await apiClient.get(`/dropdown/nutritionFoodItem`);
   return response.data;
 };
 
@@ -50,5 +52,15 @@ export const leisureActivityName = async (): Promise<
   leisureActivityNameType[]
 > => {
   const response = await apiClient.get(`/dropdown/leisureActivityName `);
+  return response.data;
+};
+
+export const travelModeList = async (): Promise<TravelMode[]> => {
+  const response = await apiClient.get(`/dropdown/modeOfTransportByTravel `);
+  return response.data;
+};
+
+export const travelType = async (): Promise<TripType[]> => {
+  const response = await apiClient.get(`/dropdown/traveltype `);
   return response.data;
 };

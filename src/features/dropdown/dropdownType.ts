@@ -1,15 +1,9 @@
 export interface FoodItem {
-  date: Date;
-  mealType: number;
-  mealStyle: number;
-  item?: string[];
-  notes: string;
-  studentId: string;
-  schoolCollegeId: string;
-  image?: string[];
-  isDeleted: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  EF_Value_Unit: string;
+  Final_EF_Value: number;
+  Points: number;
+  label: string;
+  value: number;
 }
 
 export interface MealType {
@@ -57,6 +51,20 @@ export interface leisureActivityNameType {
   dataId: string;
 }
 
+export interface TravelMode {
+  dataId: string;
+  iconUrl: string;
+  label: string;
+  state: string;
+  type: string;
+  value: number;
+}
+
+export interface TripType {
+  value: number;
+  label: string;
+}
+
 export interface dropdownState {
   foodItem: FoodItem[] | [];
   mealType: MealType[] | [];
@@ -66,6 +74,8 @@ export interface dropdownState {
   appliance: ApplianceType[] | [];
   gasUsed: GasUsedType[] | [];
   leisureActivity: leisureActivityNameType[] | [];
+  travelMode: TravelMode[] | [];
+  tripType: TripType[] | [];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }

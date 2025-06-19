@@ -13,66 +13,69 @@ import SearchIcon from '../../../../images/icons/SearchIcon.svg';
 import CrossIcon from '../../../../images/icons/crossIcon.svg';
 import BedgeIcon from '../../../../images/icons/greenBedgeIcon.svg';
 import {useAppSelector} from '../../../../hooks/hooks';
+import CustomButton from '../../../../common/button';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {FoodItem} from '../../../../features/dropdown/dropdownType';
+import {RootStackParamList} from '../../../../navigations/rootStackNavigator';
 
-const foodItems = [
-  {name: 'Tofu Stir Fry', points: 15},
-  {name: 'Quinoa Salad', points: 12},
-  {name: 'Mixed Veg Curry', points: 10},
-  {name: 'Oats & Almond Milk', points: 14},
-  {name: 'Boiled Eggs', points: 10},
-  {name: 'Paneer Wrap', points: 12},
-  {name: 'Coconut Milk Smoothie', points: 13},
-  {name: 'Hummus & Pita', points: 11},
-  {name: 'Dal Khichdi', points: 15},
-  {name: 'Fresh Fruit Bowl', points: 10},
-  {name: 'Chia Pudding', points: 13},
-  {name: 'Avocado Toast', points: 14},
-  {name: 'Other', points: 0},
-];
+type ConsumItemListRouteProp = RouteProp<RootStackParamList, 'ConsumItemList'>;
 
 const ConsumItemList = () => {
+  const navigation = useNavigation();
+  const route = useRoute<ConsumItemListRouteProp>();
   const [search, setSearch] = useState('');
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = useState<FoodItem[]>(
+    route.params?.selectedItems || [],
+  );
   const [customItem, setCustomItem] = useState('');
   const foodItem = useAppSelector(state => state.dropdown.foodItem);
 
   console.log('foodItem', foodItem);
 
-  const handleSelect = (item: string) => {
+  const handleSelect = (item: FoodItem) => {
     setSelectedItems(prev =>
-      prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item],
+      prev.some(i => i.value === item.value)
+        ? prev.filter(i => i.value !== item.value)
+        : [...prev, item],
     );
-    if (item === 'Other') setCustomItem('');
+    if (item.label === 'Other') setCustomItem('');
+  };
+  console.log('selectedItems', selectedItems);
+
+  const handleDone = () => {
+    if (route.params?.onSelect) {
+      route.params.onSelect(selectedItems);
+    }
+    navigation.goBack();
   };
 
-  const renderItem = ({item}: {item: {name: string; points: number}}) => (
+  const renderItem = ({item}: {item: any}) => (
     <View>
-      <TouchableOpacity
-        style={styles.row}
-        onPress={() => handleSelect(item.name)}>
+      <TouchableOpacity style={styles.row} onPress={() => handleSelect(item)}>
         <View style={styles.checkbox}>
-          {selectedItems.includes(item.name) ? (
+          {selectedItems.find(i => i.value === item.value) ? (
             <CheckBoxIcon width={20} height={20} />
           ) : (
             <UnCheckBoxIcon width={20} height={20} />
           )}
         </View>
-        <Text style={styles.itemText}>{item.name}</Text>
+        <Text style={styles.itemText}>{item.label}</Text>
         <View style={styles.pointsBadge}>
           <BedgeIcon width={20} height={20} />
-          <Text style={styles.pointsText}>{item.points} pts</Text>
+          <Text style={styles.pointsText}>{item?.Points} pts</Text>
         </View>
       </TouchableOpacity>
 
-      {item.name === 'Other' && selectedItems.includes('Other') && (
-        <TextInput
-          style={styles.otherInput}
-          placeholder="Enter item name"
-          placeholderTextColor="#999"
-          value={customItem}
-          onChangeText={setCustomItem}
-        />
-      )}
+      {item.label === 'Other' &&
+        selectedItems.find(item => item.label === 'Other') && (
+          <TextInput
+            style={styles.otherInput}
+            placeholder="Enter item name"
+            placeholderTextColor="#999"
+            value={customItem}
+            onChangeText={setCustomItem}
+          />
+        )}
     </View>
   );
 
@@ -92,8 +95,8 @@ const ConsumItemList = () => {
       {/* Selected Items */}
       <View style={styles.selectedContainer}>
         {selectedItems.map(item => (
-          <View style={styles.selectedItem} key={item}>
-            <Text style={styles.selectedText}>{item}</Text>
+          <View style={styles.selectedItem} key={item.value}>
+            <Text style={styles.selectedText}>{item.label}</Text>
             <TouchableOpacity onPress={() => handleSelect(item)}>
               <CrossIcon width={16} height={16} />
             </TouchableOpacity>
@@ -103,11 +106,18 @@ const ConsumItemList = () => {
 
       {/* Food List */}
       <FlatList
-        data={foodItems.filter(i =>
-          i.name.toLowerCase().includes(search.toLowerCase()),
+        data={foodItem.filter(i =>
+          i.label.toLowerCase().includes(search.toLowerCase()),
         )}
         renderItem={renderItem}
-        keyExtractor={item => item.name}
+        keyExtractor={item => item.label}
+      />
+
+      <CustomButton
+        text={'Done'}
+        onPress={handleDone}
+        backgroundColor="#17a086"
+        style={styles.submitButton}
       />
     </View>
   );
@@ -205,5 +215,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     backgroundColor: '#fff',
     fontFamily: 'Montserrat-Medium',
+  },
+  submitButton: {
+    marginTop: 20,
+    borderRadius: 30,
+    paddingVertical: 16,
   },
 });

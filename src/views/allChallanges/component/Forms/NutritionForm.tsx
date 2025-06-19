@@ -17,7 +17,11 @@ import {Picker} from '@react-native-picker/picker';
 import CustomButton from '../../../../common/button';
 import AddIcon from '../../../../images/icons/add_plus.svg';
 import ConsumItemList from './ConsumeItemList';
-import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {
+  useNavigation,
+  NavigationProp,
+  useRoute,
+} from '@react-navigation/native';
 import GalleryaddIcon from '../../../../images/icons/gallery-add.svg';
 import * as yup from 'yup';
 import {uploadNutrition} from '../../../../features/nutrition/nutritionThunks';
@@ -28,6 +32,8 @@ import {
   getMealType,
 } from '../../../../features/dropdown/dropdownThunks';
 import {ImagePickerService} from '../../../../services/ImagePickerService';
+import {FoodItem} from '../../../../features/dropdown/dropdownType';
+import {RootStackParamList} from '../../../../navigations/rootStackNavigator';
 
 const mockItems = [
   {name: 'Tofu Stir Fry', points: 18, tag: 'Repeat'},
@@ -35,11 +41,6 @@ const mockItems = [
   {name: 'Paneer Wrap', points: 22, tag: 'High'},
   {name: 'Other Items', points: 0},
 ];
-
-type RootStackParamList = {
-  NutritionForm: undefined;
-  ConsumItemList: undefined;
-};
 
 // Validation schema
 const nutritionValidationSchema = yup.object().shape({
@@ -55,7 +56,7 @@ const NutritionForm = () => {
   const [showPicker, setShowPicker] = useState(false);
   const [mealType, setMealType] = useState<number | undefined>();
   const [mealStyle, setMealStyle] = useState<number | undefined>();
-  const [selectedItems, setSelectedItems] = useState(mockItems);
+  const [selectedItems, setSelectedItems] = useState<FoodItem[]>([]);
   const [description, setDescription] = useState('');
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [photoBase64, setPhotoBase64] = useState<string | null>(null);
@@ -67,7 +68,6 @@ const NutritionForm = () => {
   const mealTypes = useAppSelector(state => state.dropdown.mealType);
   const mealStyles = useAppSelector(state => state.dropdown.mealStyle);
 
-  console.log('foodIetems', foodItems);
   console.log('mealTypes', mealTypes);
   console.log('mealStyles', mealStyles);
 
@@ -240,9 +240,9 @@ const NutritionForm = () => {
 
   const renderItem = ({item, index}: any) => (
     <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{item.name}</Text>
+      <Text style={styles.itemText}>{item.label || item.name}</Text>
       {item.tag && <Text style={styles.tag}>{item.tag}</Text>}
-      <Text style={styles.points}>{item.points} pts</Text>
+      <Text style={styles.points}>{item.Points || 0} pts</Text>
       <TextInput placeholder="gm" style={styles.inputSmall} />
       <TouchableOpacity onPress={() => handleRemove(index)}>
         <Text style={styles.remove}>×</Text>
@@ -360,7 +360,12 @@ const NutritionForm = () => {
           <Text style={styles.label}>Select Items Consumed</Text>
           <TouchableOpacity
             style={[styles.inputBox, errors.selectedItems && styles.inputError]}
-            onPress={() => navigation.navigate('ConsumItemList')}>
+            onPress={() =>
+              navigation.navigate('ConsumItemList', {
+                selectedItems,
+                onSelect: (items: FoodItem[]) => setSelectedItems(items),
+              })
+            }>
             <Text>Add items</Text>
             <AddIcon width={20} height={20} fill="#007AFF" />
           </TouchableOpacity>

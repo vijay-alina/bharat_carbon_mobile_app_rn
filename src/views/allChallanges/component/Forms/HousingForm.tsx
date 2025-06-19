@@ -551,7 +551,7 @@ const HousingForm = () => {
       setWaterSource(waterSourceList[0].value);
       setGasFilled(gasusedList[0].value);
     }
-  }, [fuelTypeList, waterSourceList]);
+  }, [fuelTypeList, waterSourceList, applianceTypeList, gasusedList]);
 
   return (
     <KeyboardAvoidingView

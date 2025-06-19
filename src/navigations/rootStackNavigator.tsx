@@ -5,8 +5,19 @@ import { DrawerNavigator } from './drawerNavigator';
 import UploadDataScreen from '../views/allChallanges/UploadDataScreen';
 import ChallengeFormSelectionScreen from '../views/allChallanges/ChallengeFormSelectionScreen';
 import ConsumItemList from '../views/allChallanges/component/Forms/ConsumeItemList';
+import { FoodItem } from '../features/dropdown/dropdownType';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  DrawerNavigator: undefined;
+  UploadDataScreen: undefined;
+  ChallengeFormSelectionScreen: undefined;
+  ConsumItemList: {
+    selectedItems: FoodItem[];
+    onSelect: (items: FoodItem[]) => void;
+  };
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const RootStackNavigator = () => {
   return (

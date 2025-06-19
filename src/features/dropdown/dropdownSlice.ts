@@ -7,6 +7,8 @@ import {
   getLeisureActivity,
   getMealStyle,
   getMealType,
+  getTravelMode,
+  getTripType,
   getWaterSource,
 } from './dropdownThunks';
 import {dropdownState} from './dropdownType';
@@ -20,6 +22,8 @@ const initialState: dropdownState = {
   appliance: [],
   gasUsed: [],
   leisureActivity: [],
+  travelMode: [],
+  tripType: [],
   status: 'idle',
   error: null,
 };
@@ -35,7 +39,7 @@ const dropdownSlice = createSlice({
         state.error = null;
       })
       .addCase(getFoodItem.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log('uploadNutrition.fulfilled', action.payload);
+        console.log('getFoodItem.fulfilled', action.payload);
         state.status = 'succeeded';
         state.foodItem = action.payload.data;
       })
@@ -144,6 +148,34 @@ const dropdownSlice = createSlice({
         },
       )
       .addCase(getLeisureActivity.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+      })
+
+      .addCase(getTripType.pending, state => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(getTripType.fulfilled, (state, action: PayloadAction<any>) => {
+        console.log('getTripType.fulfilled', action.payload);
+        state.status = 'succeeded';
+        state.tripType = action.payload.data;
+      })
+      .addCase(getTripType.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+      })
+
+      .addCase(getTravelMode.pending, state => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(getTravelMode.fulfilled, (state, action: PayloadAction<any>) => {
+        console.log('getTravelMode.fulfilled', action.payload);
+        state.status = 'succeeded';
+        state.travelMode = action.payload.data;
+      })
+      .addCase(getTravelMode.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
       });

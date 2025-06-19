@@ -7,6 +7,8 @@ import {
   leisureActivityName,
   mealStyleList,
   mealTypeList,
+  travelModeList,
+  travelType,
   waterSourceList,
 } from '../../services/dropdownService';
 
@@ -106,6 +108,32 @@ export const getLeisureActivity = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       return await leisureActivityName();
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Fetch failed',
+      );
+    }
+  },
+);
+
+export const getTravelMode = createAsyncThunk(
+  'dropdown/getTravelMode',
+  async (_, thunkAPI) => {
+    try {
+      return await travelModeList();
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Fetch failed',
+      );
+    }
+  },
+);
+
+export const getTripType = createAsyncThunk(
+  'dropdown/getTripType',
+  async (_, thunkAPI) => {
+    try {
+      return await travelType();
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || 'Fetch failed',

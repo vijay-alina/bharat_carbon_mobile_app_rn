@@ -13,9 +13,6 @@ const UploadDataScreen = () => {
   const [selectedChallenge, setSelectedChallenge] = useState<TChallenge>(
     Categories[0],
   );
-  const housingData = useAppSelector(state => state.housingData.housingData);
-
-  console.log('housingData', housingData);
 
   const renderItem = ({item}: any) => (
     <CategoryCard

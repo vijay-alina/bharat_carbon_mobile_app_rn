@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
@@ -19,8 +20,9 @@ import GalleryaddIcon from '../../../../images/icons/gallery-add.svg';
 import * as yup from 'yup';
 import CalenderIcon from '../../../../images/icons/Calendar_Days.svg';
 import {ImagePickerService} from '../../../../services/ImagePickerService';
-import {useAppDispatch} from '../../../../hooks/hooks';
+import {useAppDispatch, useAppSelector} from '../../../../hooks/hooks';
 import {uploadLesiure} from '../../../../features/leisure/leisureThunks';
+import {getLeisureActivity} from '../../../../features/dropdown/dropdownThunks';
 
 type RootStackParamList = {
   MobilityForm: undefined;
@@ -37,7 +39,7 @@ const LeisureForm = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [leisureActivity, setLeisureActivity] = useState(0);
+  const [leisureActivity, setLeisureActivity] = useState<number | undefined>();
   const [people, setPeople] = useState('');
   const [amount, setAmount] = useState('');
   const [notes, setNotes] = useState('');
@@ -45,7 +47,14 @@ const LeisureForm = () => {
   const [photoBase64, setPhotoBase64] = useState<string | null>(null);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dataLoading, setDataLoading] = useState(false);
   const dispatch = useAppDispatch();
+
+  const leisureActivities = useAppSelector(
+    state => state.dropdown.leisureActivity,
+  );
+
+  console.log('leisureActivities', leisureActivities);
 
   const handleDateChange = (_: any, selected?: Date) => {
     const currentDate = selected || date;
@@ -175,7 +184,7 @@ const LeisureForm = () => {
       // Replace with your actual housing API call
       await dispatch(uploadLesiure(requestBody)).unwrap();
 
-      Alert.alert('Success', 'Housing data submitted successfully!', [
+      Alert.alert('Success', 'Leisure data submitted successfully!', [
         {
           text: 'OK',
           onPress: () => navigation.goBack(),
@@ -183,123 +192,163 @@ const LeisureForm = () => {
       ]);
     } catch (error: any) {
       console.error('Error submitting housing data:', error);
-      Alert.alert('Error', error.message || 'Failed to submit housing data');
+      Alert.alert('Error', error.message || 'Failed to submit leisure data');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const fetchData = async () => {
+    setDataLoading(true);
+    try {
+      await dispatch(getLeisureActivity()).unwrap();
+    } catch (error) {
+      console.error('Error fetching food items:', error);
+    } finally {
+      setDataLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const shouldFetchData = leisureActivities.length === 0;
+
+    if (shouldFetchData) {
+      fetchData();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (leisureActivities.length > 0) {
+      setLeisureActivity(leisureActivities[0].value);
+    }
+  }, [leisureActivities]);
 
   return (
     <KeyboardAvoidingView
       style={styles.keyboardAvoidingView}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.scrollContentContainer}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-        contentInsetAdjustmentBehavior="automatic">
-        <Text style={styles.label}>Select Date</Text>
-        <TouchableOpacity
-          style={styles.inputBox}
-          onPress={() => setShowPicker(true)}>
-          <Text>{date.toLocaleDateString('en-GB')}</Text>
-          <CalenderIcon width={24} height={24} />
-        </TouchableOpacity>
-        {showPicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={handleDateChange}
-          />
-        )}
-        <Text style={styles.label}>Activity Name</Text>
-        <View style={styles.pickerBox}>
-          <Picker
-            selectedValue={leisureActivity}
-            onValueChange={setLeisureActivity}>
-            <Picker.Item label="Fishing" value={0} />
-            <Picker.Item label="Camping" value={1} />
-            <Picker.Item label="Bird Watcing" value={2} />
-            <Picker.Item label="Cycling" value={3} />
-          </Picker>
+      {dataLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
         </View>
-        <Text style={styles.label}>No of people involved</Text>
-        <TextInput
-          placeholder="No of people involved"
-          value={people}
-          onChangeText={setPeople}
-          keyboardType="numeric"
-          style={[styles.inputBox, errors.people && styles.inputError]}
-        />
-        {errors.people && <Text style={styles.errorText}>{errors.people}</Text>}
-        <Text style={styles.label}>Amount spent (INR)</Text>
-        <TextInput
-          placeholder={'Amount spent (INR)'}
-          value={amount}
-          onChangeText={setAmount}
-          keyboardType="numeric"
-          style={[styles.inputBox, errors.amount && styles.inputError]}
-        />
-        {errors.amount && <Text style={styles.errorText}>{errors.amount}</Text>}
-
-        <Text style={styles.label}>Add Description</Text>
-        <View style={styles.inputWithIcon}>
-          <View style={styles.inputWrapperBox}>
-            <TextInput
-              placeholder="Note (Optional)"
-              value={notes}
-              onChangeText={setNotes}
-              style={styles.inputBox}
-            />
-          </View>
+      ) : (
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.scrollContentContainer}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          contentInsetAdjustmentBehavior="automatic">
+          <Text style={styles.label}>Select Date</Text>
           <TouchableOpacity
-            style={styles.buttonBox}
-            onPress={handleImagePicker}>
-            <GalleryaddIcon width={24} height={24} />
+            style={styles.inputBox}
+            onPress={() => setShowPicker(true)}>
+            <Text>{date.toLocaleDateString('en-GB')}</Text>
+            <CalenderIcon width={24} height={24} />
           </TouchableOpacity>
-        </View>
+          {showPicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              onChange={handleDateChange}
+            />
+          )}
+          <Text style={styles.label}>Activity Name</Text>
+          <View style={styles.pickerBox}>
+            <Picker
+              selectedValue={leisureActivity}
+              onValueChange={setLeisureActivity}>
+              {leisureActivities?.map(item => (
+                <Picker.Item
+                  key={item.dataId}
+                  label={item.label}
+                  value={item.value}
+                />
+              ))}
+            </Picker>
+          </View>
+          <Text style={styles.label}>No of people involved</Text>
+          <TextInput
+            placeholder="No of people involved"
+            value={people}
+            onChangeText={setPeople}
+            keyboardType="numeric"
+            style={[styles.inputBox, errors.people && styles.inputError]}
+          />
+          {errors.people && (
+            <Text style={styles.errorText}>{errors.people}</Text>
+          )}
+          <Text style={styles.label}>Amount spent (INR)</Text>
+          <TextInput
+            placeholder={'Amount spent (INR)'}
+            value={amount}
+            onChangeText={setAmount}
+            keyboardType="numeric"
+            style={[styles.inputBox, errors.amount && styles.inputError]}
+          />
+          {errors.amount && (
+            <Text style={styles.errorText}>{errors.amount}</Text>
+          )}
 
-        <Text style={styles.note}>Earn 10 points by uploading a picture!</Text>
-
-        {photoUri && (
-          <View style={styles.photoContainer}>
-            <View style={styles.photoHeader}>
-              <Text style={styles.photoText}>Photo added successfully!</Text>
-              <TouchableOpacity
-                onPress={handleRemovePhoto}
-                style={styles.removePhotoButton}>
-                <Text style={styles.removePhotoText}>Remove</Text>
-              </TouchableOpacity>
+          <Text style={styles.label}>Add Description</Text>
+          <View style={styles.inputWithIcon}>
+            <View style={styles.inputWrapperBox}>
+              <TextInput
+                placeholder="Note (Optional)"
+                value={notes}
+                onChangeText={setNotes}
+                style={styles.inputBox}
+              />
             </View>
-            <Text style={styles.photoSubText}>
-              Base64 size:{' '}
-              {photoBase64 ? Math.round(photoBase64.length / 1024) : 0} KB
-            </Text>
-            <Text style={styles.photoSubText}>
-              File size: {photoUri ? 'Image loaded' : 'No image'}
+            <TouchableOpacity
+              style={styles.buttonBox}
+              onPress={handleImagePicker}>
+              <GalleryaddIcon width={24} height={24} />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.note}>
+            Earn 10 points by uploading a picture!
+          </Text>
+
+          {photoUri && (
+            <View style={styles.photoContainer}>
+              <View style={styles.photoHeader}>
+                <Text style={styles.photoText}>Photo added successfully!</Text>
+                <TouchableOpacity
+                  onPress={handleRemovePhoto}
+                  style={styles.removePhotoButton}>
+                  <Text style={styles.removePhotoText}>Remove</Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.photoSubText}>
+                Base64 size:{' '}
+                {photoBase64 ? Math.round(photoBase64.length / 1024) : 0} KB
+              </Text>
+              <Text style={styles.photoSubText}>
+                File size: {photoUri ? 'Image loaded' : 'No image'}
+              </Text>
+            </View>
+          )}
+
+          <View style={styles.instructionsCard}>
+            <Text style={styles.cardHeading}>Did you know?</Text>
+            <Text style={styles.cardPoints}>
+              Swapping screen time for outdoor time reduces energy use & boosts
+              your health!{' '}
             </Text>
           </View>
-        )}
 
-        <View style={styles.instructionsCard}>
-          <Text style={styles.cardHeading}>Did you know?</Text>
-          <Text style={styles.cardPoints}>
-            Swapping screen time for outdoor time reduces energy use & boosts
-            your health!{' '}
-          </Text>
-        </View>
-
-        <CustomButton
-          text={isSubmitting ? 'Submitting...' : 'Submit'}
-          onPress={handleSubmit}
-          backgroundColor="#17a086"
-          style={styles.submitButton}
-          disabled={isSubmitting}
-        />
-      </ScrollView>
+          <CustomButton
+            text={isSubmitting ? 'Submitting...' : 'Submit'}
+            onPress={handleSubmit}
+            backgroundColor="#17a086"
+            style={styles.submitButton}
+            disabled={isSubmitting}
+          />
+        </ScrollView>
+      )}
     </KeyboardAvoidingView>
   );
 };
@@ -307,6 +356,12 @@ const LeisureForm = () => {
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
+    backgroundColor: '#F4F6FA',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#F4F6FA',
   },
   container: {

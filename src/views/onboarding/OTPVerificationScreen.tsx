@@ -261,10 +261,11 @@ const OTPVerificationScreen = ({
 
               <CustomButton
                 text={isLoading ? 'Verifying...' : 'Verify & Continue'}
-                onPress={handleVerifyOTP}
-                // onPress={() => {
-                //   navigation.navigate('CreateProfileScreen');
-                // }}
+                // onPress={handleVerifyOTP}
+                onPress={() => {
+                  // navigation.navigate('CreateProfileScreen');
+                  completeOnboarding();
+                }}
                 disabled={isLoading}
                 style={styles.verifyButton}
               />

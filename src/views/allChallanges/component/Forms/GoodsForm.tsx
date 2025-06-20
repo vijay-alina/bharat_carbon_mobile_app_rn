@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,13 +10,14 @@ import {
   Platform,
   Image,
   ScrollView,
+  Alert,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import CustomButton from '../../../../common/button';
 import AddIcon from '../../../../images/icons/add_plus.svg';
 import ConsumItemList from './ConsumeItemList';
-import {useNavigation, NavigationProp} from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import GalleryaddIcon from '../../../../images/icons/gallery-add.svg';
 import {
   Camera,
@@ -25,15 +26,19 @@ import {
   useCameraPermission,
 } from 'react-native-vision-camera';
 import CalenderIcon from '../../../../images/icons/Calendar_Days.svg';
-import {Colors} from '../../../../constants/colors';
-import {useAppDispatch, useAppSelector} from '../../../../hooks/hooks';
-import {fetchGoodsType} from '../../../../features/challenge/goods/goodsThunk';
+import { Colors } from '../../../../constants/colors';
+import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
+import { fetchGoodsType, uploadGoods } from '../../../../features/challenge/goods/goodsThunk';
 import { TGoodsType } from '../../../../features/challenge/types';
+import * as yup from 'yup'
+import { getClothes } from '../../../../services/challengeService';
+import { fetchClothes } from '../../../../features/challenge/cloths/clothsThunk';
+import { fetchAppliances } from '../../../../features/challenge/appliance/appliancesThunk';
 const mockItems = [
-  {name: 'Tofu Stir Fry', points: 18, tag: 'Repeat'},
-  {name: 'Quinoa Salad', points: 20},
-  {name: 'Paneer Wrap', points: 22, tag: 'High'},
-  {name: 'Other Items', points: 0},
+  { name: 'Tofu Stir Fry', points: 18, tag: 'Repeat' },
+  { name: 'Quinoa Salad', points: 20 },
+  { name: 'Paneer Wrap', points: 22, tag: 'High' },
+  { name: 'Other Items', points: 0 },
 ];
 
 type RootStackParamList = {
@@ -41,21 +46,36 @@ type RootStackParamList = {
   ConsumItemList: undefined;
 };
 
+const goodsValidationSchema = yup.object().shape({
+  date: yup.date().required('date is required'),
+  goodsType: yup.string().required('Select goods type'),
+  amount: yup.string().required('Enter the amount u have spent'),
+  selectedItems: yup.array().min(1, 'At least one item must be selected'),
+});
+
+
 const GoodsForm = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [goodsType, setGoodsType] = useState('Breakfast');
+  const [amount, setAmount] = useState()
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [goodsType, setGoodsType] = useState<number>(1);
   const [mealStyle, setMealStyle] = useState('Vegetarian');
+  const [applianceType, setApplianceType] = useState('TV')
+  const [clothsType, setClothsType] = useState('kurta')
   const [selectedItems, setSelectedItems] = useState(mockItems);
   const [description, setDescription] = useState('');
   const [openCamera, setOpenCamera] = useState(false);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
-  const {hasPermission, requestPermission} = useCameraPermission();
+  const { hasPermission, requestPermission } = useCameraPermission();
   const device = useCameraDevice('back');
 
   const dispatch = useAppDispatch();
-  const {goods} = useAppSelector(state => state.goods);
+  const { goods } = useAppSelector(state => state.goods);
+  const {cloths} = useAppSelector(state => state.cloths);
+  const {appliances} = useAppSelector(state => state.appliances);
   console.log('goods----', goods);
 
   useEffect(() => {
@@ -85,7 +105,109 @@ const GoodsForm = () => {
     }
   };
 
-  const renderItem = ({item, index}: any) => (
+  // const getAppliancesList
+  const validateForm = async (): Promise<boolean> => {
+    try {
+      await goodsValidationSchema.validate(
+        {
+          date,
+          goodsType,
+          amount,
+          selectedItems,
+        },
+        { abortEarly: false },
+      );
+      setErrors({});
+      return true;
+    } catch (error) {
+      if (error instanceof yup.ValidationError) {
+        const newErrors: { [key: string]: string } = {};
+        error.inner.forEach(err => {
+          if (err.path) {
+            newErrors[err.path] = err.message;
+          }
+        });
+        setErrors(newErrors);
+      }
+      return false;
+    }
+  };
+
+  const handleSubmitt = async () => {
+    try {
+      setIsSubmitting(true)
+      setErrors({})
+
+      const isValid = await validateForm()
+      if (!isValid) {
+        setIsSubmitting(false);
+        return;
+      }
+
+      const requestBody = {
+        goods: [
+          {
+            goodsType,
+            date: date.toISOString(),
+            applianceType,
+            clothsType,
+            notes: description,
+            items: selectedItems,
+            image: []
+
+          }
+        ]
+      }
+
+      console.log("requestBody", requestBody);
+      await dispatch(uploadGoods(requestBody)).unwrap()
+      Alert.alert('success', 'Goods data submitted Successfully!', [
+        {
+          text: 'ok',
+          onPress: () => navigation.goBack()
+        }
+      ]);
+    } catch (error: any) {
+      console.error('error submitting goods data', error)
+      Alert.alert('Error', error.message || 'Failed to submitt goods data')
+
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const getClothList = async () => {
+    try {
+      const responce = await dispatch(fetchClothes()).unwrap();
+      console.log(responce)
+    } catch (error) {
+      console.error('Error fetching cloths', error);
+
+    }
+  }
+
+  const getAppliancesList = async () => {
+    try {
+      const responce = await dispatch(fetchAppliances()).unwrap();
+      console.log(responce)
+    } catch (error) {
+      console.error('Error fatching appliances', error)
+    }
+  }
+
+  const getSelectedGoodsTypeDataList = () => {
+    if(goodsType === 1) {
+      return appliances;
+    }
+    return cloths
+  }
+
+  useEffect(() => {
+    getClothList();
+    getAppliancesList();
+  }, [])
+
+  const renderItem = ({ item, index }: any) => (
     <View style={styles.itemContainer}>
       <Text style={styles.itemText}>{item.name}</Text>
       {item.tag && <Text style={styles.tag}>{item.tag}</Text>}
@@ -120,25 +242,28 @@ const GoodsForm = () => {
 
       <Text style={styles.label}>Choose goods</Text>
       <View style={styles.pickerBox}>
-        <Picker selectedValue={goodsType} onValueChange={setGoodsType}>
-            {goods.map((it:TGoodsType, i:number) => {
-                return <Picker.Item key={i.toString()} label={it.label} value={it.value} />;
-            })}
+        <Picker selectedValue={goodsType} onValueChange={(value) => {
+          console.log('value--', value);
+          setGoodsType(value)
+        }}>
+          {goods.map((it: TGoodsType, i: number) => {
+            return <Picker.Item key={i.toString()} label={it.label} value={it.value} />;
+          })}
         </Picker>
       </View>
 
-      <Text style={styles.label}>Clothe Type</Text>
+      <Text style={styles.label}>{goodsType === 1 ? "Choose Appliance" : "Choose Cloths"}</Text>
       <View style={styles.pickerBox}>
         <Picker selectedValue={mealStyle} onValueChange={setMealStyle}>
-          <Picker.Item label="Cotton Kurta" value="Vegetarian" />
-          <Picker.Item label="Non-Vegetarian" value="Non-Vegetarian" />
-          <Picker.Item label="Vegan" value="Vegan" />
+          {getSelectedGoodsTypeDataList().map((it, i) => {
+            return <Picker.Item label={it.label} value={it.value} />
+          })}
         </Picker>
       </View>
 
       <Text style={styles.label}>Amount Spent INR</Text>
       <TextInput
-        placeholder="1500"
+        placeholder="100"
         value={description}
         onChangeText={setDescription}
         style={styles.inputBox}
@@ -172,7 +297,7 @@ const GoodsForm = () => {
         </Text>
       </View>
       {photoUri && (
-        <View style={{marginTop: 10}}>
+        <View style={{ marginTop: 10 }}>
           <Text style={styles.label}>Attached photo</Text>
           <View
             style={{
@@ -182,8 +307,8 @@ const GoodsForm = () => {
               marginBottom: 8,
             }}>
             <Image
-              source={{uri: 'file://' + photoUri}}
-              style={{width: '100%', height: 200, borderRadius: 8}}
+              source={{ uri: 'file://' + photoUri }}
+              style={{ width: '100%', height: 200, borderRadius: 8 }}
               resizeMode="contain"
             />
           </View>
@@ -192,7 +317,7 @@ const GoodsForm = () => {
       <CustomButton
         text={'Submit'}
         onPress={() => {
-            //
+          //
         }}
         // showIcon={!isSubmitting}
         // iconName="arrow-forward"
@@ -259,7 +384,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 8,
   },
-  itemText: {flex: 1},
+  itemText: { flex: 1 },
   tag: {
     backgroundColor: '#E6F0FF',
     color: '#007AFF',

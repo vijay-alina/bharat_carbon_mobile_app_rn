@@ -1,5 +1,5 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
-import {getGoodsType} from '../../../services/challengeService';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { getGoodsType } from '../../../services/challengeService';
 
 export const fetchGoodsType = createAsyncThunk(
   'goods/fetchGoodsType',
@@ -13,3 +13,16 @@ export const fetchGoodsType = createAsyncThunk(
     }
   },
 );
+
+export const uploadGoods = createAsyncThunk(
+  'goods/uploadGoods',
+  async (Response: any, thuknAPI) => {
+    try {
+      return Response()
+    } catch (error: any) {
+      return thuknAPI.rejectWithValue(
+        error.response?.data?.message || 'upload failed'
+      )
+    }
+  }
+)

@@ -238,12 +238,26 @@ const NutritionForm = () => {
     }
   };
 
+  const handleQuantityChange = (text: string, index: number) => {
+    const updated = [...selectedItems];
+    updated[index] = {
+      ...updated[index],
+      quantity: parseFloat(text),
+    };
+    setSelectedItems(updated);
+  };
+
   const renderItem = ({item, index}: any) => (
     <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{item.label || item.name}</Text>
-      {item.tag && <Text style={styles.tag}>{item.tag}</Text>}
+      <Text style={styles.itemText}>{item.label}</Text>
       <Text style={styles.points}>{item.Points || 0} pts</Text>
-      <TextInput placeholder="gm" style={styles.inputSmall} />
+      <TextInput
+        placeholder="gm"
+        style={styles.inputSmall}
+        value={item.quantity || ''}
+        onChangeText={text => handleQuantityChange(text, index)}
+        keyboardType="numeric"
+      />
       <TouchableOpacity onPress={() => handleRemove(index)}>
         <Text style={styles.remove}>×</Text>
       </TouchableOpacity>

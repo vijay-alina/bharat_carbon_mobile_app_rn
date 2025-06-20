@@ -4,6 +4,7 @@ export interface FoodItem {
   Points: number;
   label: string;
   value: number;
+  quantity?: number;
 }
 
 export interface MealType {

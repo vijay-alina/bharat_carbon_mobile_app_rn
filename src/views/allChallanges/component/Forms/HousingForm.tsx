@@ -82,6 +82,7 @@ const HousingForm = () => {
 
   console.log('fuelTypeList', fuelTypeList);
   console.log('waterSourceList', waterSourceList);
+  console.log('gasusedList', gasusedList);
 
   // Reset form fields and set appropriate date when category changes
   useEffect(() => {
@@ -90,7 +91,6 @@ const HousingForm = () => {
     setQuantity('');
     setDescription('');
     setBrandName('');
-    setGasFilled(undefined);
     setRefrigerantCharge('');
     setSolarUnits('');
     setIsSolarInstalled(false);
@@ -544,14 +544,17 @@ const HousingForm = () => {
     if (
       fuelTypeList.length > 0 &&
       waterSourceList.length > 0 &&
-      applianceTypeList.length > 0 &&
       gasusedList.length > 0
     ) {
       setFuelType(fuelTypeList[0].value);
       setWaterSource(waterSourceList[0].value);
       setGasFilled(gasusedList[0].value);
     }
-  }, [fuelTypeList, waterSourceList, applianceTypeList, gasusedList]);
+  }, [fuelTypeList, waterSourceList, gasusedList]);
+
+  console.log('gasFilled', gasFilled);
+  console.log('fuelType', fuelType);
+  console.log('waterSource', waterSource);
 
   return (
     <KeyboardAvoidingView

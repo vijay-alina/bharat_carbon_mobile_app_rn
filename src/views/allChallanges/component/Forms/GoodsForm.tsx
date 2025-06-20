@@ -5,17 +5,13 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  FlatList,
-  Button,
   Platform,
-  Image,
   ScrollView,
   Alert,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import CustomButton from '../../../../common/button';
-import AddIcon from '../../../../images/icons/add_plus.svg';
 import ConsumItemList from './ConsumeItemList';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import GalleryaddIcon from '../../../../images/icons/gallery-add.svg';
@@ -34,6 +30,8 @@ import * as yup from 'yup'
 import { getClothes } from '../../../../services/challengeService';
 import { fetchClothes } from '../../../../features/challenge/cloths/clothsThunk';
 import { fetchAppliances } from '../../../../features/challenge/appliance/appliancesThunk';
+import { ImagePickerService } from '../../../../services/ImagePickerService';
+
 const mockItems = [
   { name: 'Tofu Stir Fry', points: 18, tag: 'Repeat' },
   { name: 'Quinoa Salad', points: 20 },
@@ -58,24 +56,26 @@ const GoodsForm = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [amount, setAmount] = useState()
+  const [amount, setAmount] = useState<string>('')
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [goodsType, setGoodsType] = useState<number>(1);
-  const [mealStyle, setMealStyle] = useState('Vegetarian');
-  const [applianceType, setApplianceType] = useState('TV')
-  const [clothsType, setClothsType] = useState('kurta')
+  const [applianceType, setApplianceType] = useState<number>(1)
+  const [clothsType, setClothsType] = useState<number>(1)
   const [selectedItems, setSelectedItems] = useState(mockItems);
   const [description, setDescription] = useState('');
   const [openCamera, setOpenCamera] = useState(false);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [photoBase64, setPhotoBase64] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+
   const { hasPermission, requestPermission } = useCameraPermission();
   const device = useCameraDevice('back');
 
   const dispatch = useAppDispatch();
   const { goods } = useAppSelector(state => state.goods);
-  const {cloths} = useAppSelector(state => state.cloths);
-  const {appliances} = useAppSelector(state => state.appliances);
+  const { cloths } = useAppSelector(state => state.cloths);
+  const { appliances } = useAppSelector(state => state.appliances);
   console.log('goods----', goods);
 
   useEffect(() => {
@@ -113,7 +113,7 @@ const GoodsForm = () => {
           date,
           goodsType,
           amount,
-          selectedItems,
+          // selectedItems,
         },
         { abortEarly: false },
       );
@@ -143,18 +143,14 @@ const GoodsForm = () => {
         setIsSubmitting(false);
         return;
       }
-
       const requestBody = {
         goods: [
           {
             goodsType,
             date: date.toISOString(),
             applianceType,
-            clothsType,
             notes: description,
-            items: selectedItems,
             image: []
-
           }
         ]
       }
@@ -196,28 +192,79 @@ const GoodsForm = () => {
   }
 
   const getSelectedGoodsTypeDataList = () => {
-    if(goodsType === 1) {
+    if (goodsType === 1) {
       return appliances;
     }
     return cloths
   }
 
+
+
   useEffect(() => {
     getClothList();
     getAppliancesList();
   }, [])
+  const handleImagePicker = async () => {
+    try {
+      const result = await ImagePickerService.pickImage(
+        {
+          quality: 0.8,
+          maxHeight: 2000,
+          maxWidth: 2000,
+          includeBase64: true,
+          mediaType: 'photo',
+        },
+        {
+          title: 'Add Food Photo',
+          message: 'Choose how you want to add your food photo',
+          cameraText: '📷 Take Photo',
+          galleryText: '🖼️ Choose from Gallery',
+          cancelText: 'Cancel',
+        },
+      );
 
-  const renderItem = ({ item, index }: any) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{item.name}</Text>
-      {item.tag && <Text style={styles.tag}>{item.tag}</Text>}
-      <Text style={styles.points}>{item.points} pts</Text>
-      <TextInput placeholder="gm" style={styles.inputSmall} />
-      <TouchableOpacity onPress={() => handleRemove(index)}>
-        <Text style={styles.remove}>×</Text>
-      </TouchableOpacity>
-    </View>
-  );
+      if (result && result.uri) {
+        setPhotoUri(result.uri);
+        setPhotoBase64(result.base64);
+
+        console.log('Image selected successfully:', {
+          uri: result.uri,
+          fileName: result.fileName,
+          fileSize: result.fileSize
+            ? `${Math.round(result.fileSize / 1024)} KB`
+            : 'Unknown',
+          base64Size: result.base64
+            ? `${Math.round(result.base64.length / 1024)} KB`
+            : '0 KB',
+        });
+
+        Alert.alert(
+          'Success!',
+          'Photo added successfully! You earned 10 points.',
+          [{ text: 'OK' }],
+        );
+      }
+    } catch (error) {
+      console.error('Error selecting image:', error);
+      Alert.alert('Error', 'Failed to select image. Please try again.', [
+        { text: 'OK' },
+      ]);
+    }
+  };
+
+  const handleRemovePhoto = async () => {
+    Alert.alert('remove photo', 'Are you want to remove this photo?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Remove',
+        style: 'destructive',
+        onPress: () => {
+          setPhotoUri(null);
+          setPhotoBase64(null);
+        },
+      },
+    ])
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -231,6 +278,7 @@ const GoodsForm = () => {
         <Text>{date.toLocaleDateString('en-GB')}</Text>
         <CalenderIcon width={20} height={20} />
       </TouchableOpacity>
+      {errors.date && <Text style={styles.errorText}>{errors.date}</Text>}
       {showPicker && (
         <DateTimePicker
           value={date}
@@ -250,25 +298,39 @@ const GoodsForm = () => {
             return <Picker.Item key={i.toString()} label={it.label} value={it.value} />;
           })}
         </Picker>
+        {errors.goodsType && (
+          <Text style={styles.errorText}>{errors.goodsType}</Text>
+        )}
       </View>
 
       <Text style={styles.label}>{goodsType === 1 ? "Choose Appliance" : "Choose Cloths"}</Text>
       <View style={styles.pickerBox}>
-        <Picker selectedValue={mealStyle} onValueChange={setMealStyle}>
+        <Picker selectedValue={goodsType === 1 ? applianceType : clothsType} onValueChange={(value) => {
+          if (goodsType === 1) {
+            setApplianceType(Number(value));
+          } else {
+            setClothsType(Number(value));
+          }
+        }}>
           {getSelectedGoodsTypeDataList().map((it, i) => {
-            return <Picker.Item label={it.label} value={it.value} />
+            return <Picker.Item key={i} label={it.label} value={it.value} />
           })}
         </Picker>
+        {errors.goodsType && (
+          <Text style={styles.errorText}>{errors.goodsType}</Text>
+        )}
       </View>
 
       <Text style={styles.label}>Amount Spent INR</Text>
       <TextInput
         placeholder="100"
-        value={description}
-        onChangeText={setDescription}
+        value={amount}
+        onChangeText={setAmount}
         style={styles.inputBox}
       />
-
+      {errors.amount && (
+        <Text style={styles.errorText}>{errors.amount}</Text>
+      )}
       {/* Description */}
       <Text style={styles.label}>Add Description</Text>
       <View style={styles.inputWithIcon}>
@@ -282,9 +344,7 @@ const GoodsForm = () => {
         </View>
         <TouchableOpacity
           style={styles.buttonBox}
-          onPress={() => {
-            handleOpenCamera();
-          }}>
+          onPress={handleImagePicker}>
           <GalleryaddIcon width={24} height={24} />
         </TouchableOpacity>
       </View>
@@ -296,32 +356,36 @@ const GoodsForm = () => {
           Next time, tryrenting rarely used item to save money & emission
         </Text>
       </View>
+
+      {/* display photo if taken */}
       {photoUri && (
-        <View style={{ marginTop: 10 }}>
-          <Text style={styles.label}>Attached photo</Text>
-          <View
-            style={{
-              backgroundColor: '#fff',
-              padding: 10,
-              borderRadius: 8,
-              marginBottom: 8,
-            }}>
-            <Image
-              source={{ uri: 'file://' + photoUri }}
-              style={{ width: '100%', height: 200, borderRadius: 8 }}
-              resizeMode="contain"
-            />
+        <View style={styles.photoContainer}>
+          <View style={styles.photoHeader}>
+            <Text style={styles.photoText}>Photo added successfully!</Text>
+            <TouchableOpacity
+              onPress={handleRemovePhoto}
+              style={styles.removePhotoButton}>
+              <Text style={styles.removePhotoText}>Remove</Text>
+            </TouchableOpacity>
           </View>
+          <Text style={styles.photoSubText}>
+            Base64 size:{' '}
+            {photoBase64 ? Math.round(photoBase64.length / 1024) : 0} KB
+          </Text>
+          <Text style={styles.photoSubText}>
+            File size: {photoUri ? 'Image loaded' : 'No image'}
+          </Text>
         </View>
       )}
+      {/* Submit error */}
+      {errors.submit && <Text style={styles.errorText}>{errors.submit}</Text>}
       <CustomButton
         text={'Submit'}
-        onPress={() => {
-          //
-        }}
-        // showIcon={!isSubmitting}
-        // iconName="arrow-forward"
-        backgroundColor="#17a086"
+        onPress={handleSubmitt}
+        disabled={isSubmitting || isImageLoading}
+        backgroundColor={
+          isSubmitting || isImageLoading ? '#cccccc' : '#17a086'
+        }
         style={styles.submitButton}
       />
       {openCamera && device && (
@@ -453,6 +517,48 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Medium',
     color: Colors.BlueShades300,
     marginTop: 4,
+  },
+  photoContainer: {
+    backgroundColor: '#E6F7FF',
+    padding: 12,
+    borderRadius: 8,
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: '#B3E5FC',
+  },
+  photoHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  photoText: {
+    color: '#007AFF',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  removePhotoButton: {
+    backgroundColor: '#ff4d4d',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  removePhotoText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  photoSubText: {
+    color: '#666',
+    fontSize: 12,
+    marginTop: 2,
+  },
+  errorText: {
+    color: '#ff4d4d',
+    fontSize: 12,
+    marginTop: -4,
+    marginBottom: 8,
+    marginLeft: 4,
   },
 });
 

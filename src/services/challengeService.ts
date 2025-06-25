@@ -14,5 +14,10 @@ export const getClothes = async (): Promise<TClothesTypeResponse> => {
 export const getAppliances = async () : Promise<TApplianceTypeResponse> => {
   const response = await apiClient.get('dropdown/appliance')
   return response.data;
-  
+}
+
+export const submitGoods = async (payload:any) : Promise<any> => {
+  const response = await apiClient.post('/goods', payload);
+  console.log(response);
+  return response.data;
 }

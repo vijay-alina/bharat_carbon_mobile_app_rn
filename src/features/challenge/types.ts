@@ -13,7 +13,7 @@ export type TGoodsTypeResponse = {
 export type TGoodsState = {
   goods: TGoodsType[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string|null;
+  error: string | null;
 };
 
 
@@ -32,7 +32,7 @@ export type TClothesTypeResponse = {
 export type TClothesState = {
   cloths: TClothesType[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string|null;
+  error: string | null;
 };
 
 export type TApplianceType = {
@@ -47,7 +47,22 @@ export type TApplianceTypeResponse = {
 }
 
 export type TApplianceState = {
-  appliances : TApplianceType[];
+  appliances: TApplianceType[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string|null;
+  error: string | null;
+}
+
+export type TGoodsFormPayload = {
+  goodsType: number,
+  date: Date
+  applianceType: number
+  notes: string
+  image: string[]
+}
+
+export type TGoodsFormState = {
+  goodsType: any
+  status: 'idle' | 'loading' | 'succeded' | 'failed';
+  error: string | null;
+
 }

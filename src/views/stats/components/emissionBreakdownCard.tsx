@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
-import Svg, { Circle, Text as SvgText } from 'react-native-svg';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import Svg, {Circle, Text as SvgText} from 'react-native-svg';
 
 interface EmissionItem {
   category: string;
@@ -36,6 +43,14 @@ const data: EmissionItem[] = [
     percent: 21.8,
     timeRange: 'Jan to Apr 2025',
   },
+  {
+    category: 'Goods',
+    icon: '🚗',
+    color: '#FF9800',
+    amount: 4.3,
+    percent: 21.8,
+    timeRange: 'Jan to Apr 2025',
+  },
 ];
 
 type TabType = 'All' | 'Nutrition' | 'Housing' | 'Mobility';
@@ -44,28 +59,36 @@ const EmissionBreakdownCard = () => {
   const [activeTab, setActiveTab] = useState<TabType>('All');
 
   // Filter data based on active tab
-  const filteredData = activeTab === 'All' 
-    ? data 
-    : data.filter(item => item.category === activeTab);
+  const filteredData =
+    activeTab === 'All'
+      ? data
+      : data.filter(item => item.category === activeTab);
 
   return (
     <View style={styles.container}>
       {/* Tabs */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false} 
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
         style={styles.tabsScroll}
-        contentContainerStyle={styles.tabsContainer}
-      >
-        {(['All', 'Nutrition', 'Housing', 'Mobility'] as TabType[]).map((tab) => (
+        contentContainerStyle={styles.tabsContainer}>
+        {(
+          [
+            'All',
+            'Nutrition',
+            'Housing',
+            'Mobility',
+            'Goods',
+            'Leisure',
+          ] as TabType[]
+        ).map(tab => (
           <TouchableOpacity
             key={tab}
             style={[
               styles.tabButton,
-              activeTab === tab ? styles.activeTabButton : null
+              activeTab === tab ? styles.activeTabButton : null,
             ]}
-            onPress={() => setActiveTab(tab)}
-          >
+            onPress={() => setActiveTab(tab)}>
             {tab === 'Nutrition' && activeTab !== 'Nutrition' && (
               <Text style={styles.tabIcon}></Text>
             )}
@@ -75,12 +98,13 @@ const EmissionBreakdownCard = () => {
             {tab === 'Mobility' && activeTab !== 'Mobility' && (
               <Text style={styles.tabIcon}></Text>
             )}
-            <Text 
+            <Text
               style={[
-                styles.tabText, 
-                activeTab === tab ? styles.activeTabText : styles.inactiveTabText
-              ]}
-            >
+                styles.tabText,
+                activeTab === tab
+                  ? styles.activeTabText
+                  : styles.inactiveTabText,
+              ]}>
               {tab}
             </Text>
           </TouchableOpacity>
@@ -90,8 +114,8 @@ const EmissionBreakdownCard = () => {
       {/* Cards list */}
       <FlatList
         data={filteredData}
-        keyExtractor={(item) => item.category}
-        renderItem={({ item }) => <Card item={item} />}
+        keyExtractor={item => item.category}
+        renderItem={({item}) => <Card item={item} />}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
       />
@@ -99,21 +123,22 @@ const EmissionBreakdownCard = () => {
   );
 };
 
-const Card = ({ item }: { item: EmissionItem }) => {
+const Card = ({item}: {item: EmissionItem}) => {
   // SVG measurements for the circular progress
   const radius = 18;
   const strokeWidth = 4;
   const size = (radius + strokeWidth) * 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference * (1 - item.percent / 100);
-  
+
   return (
     <View style={styles.card}>
       <View style={styles.left}>
-        <View style={[styles.iconContainer, { backgroundColor: `${item.color}15` }]}>
+        <View
+          style={[styles.iconContainer, {backgroundColor: `${item.color}15`}]}>
           <Text style={styles.icon}>{item.icon}</Text>
         </View>
-        
+
         <View style={styles.textContainer}>
           <Text style={styles.category}>{item.category}</Text>
           <View style={styles.amountContainer}>
@@ -123,7 +148,7 @@ const Card = ({ item }: { item: EmissionItem }) => {
           <Text style={styles.date}>{item.timeRange}</Text>
         </View>
       </View>
-      
+
       <View style={styles.chartContainer}>
         <Svg height={size} width={size} viewBox={`0 0 ${size} ${size}`}>
           {/* Background circle */}
@@ -135,7 +160,7 @@ const Card = ({ item }: { item: EmissionItem }) => {
             r={radius}
             strokeWidth={strokeWidth}
           />
-          
+
           {/* Progress circle */}
           <Circle
             stroke={item.color}
@@ -150,7 +175,7 @@ const Card = ({ item }: { item: EmissionItem }) => {
             rotation="-90"
             origin={`${radius + strokeWidth}, ${radius + strokeWidth}`}
           />
-          
+
           {/* Percentage text */}
           <SvgText
             x={radius + strokeWidth}
@@ -158,9 +183,8 @@ const Card = ({ item }: { item: EmissionItem }) => {
             fontSize="10"
             fontWeight="bold"
             fill="#333"
-            textAnchor="middle"
-          >
-            {item.percent}%
+            textAnchor="middle">
+            {item.percent}
           </SvgText>
         </Svg>
       </View>
@@ -171,16 +195,17 @@ const Card = ({ item }: { item: EmissionItem }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
+    marginBottom: 90,
+    // backgroundColor: '#F5F7FA',
   },
   tabsScroll: {
-    maxHeight: 50,
+    // maxHeight: 80,
     flexGrow: 0,
   },
   tabsContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: 70,
+    height: 100,
     paddingHorizontal: 16,
     paddingVertical: 10,
     gap: 4,
@@ -224,7 +249,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     shadowColor: '#000',
     shadowOpacity: 0.06,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowRadius: 8,
     elevation: 2,
   },
@@ -278,7 +303,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-
 
 export default EmissionBreakdownCard;

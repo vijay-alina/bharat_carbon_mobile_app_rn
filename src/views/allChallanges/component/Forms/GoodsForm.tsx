@@ -74,9 +74,8 @@ const GoodsForm = () => {
 
   const dispatch = useAppDispatch();
   const { goods } = useAppSelector(state => state.goods);
-  const { cloths } = useAppSelector(state => state.cloths);
-  const { appliances } = useAppSelector(state => state.appliances);
-  console.log('goods----', goods);
+  const {cloths} = useAppSelector(state => state.cloths);
+  const {appliances} = useAppSelector(state => state.appliances);
 
   useEffect(() => {
     dispatch(fetchGoodsType()).unwrap();
@@ -155,7 +154,6 @@ const GoodsForm = () => {
         ]
       }
 
-      console.log("requestBody", requestBody);
       await dispatch(uploadGoods(requestBody)).unwrap()
       Alert.alert('success', 'Goods data submitted Successfully!', [
         {
@@ -175,7 +173,6 @@ const GoodsForm = () => {
   const getClothList = async () => {
     try {
       const responce = await dispatch(fetchClothes()).unwrap();
-      console.log(responce)
     } catch (error) {
       console.error('Error fetching cloths', error);
 
@@ -185,7 +182,6 @@ const GoodsForm = () => {
   const getAppliancesList = async () => {
     try {
       const responce = await dispatch(fetchAppliances()).unwrap();
-      console.log(responce)
     } catch (error) {
       console.error('Error fatching appliances', error)
     }
@@ -291,7 +287,6 @@ const GoodsForm = () => {
       <Text style={styles.label}>Choose goods</Text>
       <View style={styles.pickerBox}>
         <Picker selectedValue={goodsType} onValueChange={(value) => {
-          console.log('value--', value);
           setGoodsType(value)
         }}>
           {goods.map((it: TGoodsType, i: number) => {

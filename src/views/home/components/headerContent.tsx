@@ -20,7 +20,6 @@ import { Colors } from '../../../constants/colors';
 type Props = {};
 
 const ListHeaderContent = (props: Props) => {
-    console.log(props);
   const navigation = useNavigation();
   const {width} = useWindowDimensions();
 

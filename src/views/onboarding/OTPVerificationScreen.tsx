@@ -44,8 +44,6 @@ const OTPVerificationScreen = ({
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.user);
 
-  console.log('user', user);
-
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -133,7 +131,6 @@ const OTPVerificationScreen = ({
   };
 
   const handleVerifyOTP = async () => {
-    console.log('otp');
     Keyboard.dismiss();
     const otpString = otp.join('');
 
@@ -261,11 +258,11 @@ const OTPVerificationScreen = ({
 
               <CustomButton
                 text={isLoading ? 'Verifying...' : 'Verify & Continue'}
-                // onPress={handleVerifyOTP}
-                onPress={() => {
-                  // navigation.navigate('CreateProfileScreen');
-                  completeOnboarding();
-                }}
+                onPress={handleVerifyOTP}
+                // onPress={() => {
+                //   // navigation.navigate('CreateProfileScreen');
+                //   completeOnboarding();
+                // }}
                 disabled={isLoading}
                 style={styles.verifyButton}
               />

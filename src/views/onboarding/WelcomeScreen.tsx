@@ -14,16 +14,14 @@ import {Colors} from '../../constants/colors';
 import bharatCarbonImageWhite from '../../images/icons/bharat_carbon_image_white.png';
 import {getLineHeight} from '../../utils/utils';
 import CustomButton from '../../common/button';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 
 const WelcomeScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   const handleLogin = () => {
-    console.log('Login button clicked');
-    //@ts-ignore
     navigation.navigate('LoginScreen');
   };
 

@@ -25,7 +25,7 @@ export const otpGet = createAsyncThunk(
     try {
       return await getOtp(email);
     } catch (error: any) {
-      console.log('Error fetching OTP thunk:', error);
+      console.error('Error fetching OTP thunk:', error);
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || 'Fetch failed',
       );

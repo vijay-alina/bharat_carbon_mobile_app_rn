@@ -14,6 +14,7 @@ type VerticalClimateCardProps = {
   buttonText: string;
   gradientColors: string[];
   icon?: React.ReactNode;
+  press: () => void;
 };
 
 const VerticalClimateCard: React.FC<VerticalClimateCardProps> = ({
@@ -23,6 +24,7 @@ const VerticalClimateCard: React.FC<VerticalClimateCardProps> = ({
   buttonText,
   gradientColors,
   icon,
+  press
 }) => {
   return (
     <LinearGradient
@@ -34,7 +36,7 @@ const VerticalClimateCard: React.FC<VerticalClimateCardProps> = ({
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>{subtitle}</Text>
       </View>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={press}>
         {icon}
         <Text style={icon ? styles.buttonText : styles.buttonText2}>{buttonText}</Text>
       </TouchableOpacity>

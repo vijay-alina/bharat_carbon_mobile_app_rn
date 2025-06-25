@@ -14,8 +14,6 @@ type Props = {
 
 const SubscriptionScreen = ({navigation}: Props) => {
   const handleSubscribe = () => {
-    // Navigate or handle subscription logic here
-    console.log('Subscribed!');
     navigation.navigate('PaymentScreen');
   };
 

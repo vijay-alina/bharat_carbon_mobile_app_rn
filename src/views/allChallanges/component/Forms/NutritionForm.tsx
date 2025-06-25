@@ -10,19 +10,30 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 import CustomButton from '../../../../common/button';
 import AddIcon from '../../../../images/icons/add_plus.svg';
 import ConsumItemList from './ConsumeItemList';
-import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {
+  useNavigation,
+  NavigationProp,
+  useRoute,
+} from '@react-navigation/native';
 import GalleryaddIcon from '../../../../images/icons/gallery-add.svg';
 import * as yup from 'yup';
 import {uploadNutrition} from '../../../../features/nutrition/nutritionThunks';
-import {useAppDispatch} from '../../../../hooks/hooks';
-import {getFoodItem} from '../../../../features/dropdown/dropdownThunks';
+import {useAppDispatch, useAppSelector} from '../../../../hooks/hooks';
+import {
+  getFoodItem,
+  getMealStyle,
+  getMealType,
+} from '../../../../features/dropdown/dropdownThunks';
 import {ImagePickerService} from '../../../../services/ImagePickerService';
+import {FoodItem} from '../../../../features/dropdown/dropdownType';
+import {RootStackParamList} from '../../../../navigations/rootStackNavigator';
 
 const mockItems = [
   {name: 'Tofu Stir Fry', points: 18, tag: 'Repeat'},
@@ -30,11 +41,6 @@ const mockItems = [
   {name: 'Paneer Wrap', points: 22, tag: 'High'},
   {name: 'Other Items', points: 0},
 ];
-
-type RootStackParamList = {
-  NutritionForm: undefined;
-  ConsumItemList: undefined;
-};
 
 // Validation schema
 const nutritionValidationSchema = yup.object().shape({
@@ -48,16 +54,19 @@ const NutritionForm = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [mealType, setMealType] = useState(0);
-  const [mealStyle, setMealStyle] = useState(0);
-  const [selectedItems, setSelectedItems] = useState(mockItems);
+  const [mealType, setMealType] = useState<number | undefined>();
+  const [mealStyle, setMealStyle] = useState<number | undefined>();
+  const [selectedItems, setSelectedItems] = useState<FoodItem[]>([]);
   const [description, setDescription] = useState('');
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [photoBase64, setPhotoBase64] = useState<string | null>(null);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isImageLoading, setIsImageLoading] = useState(false);
+  const [dataLoading, setDataLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const foodItems = useAppSelector(state => state.dropdown.foodItem);
+  const mealTypes = useAppSelector(state => state.dropdown.mealType);
+  const mealStyles = useAppSelector(state => state.dropdown.mealStyle);
 
   const handleDateChange = (_: any, selected?: Date) => {
     const currentDate = selected || date;
@@ -101,16 +110,6 @@ const NutritionForm = () => {
         setPhotoUri(result.uri);
         setPhotoBase64(result.base64);
 
-        console.log('Image selected successfully:', {
-          uri: result.uri,
-          fileName: result.fileName,
-          fileSize: result.fileSize
-            ? `${Math.round(result.fileSize / 1024)} KB`
-            : 'Unknown',
-          base64Size: result.base64
-            ? `${Math.round(result.base64.length / 1024)} KB`
-            : '0 KB',
-        });
 
         Alert.alert(
           'Success!',
@@ -195,8 +194,6 @@ const NutritionForm = () => {
         ],
       };
 
-      console.log('Request Body:', requestBody);
-
       await dispatch(uploadNutrition(requestBody)).unwrap();
       Alert.alert('Success', 'Nutrition data submitted successfully!', [
         {
@@ -226,162 +223,219 @@ const NutritionForm = () => {
     }
   };
 
+  const handleQuantityChange = (text: string, index: number) => {
+    const updated = [...selectedItems];
+    updated[index] = {
+      ...updated[index],
+      quantity: parseFloat(text),
+    };
+    setSelectedItems(updated);
+  };
+
   const renderItem = ({item, index}: any) => (
     <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{item.name}</Text>
-      {item.tag && <Text style={styles.tag}>{item.tag}</Text>}
-      <Text style={styles.points}>{item.points} pts</Text>
-      <TextInput placeholder="gm" style={styles.inputSmall} />
+      <Text style={styles.itemText}>{item.label}</Text>
+      <Text style={styles.points}>{item.Points || 0} pts</Text>
+      <TextInput
+        placeholder="gm"
+        style={styles.inputSmall}
+        value={item.quantity || ''}
+        onChangeText={text => handleQuantityChange(text, index)}
+        keyboardType="numeric"
+      />
       <TouchableOpacity onPress={() => handleRemove(index)}>
         <Text style={styles.remove}>×</Text>
       </TouchableOpacity>
     </View>
   );
 
-  const getFoodItemList = async () => {
+  const fetchData = async () => {
+    setDataLoading(true);
     try {
       const response = await dispatch(getFoodItem()).unwrap();
-      console.log(response);
+      await dispatch(getMealType()).unwrap();
+      await dispatch(getMealStyle()).unwrap();
     } catch (error) {
       console.error('Error fetching food items:', error);
+    } finally {
+      setDataLoading(false);
     }
   };
 
   useEffect(() => {
-    getFoodItemList();
+    const shouldFetchData =
+      foodItems.length === 0 ||
+      mealTypes.length === 0 ||
+      mealStyles.length === 0;
+
+    if (shouldFetchData) {
+      fetchData();
+    }
   }, []);
+
+  useEffect(() => {
+    if (mealTypes.length > 0 && mealStyles.length > 0) {
+      setMealType(mealTypes[0].value);
+      setMealStyle(mealStyles[0].value);
+    }
+  }, [mealTypes, mealStyles]);
 
   return (
     <KeyboardAvoidingView
       style={styles.keyboardAvoidingView}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.scrollContentContainer}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}>
-        <Text style={styles.header}>What did you eat today?</Text>
-
-        {/* Date Picker */}
-        <Text style={styles.label}>Select Date</Text>
-        <TouchableOpacity
-          style={[styles.inputBox, errors.date && styles.inputError]}
-          onPress={() => setShowPicker(true)}>
-          <Text>{date.toLocaleDateString('en-GB')}</Text>
-        </TouchableOpacity>
-        {errors.date && <Text style={styles.errorText}>{errors.date}</Text>}
-        {showPicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={handleDateChange}
-          />
-        )}
-
-        {/* Meal Type */}
-        <Text style={styles.label}>Select Meal Type</Text>
-        <View style={[styles.pickerBox, errors.mealType && styles.inputError]}>
-          <Picker selectedValue={mealType} onValueChange={handleMealTypeChange}>
-            <Picker.Item label="Breakfast" value={0} />
-            <Picker.Item label="Lunch" value={1} />
-            <Picker.Item label="Dinner" value={2} />
-          </Picker>
+      {dataLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
         </View>
-        {errors.mealType && (
-          <Text style={styles.errorText}>{errors.mealType}</Text>
-        )}
+      ) : (
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.scrollContentContainer}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}>
+          <Text style={styles.header}>What did you eat today?</Text>
 
-        {/* Meal Style */}
-        <Text style={styles.label}>Choose Meal Style</Text>
-        <View style={[styles.pickerBox, errors.mealStyle && styles.inputError]}>
-          <Picker
-            selectedValue={mealStyle}
-            onValueChange={handleMealStyleChange}>
-            <Picker.Item label="Vegetarian" value={0} />
-            <Picker.Item label="Non-Vegetarian" value={1} />
-            <Picker.Item label="Vegan" value={2} />
-          </Picker>
-        </View>
-        {errors.mealStyle && (
-          <Text style={styles.errorText}>{errors.mealStyle}</Text>
-        )}
-
-        {/* Meal Items */}
-        <Text style={styles.label}>Select Items Consumed</Text>
-        <TouchableOpacity
-          style={[styles.inputBox, errors.selectedItems && styles.inputError]}
-          onPress={() => navigation.navigate('ConsumItemList')}>
-          <Text>Add items</Text>
-          <AddIcon width={20} height={20} fill="#007AFF" />
-        </TouchableOpacity>
-        {errors.selectedItems && (
-          <Text style={styles.errorText}>{errors.selectedItems}</Text>
-        )}
-
-        <FlatList
-          data={selectedItems}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          scrollEnabled={false}
-        />
-
-        {/* Description */}
-        <Text style={styles.label}>Add Description</Text>
-        <View style={styles.inputWithIcon}>
-          <View style={styles.inputWrapperBox}>
-            <TextInput
-              placeholder="Note (Optional)"
-              value={description}
-              onChangeText={setDescription}
-              style={styles.descriptionInput}
-              textAlignVertical="top"
-            />
-          </View>
+          {/* Date Picker */}
+          <Text style={styles.label}>Select Date</Text>
           <TouchableOpacity
-            style={styles.buttonBox}
-            onPress={handleImagePicker}>
-            <GalleryaddIcon width={24} height={24} />
+            style={[styles.inputBox, errors.date && styles.inputError]}
+            onPress={() => setShowPicker(true)}>
+            <Text>{date.toLocaleDateString('en-GB')}</Text>
           </TouchableOpacity>
-        </View>
+          {errors.date && <Text style={styles.errorText}>{errors.date}</Text>}
+          {showPicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              onChange={handleDateChange}
+            />
+          )}
 
-        <Text style={styles.note}>Earn 10 points by uploading a picture!</Text>
-
-        {/* Display photo if taken */}
-        {photoUri && (
-          <View style={styles.photoContainer}>
-            <View style={styles.photoHeader}>
-              <Text style={styles.photoText}>Photo added successfully!</Text>
-              <TouchableOpacity
-                onPress={handleRemovePhoto}
-                style={styles.removePhotoButton}>
-                <Text style={styles.removePhotoText}>Remove</Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.photoSubText}>
-              Base64 size:{' '}
-              {photoBase64 ? Math.round(photoBase64.length / 1024) : 0} KB
-            </Text>
-            <Text style={styles.photoSubText}>
-              File size: {photoUri ? 'Image loaded' : 'No image'}
-            </Text>
+          {/* Meal Type */}
+          <Text style={styles.label}>Select Meal Type</Text>
+          <View
+            style={[styles.pickerBox, errors.mealType && styles.inputError]}>
+            <Picker
+              selectedValue={mealType}
+              onValueChange={handleMealTypeChange}>
+              {mealTypes.map(item => (
+                <Picker.Item
+                  key={item.dataId}
+                  label={item.label}
+                  value={item.value}
+                />
+              ))}
+            </Picker>
           </View>
-        )}
+          {errors.mealType && (
+            <Text style={styles.errorText}>{errors.mealType}</Text>
+          )}
 
-        {/* Submit error */}
-        {errors.submit && <Text style={styles.errorText}>{errors.submit}</Text>}
+          {/* Meal Style */}
+          <Text style={styles.label}>Choose Meal Style</Text>
+          <View
+            style={[styles.pickerBox, errors.mealStyle && styles.inputError]}>
+            <Picker
+              selectedValue={mealStyle}
+              onValueChange={handleMealStyleChange}>
+              {mealStyles.map(item => (
+                <Picker.Item
+                  key={item.dataId}
+                  label={item.label}
+                  value={item.value}
+                />
+              ))}
+            </Picker>
+          </View>
+          {errors.mealStyle && (
+            <Text style={styles.errorText}>{errors.mealStyle}</Text>
+          )}
 
-        <CustomButton
-          text={isSubmitting ? 'Submitting...' : 'Submit'}
-          onPress={handleSubmit}
-          disabled={isSubmitting || isImageLoading}
-          backgroundColor={
-            isSubmitting || isImageLoading ? '#cccccc' : '#17a086'
-          }
-          style={styles.submitButton}
-        />
-      </ScrollView>
+          {/* Meal Items */}
+          <Text style={styles.label}>Select Items Consumed</Text>
+          <TouchableOpacity
+            style={[styles.inputBox, errors.selectedItems && styles.inputError]}
+            onPress={() =>
+              navigation.navigate('ConsumItemList', {
+                selectedItems,
+                onSelect: (items: FoodItem[]) => setSelectedItems(items),
+              })
+            }>
+            <Text>Add items</Text>
+            <AddIcon width={20} height={20} fill="#007AFF" />
+          </TouchableOpacity>
+          {errors.selectedItems && (
+            <Text style={styles.errorText}>{errors.selectedItems}</Text>
+          )}
+
+          <FlatList
+            data={selectedItems}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            scrollEnabled={false}
+          />
+
+          {/* Description */}
+          <Text style={styles.label}>Add Description</Text>
+          <View style={styles.inputWithIcon}>
+            <View style={styles.inputWrapperBox}>
+              <TextInput
+                placeholder="Note (Optional)"
+                value={description}
+                onChangeText={setDescription}
+                style={styles.descriptionInput}
+                textAlignVertical="top"
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.buttonBox}
+              onPress={handleImagePicker}>
+              <GalleryaddIcon width={24} height={24} />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.note}>
+            Earn 10 points by uploading a picture!
+          </Text>
+
+          {/* Display photo if taken */}
+          {photoUri && (
+            <View style={styles.photoContainer}>
+              <View style={styles.photoHeader}>
+                <Text style={styles.photoText}>Photo added successfully!</Text>
+                <TouchableOpacity
+                  onPress={handleRemovePhoto}
+                  style={styles.removePhotoButton}>
+                  <Text style={styles.removePhotoText}>Remove</Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.photoSubText}>
+                Base64 size:{' '}
+                {photoBase64 ? Math.round(photoBase64.length / 1024) : 0} KB
+              </Text>
+              <Text style={styles.photoSubText}>
+                File size: {photoUri ? 'Image loaded' : 'No image'}
+              </Text>
+            </View>
+          )}
+
+          {/* Submit error */}
+          {errors.submit && (
+            <Text style={styles.errorText}>{errors.submit}</Text>
+          )}
+
+          <CustomButton
+            text={isSubmitting ? 'Submitting...' : 'Submit'}
+            onPress={handleSubmit}
+            disabled={isSubmitting}
+            backgroundColor={isSubmitting ? '#cccccc' : '#17a086'}
+            style={styles.submitButton}
+          />
+        </ScrollView>
+      )}
     </KeyboardAvoidingView>
   );
 };
@@ -389,6 +443,12 @@ const NutritionForm = () => {
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
+    backgroundColor: '#F4F6FA',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#F4F6FA',
   },
   container: {

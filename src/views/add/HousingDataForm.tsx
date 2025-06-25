@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -13,9 +13,17 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import {Picker} from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { launchCamera, launchImageLibrary, MediaType, ImagePickerResponse, Asset, CameraOptions, ImageLibraryOptions } from 'react-native-image-picker';
+import {
+  launchCamera,
+  launchImageLibrary,
+  MediaType,
+  ImagePickerResponse,
+  Asset,
+  CameraOptions,
+  ImageLibraryOptions,
+} from 'react-native-image-picker';
 import CustomButton from '../../common/button'; // Adjust import path as needed
 
 const HousingDataScreen = () => {
@@ -30,12 +38,22 @@ const HousingDataScreen = () => {
   const [attachedPhoto, setAttachedPhoto] = useState<Asset | null>(null);
 
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
+  const years = Array.from({length: 10}, (_, i) => currentYear - i);
 
   const handleSubmit = () => {
     const formData = {
@@ -48,7 +66,6 @@ const HousingDataScreen = () => {
       solarUnitsConsumed,
       attachedPhoto,
     };
-    console.log('Form Data:', formData);
     // Handle form submission here
   };
 
@@ -79,7 +96,7 @@ const HousingDataScreen = () => {
   };
 
   const handleBackPress = () => {
-    console.log('Back pressed');
+    console.warn('Back pressed');
     // Handle navigation back
   };
 
@@ -88,11 +105,11 @@ const HousingDataScreen = () => {
       'Select Option',
       'Choose an option to add photo',
       [
-        { text: 'Camera', onPress: () => launchCameraOption() },
-        { text: 'Gallery', onPress: () => launchGalleryOption() },
-        { text: 'Cancel', style: 'cancel' }
+        {text: 'Camera', onPress: () => launchCameraOption()},
+        {text: 'Gallery', onPress: () => launchGalleryOption()},
+        {text: 'Cancel', style: 'cancel'},
       ],
-      { cancelable: true }
+      {cancelable: true},
     );
   };
 
@@ -133,7 +150,7 @@ const HousingDataScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       {/* <StatusBar barStyle="dark-content" backgroundColor="#fff" /> */}
-      
+
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
@@ -150,9 +167,8 @@ const HousingDataScreen = () => {
           <View style={styles.pickerContainer}>
             <Picker
               selectedValue={selectedCategory}
-              onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-              style={styles.picker}
-            >
+              onValueChange={itemValue => setSelectedCategory(itemValue)}
+              style={styles.picker}>
               <Picker.Item label="Electricity" value="Electricity" />
               <Picker.Item label="Water" value="Water" />
               <Picker.Item label="Gas" value="Gas" />
@@ -163,12 +179,15 @@ const HousingDataScreen = () => {
         {/* Select Month */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Select Month</Text>
-          <TouchableOpacity 
-            style={styles.datePickerButton} 
+          <TouchableOpacity
+            style={styles.datePickerButton}
             onPress={openDatePicker}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.dateText, !getDisplayDate() && styles.placeholderText]}>
+            activeOpacity={0.7}>
+            <Text
+              style={[
+                styles.dateText,
+                !getDisplayDate() && styles.placeholderText,
+              ]}>
               {getDisplayDate() || 'Enter month'}
             </Text>
             <Icon name="calendar-outline" size={20} color="#999" />
@@ -203,20 +222,25 @@ const HousingDataScreen = () => {
                 textAlignVertical="top"
               />
             </View>
-            <TouchableOpacity style={styles.emojiButton} activeOpacity={0.7} onPress={openCamera}>
+            <TouchableOpacity
+              style={styles.emojiButton}
+              activeOpacity={0.7}
+              onPress={openCamera}>
               <Icon name="camera-outline" size={22} color="#666" />
             </TouchableOpacity>
           </View>
-          <Text style={styles.pointsText}>Earn 10 points by uploading a picture!</Text>
+          <Text style={styles.pointsText}>
+            Earn 10 points by uploading a picture!
+          </Text>
         </View>
 
         {/* Solar Panel Checkbox */}
-        <TouchableOpacity 
-          style={styles.checkboxContainer} 
+        <TouchableOpacity
+          style={styles.checkboxContainer}
           onPress={toggleSolarPanel}
-          activeOpacity={0.7}
-        >
-          <View style={[styles.checkbox, hasSolarPanel && styles.checkboxChecked]}>
+          activeOpacity={0.7}>
+          <View
+            style={[styles.checkbox, hasSolarPanel && styles.checkboxChecked]}>
             {hasSolarPanel && <Icon name="checkmark" size={16} color="#fff" />}
           </View>
           <Text style={styles.checkboxLabel}>Installed Solar Panel?</Text>
@@ -242,8 +266,13 @@ const HousingDataScreen = () => {
           <View style={styles.photoSection}>
             <Text style={styles.label}>Attached photo</Text>
             <View style={styles.photoContainer}>
-              <Image source={{ uri: attachedPhoto.uri }} style={styles.attachedImage} />
-              <TouchableOpacity style={styles.removePhotoButton} onPress={removePhoto}>
+              <Image
+                source={{uri: attachedPhoto.uri}}
+                style={styles.attachedImage}
+              />
+              <TouchableOpacity
+                style={styles.removePhotoButton}
+                onPress={removePhoto}>
                 <Icon name="close-circle" size={24} color="#999" />
               </TouchableOpacity>
             </View>
@@ -266,8 +295,7 @@ const HousingDataScreen = () => {
         visible={showDatePicker}
         transparent={true}
         animationType="slide"
-        onRequestClose={closeDatePicker}
-      >
+        onRequestClose={closeDatePicker}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
@@ -276,16 +304,15 @@ const HousingDataScreen = () => {
                 <Icon name="close" size={24} color="#333" />
               </TouchableOpacity>
             </View>
-            
+
             <View style={styles.pickerRow}>
               <View style={styles.pickerColumn}>
                 <Text style={styles.pickerLabel}>Month</Text>
                 <View style={styles.pickerContainer}>
                   <Picker
                     selectedValue={selectedMonth}
-                    onValueChange={(itemValue) => setSelectedMonth(itemValue)}
-                    style={styles.picker}
-                  >
+                    onValueChange={itemValue => setSelectedMonth(itemValue)}
+                    style={styles.picker}>
                     <Picker.Item label="Select Month" value="" />
                     {months.map((month, index) => (
                       <Picker.Item key={index} label={month} value={month} />
@@ -299,12 +326,15 @@ const HousingDataScreen = () => {
                 <View style={styles.pickerContainer}>
                   <Picker
                     selectedValue={selectedYear}
-                    onValueChange={(itemValue) => setSelectedYear(itemValue)}
-                    style={styles.picker}
-                  >
+                    onValueChange={itemValue => setSelectedYear(itemValue)}
+                    style={styles.picker}>
                     <Picker.Item label="Select Year" value="" />
                     {years.map((year, index) => (
-                      <Picker.Item key={index} label={year.toString()} value={year.toString()} />
+                      <Picker.Item
+                        key={index}
+                        label={year.toString()}
+                        value={year.toString()}
+                      />
                     ))}
                   </Picker>
                 </View>
@@ -312,25 +342,25 @@ const HousingDataScreen = () => {
             </View>
 
             <View style={styles.modalButtons}>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.cancelButton]} 
-                onPress={closeDatePicker}
-              >
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={closeDatePicker}>
                 <Text style={styles.cancelButtonText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[
-                  styles.modalButton, 
+                  styles.modalButton,
                   styles.confirmButton,
-                  (!selectedMonth || !selectedYear) && styles.disabledButton
-                ]} 
+                  (!selectedMonth || !selectedYear) && styles.disabledButton,
+                ]}
                 onPress={confirmDateSelection}
-                disabled={!selectedMonth || !selectedYear}
-              >
-                <Text style={[
-                  styles.confirmButtonText,
-                  (!selectedMonth || !selectedYear) && styles.disabledButtonText
-                ]}>
+                disabled={!selectedMonth || !selectedYear}>
+                <Text
+                  style={[
+                    styles.confirmButtonText,
+                    (!selectedMonth || !selectedYear) &&
+                      styles.disabledButtonText,
+                  ]}>
                   Confirm
                 </Text>
               </TouchableOpacity>

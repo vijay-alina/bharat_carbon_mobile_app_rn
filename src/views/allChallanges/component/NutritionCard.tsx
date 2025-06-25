@@ -1,38 +1,73 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-//   TouchableOpacity,
+  //   TouchableOpacity,
   Image,
   StyleProp,
   ViewStyle,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../../constants/colors';
 import CustomButton from '../../../common/button';
 import StarIcon from '../../../images/icons/star_icon.png';
-import { DEVICE_WIDTH } from '../../../utils/utils';
+import {DEVICE_WIDTH} from '../../../utils/utils';
+import {useAppDispatch} from '../../../hooks/hooks';
+import {ongoingChallengeGet} from '../../../features/manageChallege/manageChallengeThunks';
+import {useNavigation} from '@react-navigation/native';
 
 interface NutritionCardProps {
-  title: string;
-  subtitle: string;
-  points: number;
-  days: number;
-  imageSource: any; // For images (require/import)
-  onPress: () => void;
+  challengeData: any;
+  challengeType: string;
+  buttonDisabled: boolean;
+  setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   style?: StyleProp<ViewStyle>;
 }
 
 const NutritionCard: React.FC<NutritionCardProps> = ({
-  title,
-  subtitle,
-  points,
-  days,
-  imageSource,
-  onPress,
+  challengeData,
+  challengeType,
+  buttonDisabled,
+  setButtonDisabled,
   style,
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const navigation = useNavigation<any>();
+  const dispatch = useAppDispatch();
+
+  const handlePress = async () => {
+    setButtonDisabled(true);
+    setIsSubmitting(true);
+
+    try {
+      const response = await dispatch(
+        ongoingChallengeGet(challengeData.subChallangeType),
+      ).unwrap();
+
+      if (response.data.length > 0) {
+        navigation.navigate('OngoingChallengeScreen', {
+          challengeType,
+          challengeData: challengeData,
+          days: response.data[0]?.days,
+        });
+      } else {
+        navigation.navigate('VegetarianChallengeScreen', {
+          challengeType,
+          challengeData: challengeData,
+        });
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setTimeout(() => {
+        setButtonDisabled(false);
+        setIsSubmitting(false);
+      }, 400);
+    }
+  };
+
   return (
     <LinearGradient
       colors={['#17A086', '#0A2210']}
@@ -43,30 +78,38 @@ const NutritionCard: React.FC<NutritionCardProps> = ({
       <View style={styles.badge}>
         <Image source={StarIcon} style={styles.icon} resizeMode="contain" />
         <View style={styles.badgeTextContainer}>
-          <Text style={styles.badgeText}> {points} Points</Text>
-          <Text style={styles.badgeSubText}>per {days} days</Text>
+          <Text style={styles.badgeText}> {challengeData?.points} Points</Text>
+          <Text style={styles.badgeSubText}>
+            per {challengeData?.days} days
+          </Text>
         </View>
       </View>
 
       {/* Image */}
       <View style={{alignItems: 'center'}}>
-        <Image source={imageSource} style={styles.image} resizeMode="contain" />
+        <Image
+          source={challengeData?.image}
+          style={styles.image}
+          resizeMode="contain"
+        />
       </View>
 
       {/* Title + Subtitle */}
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
+        <Text style={styles.title}>{challengeData?.title}</Text>
+        <Text style={styles.subtitle}>{challengeData?.subtitle}</Text>
       </View>
 
       {/* Button */}
       <CustomButton
         text="Start Challenge"
-        onPress={onPress}
+        onPress={handlePress}
         backgroundColor="#fff"
         textColor={Colors.DarkGreen}
         style={styles.button}
         textStyle={styles.buttonText}
+        disabled={buttonDisabled}
+        loading={isSubmitting}
       />
     </LinearGradient>
   );
@@ -96,13 +139,13 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   badgeText: {
-    fontSize: 10,
+    fontSize: 8,
     fontFamily: 'Montserrat-Medium',
     fontWeight: '600',
     color: '#FECA03',
   },
   badgeSubText: {
-    fontSize: 8,
+    fontSize: 5,
     color: '#fff',
     fontFamily: 'Montserrat-Medium',
   },
@@ -119,12 +162,12 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   title: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: '700',
     color: '#fff',
   },
   subtitle: {
-    fontSize: 12,
+    fontSize: 8,
     color: '#f0f0f0',
   },
   button: {
@@ -133,7 +176,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.DarkGreen,
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: 10,
     textAlign: 'center',
   },
 });

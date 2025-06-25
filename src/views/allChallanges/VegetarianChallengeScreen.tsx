@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {use, useState} from 'react';
 import {
   View,
   Text,
@@ -6,64 +6,115 @@ import {
   FlatList,
   Image,
   ScrollView,
+  Platform,
+  ActivityIndicator,
+  BackHandler,
 } from 'react-native';
 import DayChallengeCard from './component/DayChallengeCard';
 import {Colors} from '../../constants/colors';
-import BasketIllustration from '../../images/icons/Healthy_food_online_shopping.png';
-import {challengeData} from '../../constants/constants';
+import {chooseChallengePeriod} from '../../constants/constants';
 import {Header} from '../../common/header';
 import LinearGradient from 'react-native-linear-gradient';
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 
 const VegetarianChallengeScreen = () => {
+  const tabBarHeight = useBottomTabBarHeight();
+  const navigation = useNavigation<any>();
+  const route = useRoute();
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+  const {challengeType, challengeData} = route.params as {
+    challengeType: string;
+    challengeData: any;
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      <LinearGradient
-        colors={['#17A086', '#0A2210']}
-        start={{x: 0.5, y: 0}}
-        end={{x: 0.5, y: 1}}
-        style={{}}>
-        <Header title="Set your Goal" onBackClick={() => {}} isHomeScreen={true} />
-        <Text style={styles.title}>Vegetarian Challenge</Text>
-        <Text style={styles.subtitle}>
-          Every vegetarian meal can save up to 2 kg CO₂e{'\n'}Take a step today!
-        </Text>
+    <LinearGradient
+      colors={['#17A086', '#0A2210']}
+      start={{x: 0.5, y: 0}}
+      end={{x: 0.5, y: 1}}
+      style={styles.gradient}>
+      <View style={styles.container}>
+        <View style={styles.headerWrapper}>
+          <Header
+            title="Set your Goal"
+            onBackClick={() => {
+              navigation.goBack();
+            }}
+            isHomeScreen={true}
+          />
+        </View>
 
-        {/* Illustration */}
-        <Image
-          source={BasketIllustration}
-          style={styles.illustration}
-          resizeMode="contain"
-        />
-
-        {/* Challenge List */}
-        <FlatList
-          data={challengeData}
-          keyExtractor={item => item.id}
-          contentContainerStyle={styles.listContent}
-          renderItem={({item}) => (
-            <DayChallengeCard
-              title={item.title}
-              description={item.description}
-              reward={item.reward}
-            />
-          )}
+        <ScrollView
+          contentContainerStyle={{paddingBottom: tabBarHeight - 40}}
           showsVerticalScrollIndicator={false}
-        />
-      </LinearGradient>
-    </ScrollView>
+          nestedScrollEnabled={true}>
+          <Text style={styles.title}>{challengeData?.title}</Text>
+          <Text style={styles.subtitle}>{challengeData.subtitle}</Text>
+
+          <Image
+            source={challengeData.image}
+            style={styles.illustration}
+            resizeMode="contain"
+          />
+
+          <FlatList
+            data={chooseChallengePeriod}
+            keyExtractor={item => item.id}
+            contentContainerStyle={styles.listContent}
+            scrollEnabled={false}
+            renderItem={({item}) => (
+              <DayChallengeCard
+                title={item.title}
+                description={item.description}
+                reward={item.reward}
+                days={item.day}
+                point={item.point}
+                challengeType={challengeType}
+                challengeData={challengeData}
+                buttonDisabled={buttonDisabled}
+                setButtonDisabled={setButtonDisabled}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+          />
+        </ScrollView>
+      </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: Colors.GreenShades || '#D9F0EA', // Replace with your color
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F4F6FA',
+  },
+  headerWrapper: {
+    zIndex: 10,
+    elevation: 5,
+    ...Platform.select({
+      android: {backgroundColor: 'transparent'},
+      ios: {},
+    }),
   },
   title: {
     fontSize: 24,
     fontFamily: 'Montserrat-Bold',
     color: Colors.White,
     textAlign: 'center',
+    marginTop: 30,
     marginBottom: 8,
   },
   subtitle: {

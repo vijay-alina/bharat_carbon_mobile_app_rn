@@ -1,4 +1,4 @@
-export interface HousingData {
+export interface Electricity {
   month: number;
   year: number;
   consumption: number;
@@ -10,8 +10,65 @@ export interface HousingData {
   image: string[];
 }
 
+export interface Fuel {
+  date: Date;
+  fuel: number;
+  quantity: number;
+  unit: string;
+  notes: string;
+  studentId: string;
+  schoolCollegeId: string;
+  image?: string[];
+  isDeleted?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface Water {
+  date: Date;
+  waterSource: number;
+  consumed: number;
+  unit: string;
+  notes: string;
+  studentId: string;
+  schoolCollegeId: string;
+  image?: string[];
+  isDeleted?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface Waste {
+  date: Date;
+  wasteType: number;
+  quantity: number;
+  unit: string;
+  notes: string;
+  studentId: string;
+  schoolCollegeId: string;
+  image?: string[];
+  isDeleted?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface Applience {
+  year: number;
+  type: number;
+  brandName: string;
+  gasFilled: number;
+  charge: number;
+  unit: string;
+  notes: string;
+  image?: string[];
+}
+
 export interface HousingDataState {
-  housingData: HousingData[] | null;
+  electricity: Electricity[] | [];
+  fuel: Fuel[] | [];
+  water: Water[] | [];
+  waste: Waste[] | [];
+  appliances: Applience[] | [];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }

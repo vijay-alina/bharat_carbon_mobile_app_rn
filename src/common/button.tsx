@@ -8,8 +8,9 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
+  ActivityIndicator,
 } from 'react-native';
-import { Colors } from '../constants/colors';
+import {Colors} from '../constants/colors';
 
 interface CustomButtonProps {
   text: string;
@@ -18,11 +19,12 @@ interface CustomButtonProps {
   textColor?: string;
   showIcon?: boolean;
   iconComponent?: React.ElementType; // Can accept any component like Svg
-  iconProps?: Record<string, any>;   // Props to pass to the icon (e.g., name, color)
+  iconProps?: Record<string, any>; // Props to pass to the icon (e.g., name, color)
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   isRightIcon?: boolean;
   isLeftIcon?: boolean;
+  loading?: boolean;
   disabled?: boolean;
   borderColor?: string;
   borderWidth?: number;
@@ -40,6 +42,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   textStyle,
   isRightIcon = false,
   isLeftIcon = false,
+  loading = false,
   disabled = false,
   borderColor,
   borderWidth,
@@ -48,29 +51,34 @@ const CustomButton: React.FC<CustomButtonProps> = ({
     <TouchableOpacity
       style={[
         styles.button,
-        { backgroundColor },
-        borderColor && { borderColor },
-        borderWidth !== undefined && { borderWidth },
+        {backgroundColor},
+        borderColor && {borderColor},
+        borderWidth !== undefined && {borderWidth},
         style,
         disabled && styles.disabled,
       ]}
       onPress={onPress}
       activeOpacity={0.8}
-      disabled={disabled}
-    >
-      <View style={styles.content}>
-        {showIcon && isLeftIcon && IconComponent && (
-          <IconComponent {...iconProps} style={styles.icon} />
-        )}
+      disabled={disabled}>
+      {loading ? (
+        <View>
+          <ActivityIndicator size="small" color="#0000ff" />
+        </View>
+      ) : (
+        <View style={styles.content}>
+          {showIcon && isLeftIcon && IconComponent && (
+            <IconComponent {...iconProps} style={styles.icon} />
+          )}
 
-        <Text style={[styles.text, { color: textColor }, textStyle]}>
-          {text}
-        </Text>
+          <Text style={[styles.text, {color: textColor}, textStyle]}>
+            {text}
+          </Text>
 
-        {showIcon && isRightIcon && IconComponent && (
-          <IconComponent {...iconProps} style={styles.icon} />
-        )}
-      </View>
+          {showIcon && isRightIcon && IconComponent && (
+            <IconComponent {...iconProps} style={styles.icon} />
+          )}
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

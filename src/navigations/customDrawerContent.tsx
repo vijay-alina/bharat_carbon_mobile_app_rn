@@ -36,7 +36,6 @@ export const CustomDrawerContent = (
   const {handleLogout} = useAppContext();
   const logout = () => {
     try {
-      console.log('logout');
       Alert.alert('Logout', 'Are you Sure you want to logout?', [
         {
           text: 'Cancel',

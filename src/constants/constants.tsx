@@ -258,20 +258,31 @@ export const PaymentMethods = [
   {id: '5', label: 'Apple Pay', icon: require('../images/icons/applePay.png')},
 ];
 
-export const challengeData = [
+export const chooseChallengePeriod = [
   {
     id: '1',
     title: '3-Day Challenge',
     description: 'A quick kickstart to plant-based living.',
     reward: '30 Points',
+    day: 3,
+    point: 30,
   },
   {
     id: '2',
     title: '7-Day Challenge',
-    description: 'A full week of vegetarian meals.',
+    description: 'Commit to a week of conscious water convervation.',
     reward: '100 Points',
+    day: 7,
+    point: 100,
   },
-  // Add more challenges here if needed
+  {
+    id: '3',
+    title: 'Monthly Challenge',
+    description: 'Make lasting changes for a month of water efficiency.',
+    reward: '500 Points',
+    day: 30,
+    point: 500,
+  },
 ];
 
 export const winnerTypeFilters = ['Today', 'Weekly', 'Monthly', 'All-Time'];

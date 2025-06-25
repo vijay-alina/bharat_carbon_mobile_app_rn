@@ -18,6 +18,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {aboutAppTasks} from '../../constants/constants';
 import EarthWithCheckImage from '../../images/icons/earth_with_check.png';
 import {useAppContext} from '../../context/AppContext';
+import {useNavigation} from '@react-navigation/native';
 
 const _item = {
   imageUri: require('../../images/icons/girl_with_phone.png'),
@@ -31,27 +32,24 @@ const _item = {
 
 const _itemTwo = {
   imageUri: require('../../images/icons/parent_with_kid.png'),
-  title: 'Take Your First Climate Action!',
-  subtitle:
-    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
+  title: 'Track Together, Grow Together',
+  subtitle: `Add your family members to track everyone's CO₂ impact and earn more points as a team.`,
   buttonText: 'Add Faimly Member',
   gradientColors: ['#6750a3', '#000000'],
   icon: <AddPlusIcon />,
 };
 const _itemThree = {
   imageUri: require('../../images/icons/solar_panels.png'),
-  title: 'Take Your First Climate Action!',
-  subtitle:
-    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
+  title: 'Housing Challenge',
+  subtitle: 'Save energy and water at home by adopting smart habits.',
   buttonText: 'Explore Housing',
   gradientColors: ['#17a086', '#083a31'],
   icon: null,
 };
 const _itemFour = {
   imageUri: require('../../images/icons/boy_with_bicycle.png'),
-  title: 'Take Your First Climate Action!',
-  subtitle:
-    'Upload a bill or photo to start earning points and reduce your carbon footprint today.',
+  title: 'Mobility Challenge',
+  subtitle: 'Walk, cycle, or carpool to lower your transport emissions.',
   buttonText: 'Explore Mobility',
   gradientColors: ['#17a086', '#083a31'],
   icon: null,
@@ -61,6 +59,7 @@ const list1 = [_item, _itemTwo];
 const list2 = [_itemThree, _itemFour];
 
 export const HomeScreen = () => {
+  const navigation = useNavigation<any>();
   const {completeNotesViewed, isNotesViewed} = useAppContext();
   const [currentStep, setCurrentStep] = useState(0);
   const GRADIENT_COLORS = ['#E8FFE8', '#80A380'];
@@ -115,6 +114,7 @@ export const HomeScreen = () => {
             buttonText={item.buttonText}
             gradientColors={item.gradientColors}
             icon={item.icon}
+            press={() => {}}
           />
         ))}
       </View>
@@ -136,6 +136,14 @@ export const HomeScreen = () => {
             buttonText={item.buttonText}
             gradientColors={item.gradientColors}
             icon={item.icon}
+            press={() => {
+              navigation.navigate('History', {
+                screen: 'ChallengeList',
+                params: {
+                  challengeType: item.title,
+                },
+              });
+            }}
           />
         ))}
       </View>

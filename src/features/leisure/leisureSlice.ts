@@ -8,7 +8,7 @@ const initialState: LeisureState = {
   error: null,
 };
 
-const nutritionSlice = createSlice({
+const leisureSlice = createSlice({
   name: 'leisure',
   initialState,
   reducers: {},
@@ -21,7 +21,6 @@ const nutritionSlice = createSlice({
       .addCase(
         uploadLesiure.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log('uploadLesiure.fulfilled', action.payload);
           state.status = 'succeeded';
           state.leisure = action.payload.data;
         },
@@ -33,4 +32,4 @@ const nutritionSlice = createSlice({
   },
 });
 
-export default nutritionSlice.reducer;
+export default leisureSlice.reducer;

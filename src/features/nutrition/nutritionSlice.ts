@@ -21,7 +21,6 @@ const nutritionSlice = createSlice({
       .addCase(
         uploadNutrition.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log('uploadNutrition.fulfilled', action.payload);
           state.status = 'succeeded';
           state.nutrition = action.payload.data;
         },

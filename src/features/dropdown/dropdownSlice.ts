@@ -39,7 +39,6 @@ const dropdownSlice = createSlice({
         state.error = null;
       })
       .addCase(getFoodItem.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log('getFoodItem.fulfilled', action.payload);
         state.status = 'succeeded';
         state.foodItem = action.payload.data;
       })
@@ -53,7 +52,6 @@ const dropdownSlice = createSlice({
         state.error = null;
       })
       .addCase(getMealType.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log('uploadNutrition.fulfilled', action.payload);
         state.status = 'succeeded';
         state.mealType = action.payload.data;
       })
@@ -67,7 +65,6 @@ const dropdownSlice = createSlice({
         state.error = null;
       })
       .addCase(getMealStyle.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log('uploadNutrition.fulfilled', action.payload);
         state.status = 'succeeded';
         state.mealStyle = action.payload.data;
       })
@@ -81,7 +78,6 @@ const dropdownSlice = createSlice({
         state.error = null;
       })
       .addCase(getFuelType.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log('uploadNutrition.fulfilled', action.payload);
         state.status = 'succeeded';
         state.fuelType = action.payload.data;
       })
@@ -97,7 +93,6 @@ const dropdownSlice = createSlice({
       .addCase(
         getWaterSource.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log('uploadNutrition.fulfilled', action.payload);
           state.status = 'succeeded';
           state.waterSource = action.payload.data;
         },
@@ -112,7 +107,6 @@ const dropdownSlice = createSlice({
         state.error = null;
       })
       .addCase(getAppliences.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log('uploadNutrition.fulfilled', action.payload);
         state.status = 'succeeded';
         state.appliance = action.payload.data;
       })
@@ -126,7 +120,6 @@ const dropdownSlice = createSlice({
         state.error = null;
       })
       .addCase(getGasUsed.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log('uploadNutrition.fulfilled', action.payload);
         state.status = 'succeeded';
         state.gasUsed = action.payload.data;
       })
@@ -142,7 +135,6 @@ const dropdownSlice = createSlice({
       .addCase(
         getLeisureActivity.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log('uploadNutrition.fulfilled', action.payload);
           state.status = 'succeeded';
           state.leisureActivity = action.payload.data;
         },
@@ -157,7 +149,6 @@ const dropdownSlice = createSlice({
         state.error = null;
       })
       .addCase(getTripType.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log('getTripType.fulfilled', action.payload);
         state.status = 'succeeded';
         state.tripType = action.payload.data;
       })
@@ -171,7 +162,6 @@ const dropdownSlice = createSlice({
         state.error = null;
       })
       .addCase(getTravelMode.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log('getTravelMode.fulfilled', action.payload);
         state.status = 'succeeded';
         state.travelMode = action.payload.data;
       })

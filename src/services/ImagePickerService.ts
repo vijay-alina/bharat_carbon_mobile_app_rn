@@ -78,7 +78,6 @@ export class ImagePickerService {
         }
 
         if (response.errorMessage) {
-          console.log('Camera error:', response.errorMessage);
           Alert.alert('Error', 'Failed to open camera. Please try again.');
           resolve(null);
           return;
@@ -113,7 +112,6 @@ export class ImagePickerService {
         }
 
         if (response.errorMessage) {
-          console.log('Gallery error:', response.errorMessage);
           Alert.alert('Error', 'Failed to open gallery. Please try again.');
           resolve(null);
           return;

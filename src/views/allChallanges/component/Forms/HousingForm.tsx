@@ -80,10 +80,6 @@ const HousingForm = () => {
   const applianceTypeList = useAppSelector(state => state.dropdown.appliance);
   const gasusedList = useAppSelector(state => state.dropdown.gasUsed);
 
-  console.log('fuelTypeList', fuelTypeList);
-  console.log('waterSourceList', waterSourceList);
-  console.log('gasusedList', gasusedList);
-
   // Reset form fields and set appropriate date when category changes
   useEffect(() => {
     // Reset form fields
@@ -491,8 +487,6 @@ const HousingForm = () => {
           break;
       }
 
-      console.log('Request Body:', requestBody);
-
       // Call the appropriate API based on category
       await dispatch(apiAction(requestBody)).unwrap();
 
@@ -520,7 +514,6 @@ const HousingForm = () => {
       await dispatch(getWaterSource()).unwrap();
       await dispatch(getAppliences()).unwrap();
       await dispatch(getGasUsed()).unwrap();
-      console.log(response);
     } catch (error) {
       console.error('Error fetching food items:', error);
     } finally {
@@ -552,9 +545,6 @@ const HousingForm = () => {
     }
   }, [fuelTypeList, waterSourceList, gasusedList]);
 
-  console.log('gasFilled', gasFilled);
-  console.log('fuelType', fuelType);
-  console.log('waterSource', waterSource);
 
   return (
     <KeyboardAvoidingView

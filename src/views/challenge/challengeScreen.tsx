@@ -1,20 +1,48 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  BackHandler,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import GradientChallengeCard from './components/challengeCard';
 import {Header} from '../../common/header';
 import {getLineHeight} from '../../utils/utils';
-import { useNavigation } from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import React from 'react';
 
 export const ChallengeScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
-  const handleOnClick = () => {
-    //@ts-ignore
-    navigation.navigate('ChallengeList');
+  const handleBack = () => {
+    navigation.navigate('Home');
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        if (Platform.OS === 'android') {
+          handleBack();
+          return true; // prevent default behavior
+        }
+        return false;
+      };
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress,
+      );
+      return () => subscription.remove();
+    }, []),
+  );
 
   return (
     <View style={styles.container}>
-      <Header title="Challenges" isHomeScreen={true} onBackClick={() => navigation.goBack()} />
+      <Header
+        title="Challenges"
+        isHomeScreen={true}
+        onBackClick={() => handleBack()}
+      />
       <Text style={styles.title}>Choose Your Challenge Category</Text>
       <Text style={styles.description}>
         Pick an area of your life to reduce carbon impact and earn points!
@@ -29,7 +57,14 @@ export const ChallengeScreen = () => {
           title="Housing Challenges"
           description="Save water, energy, and reduce home waste."
           keywords="Energy Saving, Waste Reduction"
-          onPress={handleOnClick}
+          onPress={() => {
+            navigation.navigate('History', {
+              screen: 'ChallengeList',
+              params: {
+                challengeType: 'Housing Challenge',
+              },
+            });
+          }}
         />
         <GradientChallengeCard
           pointsText="Earn up to"
@@ -38,7 +73,14 @@ export const ChallengeScreen = () => {
           title="Mobility Challenges"
           description="Choose eco-friendly ways to travel."
           keywords="Walk, Cycle, Public Transport, EV"
-          onPress={handleOnClick}
+          onPress={() => {
+            navigation.navigate('History', {
+              screen: 'ChallengeList',
+              params: {
+                challengeType: 'Mobility Challenge',
+              },
+            });
+          }}
         />
       </ScrollView>
     </View>

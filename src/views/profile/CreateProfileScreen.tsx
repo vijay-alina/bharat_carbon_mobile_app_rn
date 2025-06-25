@@ -58,7 +58,7 @@ interface ValidationErrors {
 
 const CreateProfileScreen: React.FC = () => {
   const navigation = useNavigation();
-  const {completeOnboarding} = useAppContext();
+  const {handleLogout} = useAppContext();
   const [backPressedOnce, setBackPressedOnce] = useState(false);
   const student = useAppSelector(state => state.user.user);
   const dispatch = useAppDispatch();
@@ -75,8 +75,6 @@ const CreateProfileScreen: React.FC = () => {
 
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  console.log('student', student);
 
   const handleInputChange = (field: keyof ProfileFormData, value: string) => {
     setFormData(prev => ({
@@ -142,11 +140,7 @@ const CreateProfileScreen: React.FC = () => {
         stripUnknown: true,
       });
 
-      console.log('Validated form data:', validatedData);
-
       await dispatch(updateProfile(validatedData)).unwrap();
-
-      console.log('Validated form data:', validatedData);
 
       Alert.alert('Success', 'Profile created successfully!', [
         {
@@ -189,7 +183,7 @@ const CreateProfileScreen: React.FC = () => {
   useEffect(() => {
     const backAction = () => {
       setBackPressedOnce(true);
-      completeOnboarding();
+      handleLogout();
       return true;
     };
     const backHandler = BackHandler.addEventListener(
@@ -197,7 +191,7 @@ const CreateProfileScreen: React.FC = () => {
       backAction,
     );
     return () => backHandler.remove();
-  }, [backPressedOnce, completeOnboarding]); // Add
+  }, [backPressedOnce, handleLogout]); // Add
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -304,11 +298,11 @@ const CreateProfileScreen: React.FC = () => {
           </View>
           <CustomButton
             text={isSubmitting ? 'Saving Profile...' : 'Save Profile'}
-            // onPress={handleSubmit}
-            onPress={() => {
-              //@ts-ignore
-              navigation.navigate('ClimateManifestoScreen');
-            }}
+            onPress={handleSubmit}
+            // onPress={() => {
+            //   //@ts-ignore
+            //   navigation.navigate('ClimateManifestoScreen');
+            // }}
             showIcon={true}
             isRightIcon={true}
             // iconName="arrow-forward"

@@ -21,7 +21,6 @@ const mobilitySlice = createSlice({
       .addCase(
         uploadMobility.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log('uploadMobility.fulfilled', action.payload);
           state.status = 'succeeded';
           state.mobility = action.payload.data;
         },

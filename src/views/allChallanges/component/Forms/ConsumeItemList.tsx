@@ -30,8 +30,6 @@ const ConsumItemList = () => {
   const [customItem, setCustomItem] = useState('');
   const foodItem = useAppSelector(state => state.dropdown.foodItem);
 
-  console.log('foodItem', foodItem);
-
   const handleSelect = (item: FoodItem) => {
     setSelectedItems(prev =>
       prev.some(i => i.value === item.value)
@@ -40,7 +38,6 @@ const ConsumItemList = () => {
     );
     if (item.label === 'Other') setCustomItem('');
   };
-  console.log('selectedItems', selectedItems);
 
   const handleDone = () => {
     if (route.params?.onSelect) {

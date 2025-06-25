@@ -62,9 +62,6 @@ const MobilityForm = () => {
   const travelModes = useAppSelector(state => state.dropdown.travelMode);
   const tripTypes = useAppSelector(state => state.dropdown.tripType);
 
-  console.log('travelModes', travelModes);
-  console.log('tripTypes', tripTypes);
-
   const handleDateChange = (_: any, selected?: Date) => {
     const currentDate = selected || date;
     setShowPicker(false);
@@ -93,17 +90,6 @@ const MobilityForm = () => {
       if (result && result.uri) {
         setPhotoUri(result.uri);
         setPhotoBase64(result.base64);
-
-        console.log('Image selected successfully:', {
-          uri: result.uri,
-          fileName: result.fileName,
-          fileSize: result.fileSize
-            ? `${Math.round(result.fileSize / 1024)} KB`
-            : 'Unknown',
-          base64Size: result.base64
-            ? `${Math.round(result.base64.length / 1024)} KB`
-            : '0 KB',
-        });
 
         Alert.alert(
           'Success!',
@@ -188,8 +174,6 @@ const MobilityForm = () => {
           },
         ],
       };
-
-      console.log('Request Body:', requestBody);
 
       // Replace with your actual housing API call
       await dispatch(uploadMobility(requestBody)).unwrap();

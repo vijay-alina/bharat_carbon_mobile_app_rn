@@ -68,9 +68,6 @@ const NutritionForm = () => {
   const mealTypes = useAppSelector(state => state.dropdown.mealType);
   const mealStyles = useAppSelector(state => state.dropdown.mealStyle);
 
-  console.log('mealTypes', mealTypes);
-  console.log('mealStyles', mealStyles);
-
   const handleDateChange = (_: any, selected?: Date) => {
     const currentDate = selected || date;
     setShowPicker(false);
@@ -113,16 +110,6 @@ const NutritionForm = () => {
         setPhotoUri(result.uri);
         setPhotoBase64(result.base64);
 
-        console.log('Image selected successfully:', {
-          uri: result.uri,
-          fileName: result.fileName,
-          fileSize: result.fileSize
-            ? `${Math.round(result.fileSize / 1024)} KB`
-            : 'Unknown',
-          base64Size: result.base64
-            ? `${Math.round(result.base64.length / 1024)} KB`
-            : '0 KB',
-        });
 
         Alert.alert(
           'Success!',
@@ -207,8 +194,6 @@ const NutritionForm = () => {
         ],
       };
 
-      console.log('Request Body:', requestBody);
-
       await dispatch(uploadNutrition(requestBody)).unwrap();
       Alert.alert('Success', 'Nutrition data submitted successfully!', [
         {
@@ -270,7 +255,6 @@ const NutritionForm = () => {
       const response = await dispatch(getFoodItem()).unwrap();
       await dispatch(getMealType()).unwrap();
       await dispatch(getMealStyle()).unwrap();
-      console.log(response);
     } catch (error) {
       console.error('Error fetching food items:', error);
     } finally {

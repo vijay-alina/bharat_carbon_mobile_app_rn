@@ -31,7 +31,6 @@ const housingDataSlice = createSlice({
       .addCase(
         uploadElectricityData.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log('uploadHousingData.fulfilled', action.payload);
           state.status = 'succeeded';
           state.electricity = action.payload.data;
         },
@@ -47,7 +46,6 @@ const housingDataSlice = createSlice({
       .addCase(
         uploadFuelData.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log('uploadHousingData.fulfilled', action.payload);
           state.status = 'succeeded';
           state.fuel = action.payload.data;
         },
@@ -63,7 +61,6 @@ const housingDataSlice = createSlice({
       .addCase(
         uploadWaterData.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log('uploadHousingData.fulfilled', action.payload);
           state.status = 'succeeded';
           state.water = action.payload.data;
         },
@@ -79,7 +76,6 @@ const housingDataSlice = createSlice({
       .addCase(
         uploadWasteData.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log('uploadHousingData.fulfilled', action.payload);
           state.status = 'succeeded';
           state.waste = action.payload.data;
         },
@@ -96,7 +92,6 @@ const housingDataSlice = createSlice({
       .addCase(
         uploadAppliancesData.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log('uploadHousingData.fulfilled', action.payload);
           state.status = 'succeeded';
           state.appliances = action.payload.data;
         },

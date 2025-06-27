@@ -9,12 +9,25 @@ const screenWidth = Dimensions.get('window').width;
 
 export const StatsScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [dataLoading, setDataLoading] = useState<boolean>(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
   // Array of slides - you can modify this based on your data
   const slides = [
-    {id: 1, component: <BarChart />},
-    {id: 2, component: <AnalyticsCard />},
+    {
+      id: 1,
+      component: (
+        <BarChart dataLoading={dataLoading} />
+      ),
+    },
+    {
+      id: 2,
+      component: (
+        <AnalyticsCard
+          dataLoading={dataLoading}
+        />
+      ),
+    },
     // Add more slides as needed
   ];
 
@@ -73,7 +86,10 @@ export const StatsScreen = () => {
 
       {/* Below Slider Content */}
       <View style={styles.content}>
-        <EmissionBreakdownCard />
+        <EmissionBreakdownCard
+          dataLoading={dataLoading}
+          setDataLoading={setDataLoading}
+        />
       </View>
     </View>
   );

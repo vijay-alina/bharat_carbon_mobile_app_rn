@@ -16,17 +16,11 @@ export const StatsScreen = () => {
   const slides = [
     {
       id: 1,
-      component: (
-        <BarChart dataLoading={dataLoading} />
-      ),
+      component: <BarChart dataLoading={dataLoading} />,
     },
     {
       id: 2,
-      component: (
-        <AnalyticsCard
-          dataLoading={dataLoading}
-        />
-      ),
+      component: <AnalyticsCard dataLoading={dataLoading} />,
     },
     // Add more slides as needed
   ];
@@ -100,7 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sliderWrapper: {
-    marginTop: 20,
+    // marginTop: 5,
   },
   slider: {
     // height: 260,
@@ -117,8 +111,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 10,
+    // marginTop: 10,
+    // marginBottom: 10,
   },
   dot: {
     height: 8,
@@ -127,6 +121,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingTop: 10,
+    // paddingTop: 1,
   },
 });

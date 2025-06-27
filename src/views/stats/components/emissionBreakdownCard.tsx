@@ -420,7 +420,7 @@ const SubItem = ({item}: {item: SubCategoryItem}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 90,
+    marginBottom: 70,
     // backgroundColor: '#F5F7FA',
   },
   loadingContainer: {
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabsScroll: {
-    // maxHeight: 80,
+    // maxHeight: 120,
     flexGrow: 0,
   },
   tabsContainer: {

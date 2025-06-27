@@ -545,7 +545,6 @@ const HousingForm = () => {
     }
   }, [fuelTypeList, waterSourceList, gasusedList]);
 
-
   return (
     <KeyboardAvoidingView
       style={styles.keyboardAvoidingView}

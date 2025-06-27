@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,12 +8,14 @@ import {
   Platform,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  ActivityIndicator,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Picker } from '@react-native-picker/picker';
+import {Picker} from '@react-native-picker/picker';
 import CustomButton from '../../../../common/button';
 import ConsumItemList from './ConsumeItemList';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
 import GalleryaddIcon from '../../../../images/icons/gallery-add.svg';
 import {
   Camera,
@@ -22,21 +24,24 @@ import {
   useCameraPermission,
 } from 'react-native-vision-camera';
 import CalenderIcon from '../../../../images/icons/Calendar_Days.svg';
-import { Colors } from '../../../../constants/colors';
-import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
-import { fetchGoodsType, uploadGoods } from '../../../../features/challenge/goods/goodsThunk';
-import { TGoodsType } from '../../../../features/challenge/types';
-import * as yup from 'yup'
-import { getClothes } from '../../../../services/challengeService';
-import { fetchClothes } from '../../../../features/challenge/cloths/clothsThunk';
-import { fetchAppliances } from '../../../../features/challenge/appliance/appliancesThunk';
-import { ImagePickerService } from '../../../../services/ImagePickerService';
+import {Colors} from '../../../../constants/colors';
+import {useAppDispatch, useAppSelector} from '../../../../hooks/hooks';
+import {
+  fetchGoodsType,
+  uploadGoods,
+} from '../../../../features/challenge/goods/goodsThunk';
+import {TGoodsType} from '../../../../features/challenge/types';
+import * as yup from 'yup';
+import {getClothes} from '../../../../services/challengeService';
+import {fetchClothes} from '../../../../features/challenge/cloths/clothsThunk';
+import {fetchAppliances} from '../../../../features/challenge/appliance/appliancesThunk';
+import {ImagePickerService} from '../../../../services/ImagePickerService';
 
 const mockItems = [
-  { name: 'Tofu Stir Fry', points: 18, tag: 'Repeat' },
-  { name: 'Quinoa Salad', points: 20 },
-  { name: 'Paneer Wrap', points: 22, tag: 'High' },
-  { name: 'Other Items', points: 0 },
+  {name: 'Tofu Stir Fry', points: 18, tag: 'Repeat'},
+  {name: 'Quinoa Salad', points: 20},
+  {name: 'Paneer Wrap', points: 22, tag: 'High'},
+  {name: 'Other Items', points: 0},
 ];
 
 type RootStackParamList = {
@@ -51,57 +56,31 @@ const goodsValidationSchema = yup.object().shape({
   selectedItems: yup.array().min(1, 'At least one item must be selected'),
 });
 
-
 const GoodsForm = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [amount, setAmount] = useState<string>('')
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [goodsType, setGoodsType] = useState<number>(1);
-  const [applianceType, setApplianceType] = useState<number>(1)
-  const [clothsType, setClothsType] = useState<number>(1)
-  const [selectedItems, setSelectedItems] = useState(mockItems);
+  const [amount, setAmount] = useState<string>('');
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [goodsType, setGoodsType] = useState<number | undefined>();
+  const [applianceType, setApplianceType] = useState<number | undefined>();
+  const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [clothsType, setClothsType] = useState<number | undefined>();
   const [description, setDescription] = useState('');
-  const [openCamera, setOpenCamera] = useState(false);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [photoBase64, setPhotoBase64] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isImageLoading, setIsImageLoading] = useState(false);
-
-  const { hasPermission, requestPermission } = useCameraPermission();
-  const device = useCameraDevice('back');
+  const [dataLoading, setDataLoading] = useState(false);
 
   const dispatch = useAppDispatch();
-  const { goods } = useAppSelector(state => state.goods);
+  const {goods} = useAppSelector(state => state.goods);
   const {cloths} = useAppSelector(state => state.cloths);
   const {appliances} = useAppSelector(state => state.appliances);
-
-  useEffect(() => {
-    dispatch(fetchGoodsType()).unwrap();
-  }, [dispatch]);
 
   const handleDateChange = (_: any, selected?: Date) => {
     const currentDate = selected || date;
     setShowPicker(false);
     setDate(currentDate);
-  };
-
-  const handleRemove = (index: number) => {
-    const updated = [...selectedItems];
-    updated.splice(index, 1);
-    setSelectedItems(updated);
-  };
-
-  const handleOpenCamera = async () => {
-    if (!hasPermission) {
-      const result = await requestPermission();
-      if (result) {
-        setOpenCamera(true);
-      }
-    } else {
-      setOpenCamera(true);
-    }
   };
 
   // const getAppliancesList
@@ -114,13 +93,13 @@ const GoodsForm = () => {
           amount,
           // selectedItems,
         },
-        { abortEarly: false },
+        {abortEarly: false},
       );
       setErrors({});
       return true;
     } catch (error) {
       if (error instanceof yup.ValidationError) {
-        const newErrors: { [key: string]: string } = {};
+        const newErrors: {[key: string]: string} = {};
         error.inner.forEach(err => {
           if (err.path) {
             newErrors[err.path] = err.message;
@@ -134,10 +113,10 @@ const GoodsForm = () => {
 
   const handleSubmitt = async () => {
     try {
-      setIsSubmitting(true)
-      setErrors({})
+      setIsSubmitting(true);
+      setErrors({});
 
-      const isValid = await validateForm()
+      const isValid = await validateForm();
       if (!isValid) {
         setIsSubmitting(false);
         return;
@@ -147,59 +126,77 @@ const GoodsForm = () => {
           {
             goodsType,
             date: date.toISOString(),
-            applianceType,
+            applianceType: goodsType === 1 ? applianceType : clothsType,
+            item: selectedItems,
             notes: description,
-            image: []
-          }
-        ]
-      }
+            amount: Number(amount),
+            image: [],
+          },
+        ],
+      };
 
-      await dispatch(uploadGoods(requestBody)).unwrap()
+      console.log('requestBody', requestBody);
+
+      await dispatch(uploadGoods(requestBody)).unwrap();
       Alert.alert('success', 'Goods data submitted Successfully!', [
         {
           text: 'ok',
-          onPress: () => navigation.goBack()
-        }
+          onPress: () => navigation.goBack(),
+        },
       ]);
     } catch (error: any) {
-      console.error('error submitting goods data', error)
-      Alert.alert('Error', error.message || 'Failed to submitt goods data')
-
+      console.error('error submitting goods data', error);
+      Alert.alert('Error', error.message || 'Failed to submitt goods data');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
-
-  const getClothList = async () => {
-    try {
-      const responce = await dispatch(fetchClothes()).unwrap();
-    } catch (error) {
-      console.error('Error fetching cloths', error);
-
-    }
-  }
-
-  const getAppliancesList = async () => {
-    try {
-      const responce = await dispatch(fetchAppliances()).unwrap();
-    } catch (error) {
-      console.error('Error fatching appliances', error)
-    }
-  }
+  };
 
   const getSelectedGoodsTypeDataList = () => {
     if (goodsType === 1) {
       return appliances;
     }
-    return cloths
-  }
+    return cloths;
+  };
 
-
+  const fetchData = async () => {
+    setDataLoading(true);
+    try {
+      await dispatch(fetchGoodsType()).unwrap();
+      await dispatch(fetchAppliances()).unwrap();
+      await dispatch(fetchClothes()).unwrap();
+    } catch (error) {
+      console.error('Error fetching data', error);
+    } finally {
+      setDataLoading(false);
+    }
+  };
 
   useEffect(() => {
-    getClothList();
-    getAppliancesList();
-  }, [])
+    const shouldFetchData =
+      goods.length === 0 || cloths.length === 0 || appliances.length === 0;
+
+    if (shouldFetchData) {
+      fetchData();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (goods.length > 0 && cloths.length > 0 && appliances.length > 0) {
+      setGoodsType(goods[0].value);
+      setClothsType(cloths[0].value);
+      setApplianceType(appliances[0].value);
+    }
+  }, [goods, cloths, appliances]);
+
+  useEffect(() => {
+    if (goodsType === 1) {
+      setSelectedItems([appliances[0]]);
+    } else {
+      setSelectedItems([cloths[0]]);
+    }
+  }, [goodsType]);
+
   const handleImagePicker = async () => {
     try {
       const result = await ImagePickerService.pickImage(
@@ -237,20 +234,20 @@ const GoodsForm = () => {
         Alert.alert(
           'Success!',
           'Photo added successfully! You earned 10 points.',
-          [{ text: 'OK' }],
+          [{text: 'OK'}],
         );
       }
     } catch (error) {
       console.error('Error selecting image:', error);
       Alert.alert('Error', 'Failed to select image. Please try again.', [
-        { text: 'OK' },
+        {text: 'OK'},
       ]);
     }
   };
 
   const handleRemovePhoto = async () => {
     Alert.alert('remove photo', 'Are you want to remove this photo?', [
-      { text: 'Cancel', style: 'cancel' },
+      {text: 'Cancel', style: 'cancel'},
       {
         text: 'Remove',
         style: 'destructive',
@@ -259,147 +256,189 @@ const GoodsForm = () => {
           setPhotoBase64(null);
         },
       },
-    ])
-  }
+    ]);
+  };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>What did you eat today?</Text>
+    <KeyboardAvoidingView
+      style={styles.keyboardAvoidingView}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
+      {dataLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      ) : (
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.scrollContentContainer}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          contentInsetAdjustmentBehavior="automatic">
+          <Text style={styles.header}>What did you eat today?</Text>
 
-      {/* Date Picker */}
-      <Text style={styles.label}>Select Date</Text>
-      <TouchableOpacity
-        style={styles.inputBox}
-        onPress={() => setShowPicker(true)}>
-        <Text>{date.toLocaleDateString('en-GB')}</Text>
-        <CalenderIcon width={20} height={20} />
-      </TouchableOpacity>
-      {errors.date && <Text style={styles.errorText}>{errors.date}</Text>}
-      {showPicker && (
-        <DateTimePicker
-          value={date}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={handleDateChange}
-        />
-      )}
+          {/* Date Picker */}
+          <Text style={styles.label}>Select Date</Text>
+          <TouchableOpacity
+            style={styles.inputBox}
+            onPress={() => setShowPicker(true)}>
+            <Text>{date.toLocaleDateString('en-GB')}</Text>
+            <CalenderIcon width={20} height={20} />
+          </TouchableOpacity>
+          {errors.date && <Text style={styles.errorText}>{errors.date}</Text>}
+          {showPicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              onChange={handleDateChange}
+            />
+          )}
 
-      <Text style={styles.label}>Choose goods</Text>
-      <View style={styles.pickerBox}>
-        <Picker selectedValue={goodsType} onValueChange={(value) => {
-          setGoodsType(value)
-        }}>
-          {goods.map((it: TGoodsType, i: number) => {
-            return <Picker.Item key={i.toString()} label={it.label} value={it.value} />;
-          })}
-        </Picker>
-        {errors.goodsType && (
-          <Text style={styles.errorText}>{errors.goodsType}</Text>
-        )}
-      </View>
+          <Text style={styles.label}>Choose goods</Text>
+          <View style={styles.pickerBox}>
+            <Picker
+              selectedValue={goodsType}
+              onValueChange={value => {
+                setGoodsType(value);
+              }}>
+              {goods.map((it: TGoodsType, i: number) => {
+                return (
+                  <Picker.Item
+                    key={i.toString()}
+                    label={it.label}
+                    value={it.value}
+                  />
+                );
+              })}
+            </Picker>
+            {errors.goodsType && (
+              <Text style={styles.errorText}>{errors.goodsType}</Text>
+            )}
+          </View>
 
-      <Text style={styles.label}>{goodsType === 1 ? "Choose Appliance" : "Choose Cloths"}</Text>
-      <View style={styles.pickerBox}>
-        <Picker selectedValue={goodsType === 1 ? applianceType : clothsType} onValueChange={(value) => {
-          if (goodsType === 1) {
-            setApplianceType(Number(value));
-          } else {
-            setClothsType(Number(value));
-          }
-        }}>
-          {getSelectedGoodsTypeDataList().map((it, i) => {
-            return <Picker.Item key={i} label={it.label} value={it.value} />
-          })}
-        </Picker>
-        {errors.goodsType && (
-          <Text style={styles.errorText}>{errors.goodsType}</Text>
-        )}
-      </View>
+          <Text style={styles.label}>
+            {goodsType === 1 ? 'Choose Appliance' : 'Choose Cloths'}
+          </Text>
+          <View style={styles.pickerBox}>
+            <Picker
+              selectedValue={goodsType === 1 ? applianceType : clothsType}
+              onValueChange={value => {
+                if (goodsType === 1) {
+                  setApplianceType(Number(value));
+                } else {
+                  setClothsType(Number(value));
+                }
+                const selectedType = getSelectedGoodsTypeDataList().find(
+                  (item: TGoodsType) => item.value === Number(value),
+                );
+                console.log('selectedType', selectedType);
+                setSelectedItems([selectedType]);
+              }}>
+              {getSelectedGoodsTypeDataList().map((it, i) => {
+                return (
+                  <Picker.Item key={i} label={it.label} value={it.value} />
+                );
+              })}
+            </Picker>
+            {errors.goodsType && (
+              <Text style={styles.errorText}>{errors.goodsType}</Text>
+            )}
+          </View>
 
-      <Text style={styles.label}>Amount Spent INR</Text>
-      <TextInput
-        placeholder="100"
-        value={amount}
-        onChangeText={setAmount}
-        style={styles.inputBox}
-      />
-      {errors.amount && (
-        <Text style={styles.errorText}>{errors.amount}</Text>
-      )}
-      {/* Description */}
-      <Text style={styles.label}>Add Description</Text>
-      <View style={styles.inputWithIcon}>
-        <View style={styles.inputWrapperBox}>
+          <Text style={styles.label}>Amount Spent INR</Text>
           <TextInput
-            placeholder="Note (Optional)"
-            value={description}
-            onChangeText={setDescription}
+            placeholder="Amount Spent INR"
+            value={amount}
+            onChangeText={setAmount}
             style={styles.inputBox}
           />
-        </View>
-        <TouchableOpacity
-          style={styles.buttonBox}
-          onPress={handleImagePicker}>
-          <GalleryaddIcon width={24} height={24} />
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.note}>Earn 10 points by uploading a picture!</Text>
-      <View style={styles.instructionsCard}>
-        <Text style={styles.cardHeading}>Smart Green Move</Text>
-        <Text style={styles.cardPoints}>
-          Next time, tryrenting rarely used item to save money & emission
-        </Text>
-      </View>
-
-      {/* display photo if taken */}
-      {photoUri && (
-        <View style={styles.photoContainer}>
-          <View style={styles.photoHeader}>
-            <Text style={styles.photoText}>Photo added successfully!</Text>
+          {errors.amount && (
+            <Text style={styles.errorText}>{errors.amount}</Text>
+          )}
+          {/* Description */}
+          <Text style={styles.label}>Add Description</Text>
+          <View style={styles.inputWithIcon}>
+            <View style={styles.inputWrapperBox}>
+              <TextInput
+                placeholder="Note (Optional)"
+                value={description}
+                onChangeText={setDescription}
+                style={styles.inputBox}
+              />
+            </View>
             <TouchableOpacity
-              onPress={handleRemovePhoto}
-              style={styles.removePhotoButton}>
-              <Text style={styles.removePhotoText}>Remove</Text>
+              style={styles.buttonBox}
+              onPress={handleImagePicker}>
+              <GalleryaddIcon width={24} height={24} />
             </TouchableOpacity>
           </View>
-          <Text style={styles.photoSubText}>
-            Base64 size:{' '}
-            {photoBase64 ? Math.round(photoBase64.length / 1024) : 0} KB
+
+          <Text style={styles.note}>
+            Earn 10 points by uploading a picture!
           </Text>
-          <Text style={styles.photoSubText}>
-            File size: {photoUri ? 'Image loaded' : 'No image'}
-          </Text>
-        </View>
+          <View style={styles.instructionsCard}>
+            <Text style={styles.cardHeading}>Smart Green Move</Text>
+            <Text style={styles.cardPoints}>
+              Next time, tryrenting rarely used item to save money & emission
+            </Text>
+          </View>
+
+          {/* display photo if taken */}
+          {photoUri && (
+            <View style={styles.photoContainer}>
+              <View style={styles.photoHeader}>
+                <Text style={styles.photoText}>Photo added successfully!</Text>
+                <TouchableOpacity
+                  onPress={handleRemovePhoto}
+                  style={styles.removePhotoButton}>
+                  <Text style={styles.removePhotoText}>Remove</Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.photoSubText}>
+                Base64 size:{' '}
+                {photoBase64 ? Math.round(photoBase64.length / 1024) : 0} KB
+              </Text>
+              <Text style={styles.photoSubText}>
+                File size: {photoUri ? 'Image loaded' : 'No image'}
+              </Text>
+            </View>
+          )}
+          {/* Submit error */}
+          {errors.submit && (
+            <Text style={styles.errorText}>{errors.submit}</Text>
+          )}
+          <CustomButton
+            text={isSubmitting ? 'Submitting...' : 'Submit'}
+            onPress={handleSubmitt}
+            backgroundColor="#17a086"
+            style={styles.submitButton}
+            disabled={isSubmitting}
+          />
+        </ScrollView>
       )}
-      {/* Submit error */}
-      {errors.submit && <Text style={styles.errorText}>{errors.submit}</Text>}
-      <CustomButton
-        text={'Submit'}
-        onPress={handleSubmitt}
-        disabled={isSubmitting || isImageLoading}
-        backgroundColor={
-          isSubmitting || isImageLoading ? '#cccccc' : '#17a086'
-        }
-        style={styles.submitButton}
-      />
-      {openCamera && device && (
-        <Camera
-          style={StyleSheet.absoluteFill}
-          device={device as CameraDevice}
-          isActive={true}
-        />
-      )}
-    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+    backgroundColor: '#F4F6FA',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F4F6FA',
+  },
   container: {
-    marginTop: 16,
-    padding: 16,
     backgroundColor: '#F4F6FA',
     flex: 1,
+  },
+  scrollContentContainer: {
+    padding: 16,
+    paddingBottom: 40,
   },
   header: {
     fontSize: 18,
@@ -443,7 +482,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 8,
   },
-  itemText: { flex: 1 },
+  itemText: {flex: 1},
   tag: {
     backgroundColor: '#E6F0FF',
     color: '#007AFF',

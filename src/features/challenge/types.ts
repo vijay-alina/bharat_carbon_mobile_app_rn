@@ -66,3 +66,38 @@ export type TGoodsFormState = {
   error: string | null;
 
 }
+
+export type TMember = {
+  _id: string;
+  fullName: string;
+  mobileNumber: string;
+  relationship: string;
+  studentId: string;
+  schoolCollegeId: string;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};
+
+export type TAddMemberFormPayload = {
+  fullName: string;
+  mobileNumber: string;
+  relationship: string;
+  // image: string;
+};
+
+export type TAddMemberFormResponse = {
+  status: string;
+  message: string;
+  data: TMember;
+};
+
+export type TGetMembersResponse = {
+  status: string;
+  message: string;
+  data: TMember[];
+};
+
+
+

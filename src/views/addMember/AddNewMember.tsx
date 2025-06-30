@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,24 +6,112 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  Alert,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import CustomButton from '../../common/button';
 import CameraIcon from '../../images/icons/camera_icon.svg';
-import {Header} from '../../common/header';
-import {useNavigation} from '@react-navigation/native';
+import { Header } from '../../common/header';
+import { useNavigation } from '@react-navigation/native';
+import { ImagePickerService } from '../../services/ImagePickerService';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../app/store';
+import { submitMemberThunk } from '../../features/challenge/addMember/addMemberThunk';
+
 const AddNewMemberScreen = () => {
   const navigation = useNavigation();
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [photoBase64, setPhotoBase64] = useState<string | null>(null);
   const [relationship, setRelationship] = useState('Sibling');
-  //   const [profileImage, setProfileImage] = useState(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading, error } = useSelector((state: RootState) => state.members);
 
-  // Example image picker handler (mock, replace with real)
-  const handlePickImage = () => {
-    // TODO: Add real image picking logic
-    // For now, simulate an image being picked
-    // setProfileImage('https://via.placeholder.com/100');
+
+  const handlePickImage = async () => {
+
+    try {
+      const result = await ImagePickerService.pickImage(
+        {
+          quality: 0.8,
+          maxHeight: 2000,
+          maxWidth: 2000,
+          includeBase64: true,
+          mediaType: 'photo',
+        },
+        {
+          title: 'Add Member Photo',
+          message: 'Choose how you want to add your member photo',
+          cameraText: '📷 Take Photo',
+          galleryText: '🖼️ Choose from Gallery',
+          cancelText: 'Cancel',
+        },
+      );
+
+      if (result && result.uri) {
+        setPhotoUri(result.uri);
+        setPhotoBase64(result.base64);
+
+        console.log('Image selected successfully:', {
+          uri: result.uri,
+          fileName: result.fileName,
+          fileSize: result.fileSize
+            ? `${Math.round(result.fileSize / 1024)} KB`
+            : 'Unknown',
+          base64Size: result.base64
+            ? `${Math.round(result.base64.length / 1024)} KB`
+            : '0 KB',
+        });
+
+        Alert.alert(
+          'Success!',
+          'Photo added successfully.',
+          [{ text: 'OK' }],
+        );
+      }
+    } catch (error) {
+      console.error('Error selecting image:', error);
+      Alert.alert('Error', 'Failed to select image. Please try again.', [
+        { text: 'OK' },
+      ]);
+    }
+  };
+  const handleRemovePhoto = async () => {
+    Alert.alert('remove photo', 'Are you want to remove this photo?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Remove',
+        style: 'destructive',
+        onPress: () => {
+          setPhotoUri(null);
+          setPhotoBase64(null);
+        },
+      },
+    ]);
+  };
+
+  const handleSubmit = async () => {
+    if (!fullName || !phoneNumber || !relationship || !photoUri) {
+      Alert.alert('Please fill all fields');
+      return;
+    }
+
+    const payload = {
+      fullName,
+      mobileNumber: phoneNumber,
+      relationship,
+      // image: photoBase64 || '',
+    };
+
+    const resultAction = await dispatch(submitMemberThunk(payload));
+
+    if (submitMemberThunk.fulfilled.match(resultAction)) {
+      Alert.alert('Member added successfully');
+      navigation.goBack();
+    } else {
+      Alert.alert('Failed to submit member: ' + JSON.stringify(resultAction.payload || 'Unknown error'));
+    }
   };
 
   return (
@@ -35,7 +123,7 @@ const AddNewMemberScreen = () => {
           style={styles.avatarContainer}>
           <Image
             source={
-              {uri: 'https://avatar.iran.liara.run/public/boy?username=Ash'} // fallback image
+              { uri: 'https://avatar.iran.liara.run/public/boy?username=Ash' }
             }
             style={styles.avatar}
           />
@@ -73,11 +161,19 @@ const AddNewMemberScreen = () => {
           </Picker>
         </View>
 
-        <CustomButton
+        {/* <CustomButton
           text={'Send Invite'}
-          onPress={() => {}}
+          onPress={() => { }}
           // showIcon={!isSubmitting}
-          iconName="arrow-forward"
+          // iconName="arrow-forward"
+          backgroundColor="#17a086"
+          style={styles.submitButton}
+        /> */}
+        <CustomButton
+          text={loading ? 'Submitting...' : 'Send Invite'}
+          onPress={handleSubmit}
+          disabled={loading}
+          // iconName="arrow-forward"
           backgroundColor="#17a086"
           style={styles.submitButton}
         />

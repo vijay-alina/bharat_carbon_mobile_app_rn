@@ -238,55 +238,57 @@ interface AnalyticsCardProps {
   dataLoading: boolean;
 }
 
-const AnalyticsCard = ({dataLoading}: AnalyticsCardProps) => {
+const AnalyticsCard = ({ dataLoading }: AnalyticsCardProps) => {
   const analyticsData = useAppSelector(state => state.analytics.analytics);
 
-  console.log('analyticsData', analyticsData);
-  // If data is loading, show shimmer
-  if (dataLoading) {
+
+  // Show shimmer while loading or if category is not a valid array
+  if (
+    dataLoading ||
+    !analyticsData ||
+    !Array.isArray(analyticsData.category)
+  ) {
     return <ShimmerAnalyticsCard />;
   }
 
   // Start from 0 degrees (leftmost position) and go clockwise to 180 degrees (rightmost position)
-  let currentAngle = 0; // This is the leftmost point of the semicircle
-  const gapBetweenArcs = 2; // Small gap in degrees between arcs to show rounded caps
+  let currentAngle = 0;
+  const gapBetweenArcs = 2;
 
-  const arcPaths = analyticsData?.category?.map((p, idx) => {
+  const arcPaths = analyticsData.category.map((p, idx) => {
     const sweep = (p?.totalEmission / 100) * 180;
     let startAngle = currentAngle;
     let endAngle = currentAngle + sweep;
 
-    // Add small gaps between segments (except for the first and last)
     if (idx > 0) {
       startAngle += gapBetweenArcs / 2;
     }
-    if (idx < analyticsData?.category?.length - 1) {
+    if (idx < analyticsData.category.length - 1) {
       endAngle -= gapBetweenArcs / 2;
     }
 
     const d = describeArc(cx, cy, radius, startAngle, endAngle);
 
-    const segment = (
+    currentAngle += sweep;
+
+    return (
       <Path
         key={idx}
         d={d}
-        stroke={analyticsData?.category[idx]?.color}
+        stroke={p?.color}
         strokeWidth={20}
         fill="none"
-        strokeLinecap="round" // Rounded caps for all segments
+        strokeLinecap="round"
       />
     );
-    currentAngle += sweep; // Move to next position
-    return segment;
   });
 
-  // Split indicators into two rows: first 3, then 2
-  const firstRowIndicators = analyticsData?.category.slice(0, 3) || [];
-  const secondRowIndicators = analyticsData?.category?.slice(3, 5) || [];
+  const firstRowIndicators = analyticsData.category.slice(0, 3);
+  const secondRowIndicators = analyticsData.category.slice(3, 5);
 
   const renderIndicator = (color: string, label: string, index: number) => (
     <View key={index} style={styles.indicator}>
-      <View style={[styles.colorDot, {backgroundColor: color}]} />
+      <View style={[styles.colorDot, { backgroundColor: color }]} />
       <Text style={styles.indicatorText}>{label}</Text>
     </View>
   );
@@ -303,17 +305,14 @@ const AnalyticsCard = ({dataLoading}: AnalyticsCardProps) => {
 
       {/* Indicators Section */}
       <View style={styles.indicatorsContainer}>
-        {/* First Row - 3 indicators */}
         <View style={styles.indicatorRow}>
           {firstRowIndicators.map((category, index) =>
-            renderIndicator(category?.color, category?.category, index),
+            renderIndicator(category?.color, category?.category, index)
           )}
         </View>
-
-        {/* Second Row - 2 indicators */}
         <View style={styles.indicatorRow}>
           {secondRowIndicators.map((category, index) =>
-            renderIndicator(category?.color, category?.category, index + 3),
+            renderIndicator(category?.color, category?.category, index + 3)
           )}
         </View>
       </View>
@@ -322,6 +321,7 @@ const AnalyticsCard = ({dataLoading}: AnalyticsCardProps) => {
 };
 
 export default AnalyticsCard;
+
 
 const styles = StyleSheet.create({
   card: {

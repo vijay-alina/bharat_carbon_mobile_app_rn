@@ -143,7 +143,7 @@ const ShimmerAnalyticsCard: React.FC = () => {
     if (idx < percentages.length - 1) {
       endAngle -= gapBetweenArcs / 2;
     }
-
+    console.log('shimmerArcPaths', shimmerArcPaths);
     const d = describeArc(cx, cy, radius, startAngle, endAngle);
 
     const segment = (

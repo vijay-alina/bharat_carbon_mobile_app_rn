@@ -136,10 +136,10 @@ const BarCard = ({dataLoading}: BarChartProps) => {
   // Check if monthlyEmission exists and has data
   if (
     analyticsData?.monthlyEmission &&
-    analyticsData.monthlyEmission.length > 0
+    analyticsData?.monthlyEmission?.length > 0
   ) {
-    const values = analyticsData.monthlyEmission
-      .map(d => d.value)
+    const values = analyticsData?.monthlyEmission
+      ?.map(d => d.value)
       .filter(v => v > 0);
     if (values.length > 0) {
       maxValue = Math.max(...values, 5); // minimum 5 to ensure visibility

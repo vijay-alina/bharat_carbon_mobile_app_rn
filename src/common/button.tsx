@@ -62,7 +62,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       disabled={disabled}>
       {loading ? (
         <View>
-          <ActivityIndicator size="small" color="#0000ff" />
+          <ActivityIndicator size="small" color="#23B397" />
         </View>
       ) : (
         <View style={styles.content}>
@@ -86,8 +86,8 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 const styles = StyleSheet.create({
   button: {
     borderRadius: 25,
-    paddingVertical: 12,
-    paddingHorizontal: 25,
+    paddingVertical: 5,
+    // paddingHorizontal: 25,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 10,

@@ -216,7 +216,7 @@ const LeisureForm = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
       {dataLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#23B397" />
         </View>
       ) : (
         <ScrollView

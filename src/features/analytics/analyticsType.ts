@@ -28,6 +28,7 @@ export interface SubCategoryItem {
   category: string;
   monthlyEmission: MonthlyEmission[];
   yearlyEmission: number;
+  percent: number;
   unit: string;
   year: string;
   userId: string;
@@ -39,7 +40,8 @@ export interface SubCategoryItem {
 export interface AnalyticsCategory {
   category: string;
   icon: string;
-  color: string;
+  bgFill: string;
+  fill: string;
   totalEmission: number;
   percent: number;
   timeRange: string;

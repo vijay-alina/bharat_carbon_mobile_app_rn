@@ -1,6 +1,7 @@
 import apiClient from './apiClient';
 import {User} from '../features/user/userTypes';
 import {setAccessToken} from '../utils/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const getUserById = async (userId: string): Promise<User> => {
   const response = await apiClient.get(`/todos/${userId}`);
@@ -23,6 +24,10 @@ export const getOtp = async (email: string): Promise<User> => {
 export const verifyOtp = async (payload: any): Promise<User> => {
   const response = await apiClient.post(`/studentInfo/verify-otp`, payload);
   setAccessToken(response.data.data.access_token);
+  await AsyncStorage.setItem(
+    'user',
+    JSON.stringify(response.data.data.student),
+  );
   return response.data.data;
 };
 

@@ -19,7 +19,7 @@ export const AppNavigator = () => {
   if (isLoading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color="#23B397" />
         <Text style={styles.loadingText}>Loading...</Text>
       </View>
     );

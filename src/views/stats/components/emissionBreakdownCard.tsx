@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import Svg, {Circle, Text as SvgText} from 'react-native-svg';
 import * as Progress from 'react-native-progress';
@@ -16,6 +17,7 @@ import {
   AnalyticsCategory,
   SubCategoryItem,
 } from '../../../features/analytics/analyticsType';
+import SvgUri from 'react-native-svg-uri';
 
 // interface SubCategoryItem {
 //   _id: string;
@@ -180,7 +182,7 @@ const EmissionBreakdownCard = ({
       {/* Tabs */}
       {dataLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#23B397" />
         </View>
       ) : (
         <>
@@ -259,15 +261,17 @@ const AllCategory = ({item}: {item: AnalyticsCategory}) => {
   return (
     <View style={styles.card}>
       <View style={styles.left}>
-        <View
-          style={[styles.iconContainer, {backgroundColor: `${item.color}15`}]}>
-          <Text style={styles.icon}>{item.icon}</Text>
+        <View style={[styles.iconContainer, {backgroundColor: item?.bgFill}]}>
+          {/* <Text style={styles.icon}>{item.icon}</Text> */}
+          <SvgUri width="24" height="24" source={{uri: item?.icon}} />
         </View>
 
         <View style={styles.textContainer}>
           <Text style={styles.category}>{item.category}</Text>
           <View style={styles.amountContainer}>
-            <Text style={styles.bold}>{item.totalEmission.toFixed(2)}</Text>
+            <Text style={[styles.bold, {color: item?.fill}]}>
+              {item.totalEmission.toFixed(2)}
+            </Text>
             <Text style={styles.unit}> kg CO₂e</Text>
           </View>
           <Text style={styles.date}>{item.timeRange}</Text>
@@ -288,7 +292,7 @@ const AllCategory = ({item}: {item: AnalyticsCategory}) => {
 
           {/* Progress circle */}
           <Circle
-            stroke={item.color}
+            stroke={item.bgFill}
             fill="none"
             cx={radius + strokeWidth}
             cy={radius + strokeWidth}
@@ -305,7 +309,7 @@ const AllCategory = ({item}: {item: AnalyticsCategory}) => {
           <SvgText
             x={radius + strokeWidth}
             y={radius + strokeWidth + 4}
-            fontSize="10"
+            fontSize={10}
             fontWeight="bold"
             fill="#333"
             textAnchor="middle">
@@ -327,15 +331,15 @@ const CategoryWise = ({item}: {item: AnalyticsCategory}) => {
 
   return (
     <View>
-      <View style={[styles.categoryCard, {backgroundColor: `${item.color}15`}]}>
+      <View style={[styles.categoryCard, {backgroundColor: `${item.bgFill}`}]}>
         <View style={{flex: 1}}>
           <View style={styles.categoryIconContainer}>
-            <Text style={styles.categoryIcon}>{item.icon}</Text>
+            <SvgUri width="24" height="24" source={{uri: item?.icon}} />
             <Text style={styles.categoryText}>{item.category}</Text>
           </View>
           <View style={styles.categoryContainer}>
             <View style={styles.categoryAmountContainer}>
-              <Text style={[styles.categoryAmount, {color: item.color}]}>
+              <Text style={[styles.categoryAmount, {color: item.fill}]}>
                 {item.totalEmission.toFixed(2)}
               </Text>
               <Text> kg CO₂e</Text>
@@ -344,7 +348,7 @@ const CategoryWise = ({item}: {item: AnalyticsCategory}) => {
               <Svg height={size} width={size} viewBox={`0 0 ${size} ${size}`}>
                 {/* Background circle */}
                 <Circle
-                  stroke="#EAEAEA"
+                  stroke="#fff"
                   fill="none"
                   cx={radius + strokeWidth}
                   cy={radius + strokeWidth}
@@ -354,7 +358,7 @@ const CategoryWise = ({item}: {item: AnalyticsCategory}) => {
 
                 {/* Progress circle */}
                 <Circle
-                  stroke={item.color}
+                  stroke={item.fill}
                   fill="none"
                   cx={radius + strokeWidth}
                   cy={radius + strokeWidth}
@@ -384,8 +388,10 @@ const CategoryWise = ({item}: {item: AnalyticsCategory}) => {
       </View>
       <FlatList
         data={item.subCategoryItem}
-        keyExtractor={item => item._id}
-        renderItem={({item}) => <SubItem item={item} />}
+        keyExtractor={subItem => subItem._id}
+        renderItem={({item: subItem}) => (
+          <SubItem item={subItem} fill={item?.fill} bgFill={item.bgFill} />
+        )}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
       />
@@ -393,25 +399,33 @@ const CategoryWise = ({item}: {item: AnalyticsCategory}) => {
   );
 };
 
-const SubItem = ({item}: {item: SubCategoryItem}) => {
+const SubItem = ({
+  item,
+  fill,
+  bgFill,
+}: {
+  item: SubCategoryItem;
+  fill: string;
+  bgFill: string;
+}) => {
   return (
     <View style={styles.subItemCard}>
       <View style={styles.cardContent}>
-        <Text style={styles.subCategory}>{item.dataId}</Text>
+        <Text style={styles.subCategory}>{item?.dataId}</Text>
         <Text style={styles.amount}>
-          {item.yearlyEmission.toFixed(2)} kg CO2e
+          {item?.yearlyEmission?.toFixed(2)} kg CO2e
         </Text>
       </View>
       <View style={styles.cardContent}>
         <Progress.Bar
-          progress={item.yearlyEmission / 100}
-          // style={[styles.progressBar, {backgroundColor: `${item.color}15`}]}
-          // color={item.color}
+          progress={item?.percent / 100}
+          style={[styles.progressBar, {backgroundColor: `${bgFill}`}]}
+          color={fill}
           unfilledColor="#E8F5E8"
           borderWidth={0}
           width={null}
         />
-        <Text>{item.yearlyEmission.toFixed(2)} %</Text>
+        <Text>{item?.percent?.toFixed(2)} %</Text>
       </View>
     </View>
   );
@@ -429,15 +443,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabsScroll: {
-    // maxHeight: 120,
     flexGrow: 0,
+    marginBottom: 10,
+    // paddingVertical: 10,
   },
   tabsContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: 100,
+    height: 70,
     paddingHorizontal: 16,
-    paddingVertical: 10,
     gap: 4,
   },
   tabButton: {
@@ -447,7 +461,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     backgroundColor: '#FFFFFF',
-    marginRight: 6,
+    // marginRight: 6,
   },
   activeTabButton: {
     backgroundColor: '#0D9F6A12', // Light green with opacity
@@ -491,13 +505,14 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     flexDirection: 'row',
-    borderRadius: 20,
+    borderRadius: 80,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
   },
   icon: {
     // marginRight: 10,
+
     fontSize: 20,
   },
   textContainer: {
@@ -517,7 +532,7 @@ const styles = StyleSheet.create({
   bold: {
     fontWeight: '700',
     fontSize: 18,
-    color: '#222222',
+    // color: '#222222',
   },
   unit: {
     fontSize: 14,
@@ -561,6 +576,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 15,
     color: '#333333',
+    marginLeft: 10,
   },
 
   categoryContainer: {

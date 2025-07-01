@@ -143,7 +143,7 @@ const ShimmerAnalyticsCard: React.FC = () => {
     if (idx < percentages.length - 1) {
       endAngle -= gapBetweenArcs / 2;
     }
-
+    console.log('shimmerArcPaths', shimmerArcPaths);
     const d = describeArc(cx, cy, radius, startAngle, endAngle);
 
     const segment = (
@@ -238,57 +238,57 @@ interface AnalyticsCardProps {
   dataLoading: boolean;
 }
 
-const AnalyticsCard = ({ dataLoading }: AnalyticsCardProps) => {
+const AnalyticsCard = ({dataLoading}: AnalyticsCardProps) => {
   const analyticsData = useAppSelector(state => state.analytics.analytics);
 
-
-  // Show shimmer while loading or if category is not a valid array
-  if (
-    dataLoading ||
-    !analyticsData ||
-    !Array.isArray(analyticsData.category)
-  ) {
+  console.log('analyticsData andddd', analyticsData);
+  // If data is loading, show shimmer
+  if (dataLoading) {
     return <ShimmerAnalyticsCard />;
   }
 
   // Start from 0 degrees (leftmost position) and go clockwise to 180 degrees (rightmost position)
-  let currentAngle = 0;
-  const gapBetweenArcs = 2;
+  let currentAngle = 0; // This is the leftmost point of the semicircle
+  const gapBetweenArcs = 2; // Small gap in degrees between arcs to show rounded caps
 
-  const arcPaths = analyticsData.category.map((p, idx) => {
-    const sweep = (p?.totalEmission / 100) * 180;
+  const arcPaths = analyticsData?.category?.map((p, idx) => {
+    console.log('ppppppppppppppp', p);
+    // const sweep = (p?.percent / 100) * 180;
+    const sweep = (50 / 100) * 180;
     let startAngle = currentAngle;
     let endAngle = currentAngle + sweep;
 
+    // Add small gaps between segments (except for the first and last)
     if (idx > 0) {
       startAngle += gapBetweenArcs / 2;
     }
-    if (idx < analyticsData.category.length - 1) {
+    if (idx < analyticsData?.category?.length - 1) {
       endAngle -= gapBetweenArcs / 2;
     }
 
     const d = describeArc(cx, cy, radius, startAngle, endAngle);
 
-    currentAngle += sweep;
-
-    return (
+    const segment = (
       <Path
         key={idx}
         d={d}
-        stroke={p?.color}
+        stroke={analyticsData?.category[idx]?.fill}
         strokeWidth={20}
         fill="none"
-        strokeLinecap="round"
+        strokeLinecap="round" // Rounded caps for all segments
       />
     );
+    currentAngle += sweep; // Move to next position
+    return segment;
   });
 
-  const firstRowIndicators = analyticsData.category.slice(0, 3);
-  const secondRowIndicators = analyticsData.category.slice(3, 5);
+  // Split indicators into two rows: first 3, then 2
+  const firstRowIndicators = analyticsData?.category.slice(0, 3) || [];
+  const secondRowIndicators = analyticsData?.category?.slice(3, 5) || [];
 
   const renderIndicator = (color: string, label: string, index: number) => (
     <View key={index} style={styles.indicator}>
-      <View style={[styles.colorDot, { backgroundColor: color }]} />
+      <View style={[styles.colorDot, {backgroundColor: color}]} />
       <Text style={styles.indicatorText}>{label}</Text>
     </View>
   );
@@ -299,20 +299,25 @@ const AnalyticsCard = ({ dataLoading }: AnalyticsCardProps) => {
         {arcPaths}
       </Svg>
       <View style={styles.valueBox}>
-        <Text style={styles.value}>20.3</Text>
-        <Text style={styles.unit}>Kg, CO₂</Text>
+        <Text style={styles.value}>
+          {analyticsData?.totalEmission?.value?.toFixed(1)}
+        </Text>
+        <Text style={styles.unit}>{analyticsData?.totalEmission?.unit}</Text>
       </View>
 
       {/* Indicators Section */}
       <View style={styles.indicatorsContainer}>
+        {/* First Row - 3 indicators */}
         <View style={styles.indicatorRow}>
           {firstRowIndicators.map((category, index) =>
-            renderIndicator(category?.color, category?.category, index)
+            renderIndicator(category?.fill, category?.category, index),
           )}
         </View>
+
+        {/* Second Row - 2 indicators */}
         <View style={styles.indicatorRow}>
           {secondRowIndicators.map((category, index) =>
-            renderIndicator(category?.color, category?.category, index + 3)
+            renderIndicator(category?.fill, category?.category, index + 3),
           )}
         </View>
       </View>
@@ -321,7 +326,6 @@ const AnalyticsCard = ({ dataLoading }: AnalyticsCardProps) => {
 };
 
 export default AnalyticsCard;
-
 
 const styles = StyleSheet.create({
   card: {

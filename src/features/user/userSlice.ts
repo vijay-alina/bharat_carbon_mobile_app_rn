@@ -44,6 +44,7 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(otpVerify.fulfilled, (state, action: PayloadAction<any>) => {
+        console.log('action.payload', action.payload);
         state.status = 'succeeded';
         state.user = action.payload.student;
       })

@@ -4,6 +4,7 @@ import AnalyticsCard from './components/analyticsCard';
 import EmissionBreakdownCard from './components/emissionBreakdownCard';
 import {Header} from '../../common/header';
 import BarChart from './components/BarChart';
+import {useNavigation} from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -11,6 +12,7 @@ export const StatsScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [dataLoading, setDataLoading] = useState<boolean>(false);
   const scrollViewRef = useRef<ScrollView>(null);
+  const navigation = useNavigation();
 
   // Array of slides - you can modify this based on your data
   const slides = [
@@ -52,7 +54,13 @@ export const StatsScreen = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <Header title="Analytics" isHomeScreen={true} />
+      <Header
+        title="Analytics"
+        isHomeScreen={true}
+        onBackClick={() => {
+          navigation.goBack();
+        }}
+      />
 
       {/* Slider Area */}
       <View style={styles.sliderWrapper}>

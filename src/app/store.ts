@@ -8,6 +8,7 @@ import clothesReducer from '../features/challenge/cloths/clothesSlice';
 import appliancesReducer from '../features/challenge/appliance/appliancesSlice';
 import manageChallengeReducer from '../features/manageChallege/manageChallengeSlice';
 import analyticsReducer from '../features/analytics/analyticsSlice';
+import leaderboardReducer from '../features/leaderboard/leaderboardSlice';
 
 const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
     appliances: appliancesReducer,
     manageChallenge: manageChallengeReducer,
     analytics: analyticsReducer,
+    leaderboard: leaderboardReducer,
   },
 });
 

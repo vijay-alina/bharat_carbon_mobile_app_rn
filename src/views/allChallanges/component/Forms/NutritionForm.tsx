@@ -110,7 +110,6 @@ const NutritionForm = () => {
         setPhotoUri(result.uri);
         setPhotoBase64(result.base64);
 
-
         Alert.alert(
           'Success!',
           'Photo added successfully! You earned 10 points.',
@@ -287,7 +286,7 @@ const NutritionForm = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
       {dataLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#23B397" />
         </View>
       ) : (
         <ScrollView

@@ -126,7 +126,7 @@ const GoodsForm = () => {
           {
             goodsType,
             date: date.toISOString(),
-            applianceType: goodsType === 1 ? applianceType : clothsType,
+            // applianceType: goodsType === 1 ? applianceType : clothsType,
             item: selectedItems,
             notes: description,
             amount: Number(amount),
@@ -266,7 +266,7 @@ const GoodsForm = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
       {dataLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#23B397" />
         </View>
       ) : (
         <ScrollView

@@ -285,7 +285,7 @@ export const chooseChallengePeriod = [
   },
 ];
 
-export const winnerTypeFilters = ['Today', 'Weekly', 'Monthly', 'All-Time'];
+export const winnerTypeFilters = ['today', 'weekly', 'monthly', 'allTime'];
 
 export const activityTabs = [
   {

@@ -10,6 +10,7 @@ import manageChallengeReducer from '../features/manageChallege/manageChallengeSl
 import analyticsReducer from '../features/analytics/analyticsSlice';
 import leaderboardReducer from '../features/leaderboard/leaderboardSlice';
 import memberReducer from '../features/challenge/addMember/addMemberSlice';
+import activitiesReducer from '../features/activities/activitySlice';
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     analytics: analyticsReducer,
     leaderboard: leaderboardReducer,
     members: memberReducer,
+    activities: activitiesReducer,
   },
 });
 

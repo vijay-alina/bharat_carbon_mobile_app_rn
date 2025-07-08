@@ -1,10 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, Animated} from 'react-native';
+import {Colors} from '../constants/colors';
 
 const AnimatedProgressBar = ({
   progress = 0.43,
-//   title = 'Keep it up! Slowly drop down!',
+  //   title = 'Keep it up! Slowly drop down!',
   height = 8,
   backgroundColor = '#E5E7EB',
   color1 = '#60A5FA', // Light blue
@@ -22,7 +23,7 @@ const AnimatedProgressBar = ({
       duration: animationDuration,
       useNativeDriver: false,
     }).start();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [progress]);
 
   // Create animated segments
@@ -50,8 +51,6 @@ const AnimatedProgressBar = ({
         extrapolate: 'clamp',
       });
 
-
-
       segments.push(
         <Animated.View
           key={i}
@@ -62,7 +61,7 @@ const AnimatedProgressBar = ({
               backgroundColor: segmentColor,
               opacity: segmentOpacity,
               marginRight: i === segmentCount - 1 ? 0 : 1,
-              transform: [{ skewX: `${skewAngle}deg` }],
+              transform: [{skewX: `${skewAngle}deg`}],
             },
           ]}
         />,
@@ -88,8 +87,9 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 16,
     flexDirection: 'row',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
     alignItems: 'center',
+
   },
   title: {
     fontSize: 16,
@@ -98,10 +98,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   progressContainer: {
-    width: '70%',
+    width: '60%',
     borderRadius: 4,
     overflow: 'hidden',
-    marginBottom: 8,
+    // marginBottom: 8,
   },
   segmentsContainer: {
     flexDirection: 'row',
@@ -113,12 +113,12 @@ const styles = StyleSheet.create({
   },
   skewedSegment: {
     height: '100%',
-    transform: [{ rotate: '15deg' }],
+    transform: [{rotate: '15deg'}],
   },
   percentage: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#2563EB',
-    textAlign: 'right',
+    color: Colors.DarkGreen,
+    // textAlign: 'right',
   },
 });

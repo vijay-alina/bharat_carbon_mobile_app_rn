@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, StatusBar, StyleSheet, View} from 'react-native';
+import {Alert, StatusBar, Text, StyleSheet, View, Image} from 'react-native';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
@@ -10,6 +10,12 @@ import CustomDrawerItem from './CustomDrawerItem';
 import {setAccessToken} from '../utils/auth';
 import {CommonActions} from '@react-navigation/native';
 import {useAppContext} from '../context/AppContext';
+import {
+  ClassRankIcon,
+  EarnedPointsIcon,
+  LevelBadgeIcon,
+  SchoolRankIcon,
+} from '../images/icons';
 
 type ProfileProps = {
   name: string;
@@ -55,23 +61,52 @@ export const CustomDrawerContent = (
 
   return (
     <View style={styles.mainContainer}>
+      <ProfileHeader
+        name={name}
+        points={points}
+        pointsToNextLevel={pointsToNextLevel}
+        level={level}
+        classRank={classRank}
+        schoolRank={schoolRank}
+        onBackPress={() => {
+          props.navigation.toggleDrawer();
+        }}
+      />
       <DrawerContentScrollView
         {...rest}
         style={styles.container}
-        contentContainerStyle={styles.contentContainerStyle}
+        contentContainerStyle={[
+          styles.contentContainerStyle,
+          {paddingHorizontal: 0},
+        ]}
         showsVerticalScrollIndicator={false}>
         <StatusBar backgroundColor="#FFFFFF" barStyle="light-content" />
-        <ProfileHeader
-          name={name}
-          points={points}
-          pointsToNextLevel={pointsToNextLevel}
-          level={level}
-          classRank={classRank}
-          schoolRank={schoolRank}
-          onBackPress={() => {
-            props.navigation.toggleDrawer();
-          }}
-        />
+        <View style={styles.profileInfo}>
+          <Image source={LevelBadgeIcon} style={styles.levelBadge} />
+          <Text style={styles.pointsToNext}>
+            {pointsToNextLevel} pts to Level {level + 1}
+          </Text>
+          <Text style={styles.userName}>{name}</Text>
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <EarnedPointsIcon />
+              <Text style={styles.statLabel}>EARNED POINTS</Text>
+              <Text style={styles.statValue}>{points}</Text>
+            </View>
+            <View style={styles.statDivider} />
+            <View style={styles.statItem}>
+              <ClassRankIcon />
+              <Text style={styles.statLabel}>CLASS RANK</Text>
+              <Text style={styles.statValue}>#{classRank}</Text>
+            </View>
+            <View style={styles.statDivider} />
+            <View style={styles.statItem}>
+              <SchoolRankIcon />
+              <Text style={styles.statLabel}>SCHOOL RANK</Text>
+              <Text style={styles.statValue}>#{schoolRank}</Text>
+            </View>
+          </View>
+        </View>
         <View style={styles.itemsContainer}>
           <CustomDrawerItem
             icon={<UserIcon />}
@@ -147,7 +182,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#f8f8f8',
+    // backgroundColor: 'red',
   },
   contentContainerStyle: {
     flexGrow: 1,
@@ -155,9 +190,63 @@ const styles = StyleSheet.create({
   },
   itemsContainer: {
     paddingVertical: 10,
+    // backgroundColor: '#fff',
   },
   gap: {
     height: 16,
+  },
+  profileInfo: {
+    alignItems: 'center',
+    paddingBottom: 20,
+  },
+  levelBadge: {
+    width: 122,
+    height: 100,
+    marginTop: 16,
+  },
+  pointsToNext: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 5,
+  },
+  userName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#3D9D91',
+    borderRadius: 20,
+    padding: 10,
+    // width: '100%',
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  statItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statLabel: {
+    color: '#fff',
+    fontSize: 12,
+    marginTop: 5,
+    textAlign: 'center',
+  },
+  statValue: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 2,
+  },
+  statDivider: {
+    width: 1,
+    backgroundColor: '#fff',
+    opacity: 0.3,
+  },
+  drawerItemsContainer: {
+    flex: 1,
+    paddingTop: 10,
   },
 });
 

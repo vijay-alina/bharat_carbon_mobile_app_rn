@@ -6,26 +6,32 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
-import { Colors } from '../constants/colors';
+import {Colors} from '../constants/colors';
 
-export interface CalendarEvent {
+interface CalendarEvent {
+  color: string;
+  type: string;
+}
+
+interface CalendarSection {
+  title: string;
   date: number;
-  events: {
-    color: string;
-    type: 'dot' | 'bar';
-  }[];
+  events: CalendarEvent[];
+  data: any[];
 }
 
 interface CalendarProps {
   initialMonth?: number;
   initialYear?: number;
-  events?: CalendarEvent[];
+  events?: CalendarSection[];
+  onMonthChange?: (month: number, year: number) => void;
 }
 
 const Calendar: React.FC<CalendarProps> = ({
   initialMonth = 3, // April (0-indexed)
   initialYear = 2025,
   events = [],
+  onMonthChange,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(initialMonth);
   const [currentYear, setCurrentYear] = useState(initialYear);
@@ -56,20 +62,31 @@ const Calendar: React.FC<CalendarProps> = ({
   };
 
   const navigateMonth = (direction: 'prev' | 'next') => {
+    let newMonth = currentMonth;
+    let newYear = currentYear;
+
     if (direction === 'prev') {
       if (currentMonth === 0) {
-        setCurrentMonth(11);
-        setCurrentYear(currentYear - 1);
+        newMonth = 11;
+        newYear = currentYear - 1;
       } else {
-        setCurrentMonth(currentMonth - 1);
+        newMonth = currentMonth - 1;
       }
     } else {
       if (currentMonth === 11) {
-        setCurrentMonth(0);
-        setCurrentYear(currentYear + 1);
+        newMonth = 0;
+        newYear = currentYear + 1;
       } else {
-        setCurrentMonth(currentMonth + 1);
+        newMonth = currentMonth + 1;
       }
+    }
+
+    setCurrentMonth(newMonth);
+    setCurrentYear(newYear);
+
+    // Call the callback to update parent component
+    if (onMonthChange) {
+      onMonthChange(newMonth, newYear);
     }
   };
 
@@ -93,7 +110,6 @@ const Calendar: React.FC<CalendarProps> = ({
     // Current month days
     for (let day = 1; day <= daysInMonth; day++) {
       const dayEvents = events.find(event => event.date === day);
-
       calendarDays.push(
         <TouchableOpacity key={day} style={styles.dayContainer}>
           <Text style={styles.dayText}>{day}</Text>
@@ -117,7 +133,6 @@ const Calendar: React.FC<CalendarProps> = ({
     // Next month's leading days
     const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
     const remainingCells = totalCells - (firstDay + daysInMonth);
-
     for (let day = 1; day <= remainingCells; day++) {
       calendarDays.push(
         <View key={`next-${day}`} style={styles.dayContainer}>
@@ -139,18 +154,15 @@ const Calendar: React.FC<CalendarProps> = ({
             style={styles.navButton}>
             <Text style={styles.navButtonText}>‹</Text>
           </TouchableOpacity>
-
           <Text style={styles.monthYear}>
             {monthNames[currentMonth]} {currentYear}
           </Text>
-
           <TouchableOpacity
             onPress={() => navigateMonth('next')}
             style={styles.navButton}>
             <Text style={styles.navButtonText}>›</Text>
           </TouchableOpacity>
         </View>
-
         {/* Day names */}
         <View style={styles.dayNamesContainer}>
           {dayNames.map((dayName, index) => (
@@ -165,7 +177,6 @@ const Calendar: React.FC<CalendarProps> = ({
             </View>
           ))}
         </View>
-
         {/* Calendar grid */}
         <View style={styles.calendarGrid}>{renderCalendarDays()}</View>
       </View>
@@ -176,19 +187,19 @@ const Calendar: React.FC<CalendarProps> = ({
 export default Calendar;
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#F5F5F5',
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
     //   justifyContent: 'center',
-      paddingHorizontal: 20,
-      marginTop: 24,
-    },
-    calendar: {
-      backgroundColor: '#FFFFFF',
-      borderRadius: 16,
-      borderWidth: 1,
-      borderColor: Colors.CardGray,
-      padding: 20,
+    // paddingHorizontal: 20,
+    marginTop: 10,
+  },
+  calendar: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.CardGray,
+    padding: 10,
     //   shadowColor: '#000',
     //   shadowOffset: {
     //     width: 0,
@@ -197,81 +208,81 @@ const styles = StyleSheet.create({
     //   shadowOpacity: 0.1,
     //   shadowRadius: 8,
     //   elevation: 4,
-    },
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: 20,
-    },
-    navButton: {
-      width: 40,
-      height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    navButtonText: {
-      fontSize: 24,
-      color: '#333',
-      fontWeight: '300',
-    },
-    monthYear: {
-      fontSize: 18,
-      fontWeight: '600',
-      color: '#333',
-    },
-    dayNamesContainer: {
-      flexDirection: 'row',
-      marginBottom: 10,
-    },
-    dayNameContainer: {
-      flex: 1,
-      alignItems: 'center',
-    },
-    dayNameText: {
-      fontSize: 14,
-      fontWeight: '500',
-      color: '#8E8E93',
-    },
-    weekendDayName: {
-      color: '#4ECDC4',
-    },
-    calendarGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-    },
-    dayContainer: {
-      width: '14.28%',
-      height: 50,
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'relative',
-    },
-    dayText: {
-      fontSize: 16,
-      color: '#333',
-      fontWeight: '400',
-    },
-    otherMonthText: {
-      color: '#C7C7CC',
-    },
-    eventsContainer: {
-      position: 'absolute',
-      bottom: 8,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    eventDot: {
-      width: 6,
-      height: 6,
-      borderRadius: 3,
-      marginHorizontal: 1,
-    },
-    eventBar: {
-      width: 12,
-      height: 3,
-      borderRadius: 1.5,
-      marginHorizontal: 1,
-    },
-  });
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  navButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navButtonText: {
+    fontSize: 24,
+    color: '#333',
+    fontWeight: '300',
+  },
+  monthYear: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+  },
+  dayNamesContainer: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  dayNameContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  dayNameText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#8E8E93',
+  },
+  weekendDayName: {
+    color: '#4ECDC4',
+  },
+  calendarGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  dayContainer: {
+    width: '14.28%',
+    height: 42,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  dayText: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: '400',
+  },
+  otherMonthText: {
+    color: '#C7C7CC',
+  },
+  eventsContainer: {
+    position: 'absolute',
+    bottom: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  eventDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginHorizontal: 1,
+  },
+  eventBar: {
+    width: 12,
+    height: 3,
+    borderRadius: 1.5,
+    marginHorizontal: 1,
+  },
+});

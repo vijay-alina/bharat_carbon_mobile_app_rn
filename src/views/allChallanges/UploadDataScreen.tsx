@@ -1,5 +1,14 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import CategoryCard from './component/CategoryCard';
 import {Categories} from '../../constants/constants';
 import CustomButton from '../../common/button';
@@ -12,6 +21,12 @@ const UploadDataScreen = () => {
   const navigation = useNavigation();
   const [selectedChallenge, setSelectedChallenge] = useState<TChallenge>(
     Categories[0],
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      Keyboard.dismiss();
+    }, []),
   );
 
   const renderItem = ({item}: any) => (
@@ -31,37 +46,41 @@ const UploadDataScreen = () => {
           navigation.goBack();
         }}
       />
-      <View style={styles.container}>
-        <Text style={styles.title}>Upload Your Climate Action Proof</Text>
-        <Text style={styles.description}>
-          Earn points by sharing your sustainable actions.
-        </Text>
-        <Text style={styles.titleTwo}>
-          Select category to track your 2025 eco action
-        </Text>
-        <FlatList
-          data={Categories}
-          renderItem={renderItem}
-          keyExtractor={item => item.id.toString()}
-          contentContainerStyle={styles.contentContainerStyle}
-          showsVerticalScrollIndicator={false}
-        />
-        <View style={styles.btnContainer}>
-          <CustomButton
-            text={'Proceed to input'}
-            onPress={() => {
-              //@ts-ignore
-              navigation.navigate('ChallengeFormSelectionScreen', {
-                id: selectedChallenge.id,
-                headerLabel: selectedChallenge.heaaderLabel,
-              });
-            }}
-            backgroundColor="#17a086"
-            style={styles.submitButton}
-            textStyle={styles.buttonTextStyle}
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Upload Your Climate Action Proof</Text>
+          <Text style={styles.description}>
+            Earn points by sharing your sustainable actions.
+          </Text>
+          <Text style={styles.titleTwo}>
+            Select category to track your 2025 eco action
+          </Text>
+          <FlatList
+            data={Categories}
+            renderItem={renderItem}
+            keyExtractor={item => item.id.toString()}
+            contentContainerStyle={styles.contentContainerStyle}
+            showsVerticalScrollIndicator={false}
           />
+          <View style={styles.btnContainer}>
+            <CustomButton
+              text={'Proceed to input'}
+              onPress={() => {
+                //@ts-ignore
+                navigation.navigate('ChallengeFormSelectionScreen', {
+                  id: selectedChallenge.id,
+                  headerLabel: selectedChallenge.heaaderLabel,
+                });
+              }}
+              backgroundColor="#17a086"
+              style={styles.submitButton}
+              textStyle={styles.buttonTextStyle}
+            />
+          </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </>
   );
 };

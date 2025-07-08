@@ -39,7 +39,7 @@ const LeisureForm = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [leisureActivity, setLeisureActivity] = useState<number | undefined>();
+  const [leisureActivity, setLeisureActivity] = useState<any>();
   const [people, setPeople] = useState('');
   const [amount, setAmount] = useState('');
   const [notes, setNotes] = useState('');
@@ -155,7 +155,7 @@ const LeisureForm = () => {
         leisures: [
           {
             date: date.toISOString(),
-            leisureActivity,
+            leisureActivity: leisureActivity,
             people: parseInt(people),
             amount: parseFloat(amount),
             unit: 'INR',
@@ -166,6 +166,7 @@ const LeisureForm = () => {
         ],
       };
 
+      console.log('Request Body:', requestBody);
 
       // Replace with your actual housing API call
       await dispatch(uploadLesiure(requestBody)).unwrap();
@@ -205,9 +206,11 @@ const LeisureForm = () => {
 
   useEffect(() => {
     if (leisureActivities.length > 0) {
-      setLeisureActivity(leisureActivities[0].value);
+      setLeisureActivity(leisureActivities[0]);
     }
   }, [leisureActivities]);
+
+  console.log('Leisure Activity:', leisureActivities);
 
   return (
     <KeyboardAvoidingView
@@ -238,6 +241,7 @@ const LeisureForm = () => {
               mode="date"
               display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               onChange={handleDateChange}
+              maximumDate={new Date()}
             />
           )}
           <Text style={styles.label}>Activity Name</Text>
@@ -249,7 +253,7 @@ const LeisureForm = () => {
                 <Picker.Item
                   key={item.dataId}
                   label={item.label}
-                  value={item.value}
+                  value={item}
                 />
               ))}
             </Picker>

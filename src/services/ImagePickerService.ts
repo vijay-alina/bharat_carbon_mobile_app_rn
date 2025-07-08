@@ -70,33 +70,37 @@ export class ImagePickerService {
 
     const mergedOptions = {...this.defaultOptions, ...options};
 
-    return new Promise((resolve) => {
-      launchCamera({...mergedOptions, mediaType: mergedOptions.mediaType || 'photo'}, (response: ImagePickerResponse) => {
-        if (response.didCancel) {
-          resolve(null);
-          return;
-        }
+    return new Promise(resolve => {
+      launchCamera(
+        {...mergedOptions, mediaType: mergedOptions.mediaType || 'photo'},
+        (response: ImagePickerResponse) => {
+          if (response.didCancel) {
+            resolve(null);
+            return;
+          }
 
-        if (response.errorMessage) {
-          Alert.alert('Error', 'Failed to open camera. Please try again.');
-          resolve(null);
-          return;
-        }
+          if (response.errorMessage) {
+            Alert.alert('Error', 'Failed to open camera. Please try again.');
+            resolve(null);
+            return;
+          }
 
-        if (response.assets && response.assets[0]) {
-          const asset = response.assets[0];
-          resolve({
-            uri: asset.uri || null,
-            base64: asset.base64 || null,
-            fileName: asset.fileName,
-            fileSize: asset.fileSize,
-            type: asset.type,
-          });
-        } else {
-          resolve(null);
-        }
-      });
-    });  }
+          if (response.assets && response.assets[0]) {
+            const asset = response.assets[0];
+            resolve({
+              uri: asset.uri || null,
+              base64: asset.base64 || null,
+              fileName: asset.fileName,
+              fileSize: asset.fileSize,
+              type: asset.type,
+            });
+          } else {
+            resolve(null);
+          }
+        },
+      );
+    });
+  }
 
   // Private method to open gallery
   private static async openGallery(
@@ -104,33 +108,37 @@ export class ImagePickerService {
   ): Promise<ImageResult | null> {
     const mergedOptions = {...this.defaultOptions, ...options};
 
-    return new Promise((resolve) => {
-      launchImageLibrary({...mergedOptions, mediaType: mergedOptions.mediaType || 'photo'}, (response: ImagePickerResponse) => {
-        if (response.didCancel) {
-          resolve(null);
-          return;
-        }
+    return new Promise(resolve => {
+      launchImageLibrary(
+        {...mergedOptions, mediaType: mergedOptions.mediaType || 'photo'},
+        (response: ImagePickerResponse) => {
+          if (response.didCancel) {
+            resolve(null);
+            return;
+          }
 
-        if (response.errorMessage) {
-          Alert.alert('Error', 'Failed to open gallery. Please try again.');
-          resolve(null);
-          return;
-        }
+          if (response.errorMessage) {
+            Alert.alert('Error', 'Failed to open gallery. Please try again.');
+            resolve(null);
+            return;
+          }
 
-        if (response.assets && response.assets[0]) {
-          const asset = response.assets[0];
-          resolve({
-            uri: asset.uri || null,
-            base64: asset.base64 || null,
-            fileName: asset.fileName,
-            fileSize: asset.fileSize,
-            type: asset.type,
-          });
-        } else {
-          resolve(null);
-        }
-      });
-    });  }
+          if (response.assets && response.assets[0]) {
+            const asset = response.assets[0];
+            resolve({
+              uri: asset.uri || null,
+              base64: asset.base64 || null,
+              fileName: asset.fileName,
+              fileSize: asset.fileSize,
+              type: asset.type,
+            });
+          } else {
+            resolve(null);
+          }
+        },
+      );
+    });
+  }
 
   // Main public method to show image picker with options
   static async pickImage(
@@ -151,7 +159,7 @@ export class ImagePickerService {
       cancelText = 'Cancel',
     } = config || {};
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       Alert.alert(title, message, [
         {
           text: cameraText,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   ImageBackground,
@@ -15,17 +15,29 @@ import {
 } from '../../../images/icons';
 import HomeHorizontalCard from './home-horizontal-card';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
-import { Colors } from '../../../constants/colors';
+import {Colors} from '../../../constants/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = {};
 
 const ListHeaderContent = (props: Props) => {
+  const [student, setStudent] = useState<any>({});
   const navigation = useNavigation();
   const {width} = useWindowDimensions();
 
   const openDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
   };
+
+  useEffect(() => {
+    const getUser = async () => {
+      const userData: any = await AsyncStorage.getItem('user');
+      const user = JSON.parse(userData);
+      setStudent(user);
+    };
+    getUser();
+  }, []);
+
   return (
     <ImageBackground
       style={styles.container}
@@ -47,7 +59,7 @@ const ListHeaderContent = (props: Props) => {
           />
         </View>
       </View>
-      <Text style={styles.greetingText}>Good Morning, Akshay</Text>
+      <Text style={styles.greetingText}>Good Morning, {student.firstName}</Text>
       <HomeHorizontalCard />
     </ImageBackground>
   );
@@ -68,7 +80,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 40, 
+    marginTop: 10,
   },
   rightContainer: {
     flexDirection: 'row',

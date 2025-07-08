@@ -9,6 +9,7 @@ import {
   MealType,
   TravelMode,
   TripType,
+  WasteType,
   WaterSourceType,
 } from '../features/dropdown/dropdownType';
 import {Water} from '../features/housingData/housingDataType';
@@ -62,5 +63,10 @@ export const travelModeList = async (): Promise<TravelMode[]> => {
 
 export const travelType = async (): Promise<TripType[]> => {
   const response = await apiClient.get(`/dropdown/traveltype `);
+  return response.data;
+};
+
+export const wasteType = async (): Promise<WasteType[]> => {
+  const response = await apiClient.get(`/dropdown/wasteCategory`);
   return response.data;
 };

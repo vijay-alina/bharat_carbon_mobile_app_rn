@@ -114,7 +114,13 @@ export const HomeScreen = () => {
             buttonText={item.buttonText}
             gradientColors={item.gradientColors}
             icon={item.icon}
-            press={() => {}}
+            press={() => {
+              item.title === 'Take Your First Climate Action!'
+                ? navigation.navigate('UploadDataScreen')
+                : navigation.navigate('MemberStackNavigator', {
+                    screen: 'AddNewMemberScreen',
+                  });
+            }}
           />
         ))}
       </View>

@@ -8,22 +8,22 @@ import {
   Text,
   ScrollView,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import BgImage from '../../../images/icons/background_image.png';
 import AvatarPlaceholder from '../../../images/icons/avatar_placeholder.png';
 import LevelBadgeImage from '../../../images/icons/level_badge_icon.png';
-import { Header } from '../../../common/header';
-import { Colors } from '../../../constants/colors';
+import {Header} from '../../../common/header';
+import {Colors} from '../../../constants/colors';
 import RankComponent from './RankComponent';
 import StatisticsItemComp from './StatisticsItemComp';
 import BadgeComp from './BadgeComp';
-import { DEVICE_WIDTH } from '../../../utils/utils';
+import {DEVICE_WIDTH} from '../../../utils/utils';
 import ChallengeComp from '../../../components/ChallengeComp';
 import LinearGradient from 'react-native-linear-gradient';
-import LeafIcon from '../../../images/icons/class_rank_green_icon.svg'
-import Verticaldevider from '../../../images/icons/vertical_divider.png'
+import LeafIcon from '../../../images/icons/class_rank_green_icon.svg';
+import Verticaldevider from '../../../images/icons/vertical_divider.png';
 import Divider from '../../../images/icons/divider.png';
-import PointsIcon from '../../../images/icons/phonepe-icon.png'
+import PointsIcon from '../../../images/icons/phonepe-icon.png';
 
 const MyProfileScreen = () => {
   const navigation = useNavigation();
@@ -32,6 +32,7 @@ const MyProfileScreen = () => {
     navigation.goBack();
   };
 
+  // TODO: Uncomment and implement status bar configuration when needed
   // useFocusEffect(
   //   React.useCallback(() => {
   //     StatusBar.setTranslucent(false);
@@ -52,17 +53,16 @@ const MyProfileScreen = () => {
       <ImageBackground
         source={BgImage}
         style={styles.backgroundImage}
+        imageStyle={styles.backgroundImageStyle}
         resizeMode="cover">
         <SafeAreaView style={styles.content}>
-          <ScrollView
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-          >
+          {/* Fixed header section - non-scrollable */}
+          <View style={styles.headerSection}>
             <Header
               isHomeScreen={false}
               title="My Profile"
               hasTransparentBackground={true}
-              textStyle={{ color: Colors.White }}
+              textStyle={{color: Colors.White}}
               onBackClick={handleBackClick}
             />
             <View style={styles.avatarContainer}>
@@ -70,17 +70,42 @@ const MyProfileScreen = () => {
             </View>
             <Image source={LevelBadgeImage} style={styles.levelBadge} />
             <Text style={styles.nameText}>Akshay Swami</Text>
-            <RankComponent earnedPoints={545} schoolRank={123} classRank={467} />
+            <RankComponent
+              earnedPoints={545}
+              schoolRank={123}
+              classRank={467}
+            />
+          </View>
+
+          {/* Scrollable content section */}
+          <ScrollView
+            style={styles.scrollContainer}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}>
+            <View style={styles.rowHeaderContainer}>
+              <Text style={{fontWeight: 'bold'}}>Statistics</Text>
+              <Text style={{color: Colors.DarkGreen, fontSize: 10}}>
+                VIEW ALL
+              </Text>
+            </View>
+            {/* Statistics row - 4 items in a grid */}
             <View style={styles.statRowContainer}>
               {[1, 2, 3, 4].map((_, i) => (
                 <StatisticsItemComp
                   key={i}
                   icon={require('../../../images/icons/stat_earth_icon.png')}
-                  statType="Emissiions"
+                  statType="Emissions"
                   statValue="29.4 kg CO2e"
                 />
               ))}
             </View>
+
+            <View style={styles.rowHeaderContainer}>
+              <Text style={{fontWeight: 'bold', marginBottom: 10}}>
+                My Badges
+              </Text>
+            </View>
+            {/* Badges section */}
             <View style={styles.badgeContainer}>
               {[1, 2, 3, 4].map((_, i) => (
                 <BadgeComp
@@ -90,7 +115,12 @@ const MyProfileScreen = () => {
                 />
               ))}
             </View>
-            <View style={{marginVertical:10}}>
+
+            <View style={styles.rowHeaderContainer}>
+              <Text style={{fontWeight: 'bold'}}>Unfinished Challenges</Text>
+            </View>
+            {/* Challenge component */}
+            <View style={styles.challengeContainer}>
               <ChallengeComp
                 icon={require('../../../images/icons/badge_green_eater.png')}
                 header="Save Water Challenge"
@@ -98,44 +128,62 @@ const MyProfileScreen = () => {
                 description="Keep it up! Every drop counts."
               />
             </View>
+
+            <View style={styles.rowHeaderContainer}>
+              <Text style={{fontWeight: 'bold'}}>
+                Your Family's Green Impact
+              </Text>
+            </View>
+            {/* Family's Green Impact section */}
             <View style={styles.lowerContainer}>
-              <Text style={styles.title}>Your Family's Green Impact</Text>
+              {/* Family statistics gradient card */}
               <LinearGradient
                 colors={[Colors.LightGreen, Colors.DarkGreen]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
                 style={styles.statContainer}>
                 <View style={styles.leftStat}>
-                  <LeafIcon width={24} height={24} />
+                  <LeafIcon width={24} height={24} fill="white" />
                   <Text style={styles.statDescription}>TOTAL EMISSION</Text>
                   <Text style={styles.statTitle}>124.5 KG CO2e</Text>
                 </View>
                 <Image
                   source={Verticaldevider}
-                  style={{ width: 3, height: 60, }}
+                  style={styles.verticalDivider}
                 />
                 <View style={styles.leftStat}>
-                  <LeafIcon width={24} height={24} />
+                  <LeafIcon width={24} height={24} fill="white" />
                   <Text style={styles.statDescription}>TOP CONTRIBUTOR</Text>
                   <Text style={styles.statTitle}>Aryan</Text>
                 </View>
               </LinearGradient>
+
+              {/* Family member card */}
               <View style={styles.card}>
-                <Image source={AvatarPlaceholder} style={styles.avatar} />
+                <Image source={AvatarPlaceholder} style={styles.cardAvatar} />
                 <Text style={styles.cardTitle}>Aarav Mehta</Text>
                 <Text style={styles.cardDescription}>Brother</Text>
-                <Image source={Divider} style={{ width: 100, height: 2, marginVertical: 10 }} />
+                <Image source={Divider} style={styles.cardDivider} />
+
+                {/* Points earned row */}
                 <View style={styles.cardPointsRow}>
-                  <Text style={styles.cardPointsDescription}>Points earned</Text>
+                  <Text style={styles.cardPointsDescription}>
+                    Points earned
+                  </Text>
                   <View style={styles.cardPointsContainer}>
-                    <Image source={PointsIcon} style={{ width: 12, height: 12 }} />
+                    <Image source={PointsIcon} style={styles.pointsIcon} />
                     <Text style={styles.cardPointsText}>480 Pts</Text>
                   </View>
                 </View>
-                <View style={[styles.cardPointsRow, { marginTop: 5 }]}>
-                  <Text style={styles.cardPointsDescription}>Emissions (CO2e)</Text>
-                  <View style={[styles.cardPointsContainer,]}>
-                    <Image source={PointsIcon} style={{ width: 12, height: 12 }} />
+
+                {/* Emissions row */}
+                <View
+                  style={[styles.cardPointsRow, styles.cardPointsRowSpacing]}>
+                  <Text style={styles.cardPointsDescription}>
+                    Emission(CO2e)
+                  </Text>
+                  <View style={styles.cardPointsContainer}>
+                    <Image source={PointsIcon} style={styles.pointsIcon} />
                     <Text style={styles.cardPointsText}>29.3 kg</Text>
                   </View>
                 </View>
@@ -159,11 +207,19 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: 320,
+    borderRadius: 400,
+  },
+  backgroundImageStyle: {
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   content: {
     flex: 1,
-    // alignItems: 'center',
-    // paddingTop: 20, // Adjust based on your design
+  },
+  // Fixed header section styles
+  headerSection: {
+    alignItems: 'center',
+    paddingBottom: 20,
   },
   avatarContainer: {
     width: 84,
@@ -189,14 +245,27 @@ const styles = StyleSheet.create({
     color: Colors.White,
     marginVertical: 14,
   },
+  // Scrollable content styles
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 60, // Increased bottom padding to ensure all content is visible
+    // alignItems: 'center',
+    flexGrow: 1, // Ensures content can expand properly
+  },
+  rowHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+  },
   statRowContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-  },
-  scrollContent: {
-    // flex: 1,
-    paddingBottom: 40,
-    alignItems: 'center',
+    paddingHorizontal: 10,
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    // marginRight: 15,
   },
   badgeContainer: {
     width: DEVICE_WIDTH * 0.94,
@@ -209,79 +278,112 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderBottomWidth: 4,
     borderColor: Colors.Neutral200,
+    marginBottom: 10,
+  },
+  challengeContainer: {
+    marginVertical: 10,
+    // width: '100%',
+    paddingHorizontal: 10,
   },
   lowerContainer: {
     alignItems: 'flex-start',
     width: '100%',
-    padding: 20
+    paddingHorizontal: 10,
+    paddingTop: 10,
   },
   title: {
     fontSize: 20,
     fontFamily: 'Montserrat-Bold',
     marginVertical: 20,
-    textAlign: 'left'
+    textAlign: 'left',
   },
   statContainer: {
-
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
-    paddingHorizontal: 10,
-    paddingVertical: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     borderRadius: 16,
-
+    marginBottom: 20,
   },
   leftStat: {
-    width: DEVICE_WIDTH * 0.45,
-    alignItems: "center"
+    flex: 1,
+    alignItems: 'center',
+  },
 
+  verticalDivider: {
+    width: 3,
+    height: 60,
+    marginHorizontal: 10,
   },
   statDescription: {
     fontSize: 12,
     fontFamily: 'Montserrat-Regular',
-    color: Colors.White
+    color: Colors.White,
+    marginTop: 8,
   },
   statTitle: {
     fontSize: 16,
     fontFamily: 'Montserrat-Bold',
     color: Colors.White,
+    marginTop: 4,
   },
   card: {
-    marginTop: 20,
-    width: "50%",
-    height: 220,
+    width: '50%',
     backgroundColor: Colors.White,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: Colors.Neutral200,
     alignItems: 'center',
-    padding: 10,
-
+    paddingVertical: 16,
+    paddingHorizontal: 5,
+    marginBottom: 20, // Added margin to ensure spacing from bottom
+  },
+  cardAvatar: {
+    width: 60,
+    height: 60,
   },
   cardTitle: {
     fontSize: 16,
     fontFamily: 'Montserrat-Bold',
-    marginTop: 10
+    marginTop: 10,
+    textAlign: 'center',
   },
   cardDescription: {
     fontFamily: 'Montserrat-SemiBold',
     color: Colors.MediumGrey,
     textAlign: 'center',
+    // marginBottom: 10,
+  },
+  cardDivider: {
+    width: 100,
+    height: 2,
+    marginVertical: 5,
   },
   cardPointsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
+  },
+  cardPointsRowSpacing: {
+    marginTop: 8,
   },
   cardPointsDescription: {
     fontSize: 12,
     fontFamily: 'Montserrat-Regular',
     color: Colors.MediumGrey,
+    flex: 1,
   },
   cardPointsContainer: {
-    gap: 2,
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 4,
+  },
+  pointsIcon: {
+    width: 12,
+    height: 12,
   },
   cardPointsText: {
     fontSize: 12,

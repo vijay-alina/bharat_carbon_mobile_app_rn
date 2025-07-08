@@ -53,7 +53,9 @@ const Dropdown: React.FC<DropdownProps> = ({
   const buttonRef = useRef<TouchableOpacity>(null);
 
   const toggleDropdown = (): void => {
-    if (disabled) {return;}
+    if (disabled) {
+      return;
+    }
 
     visible ? setVisible(false) : openDropdown();
   };
@@ -180,7 +182,7 @@ const styles = StyleSheet.create({
     // backgroundColor: '#fff',
     height: 50,
     zIndex: 1,
-    paddingHorizontal: 15,
+    // paddingHorizontal: 15,
     // borderWidth: 1,
     // borderColor: '#ccc',
     // borderRadius: 8,

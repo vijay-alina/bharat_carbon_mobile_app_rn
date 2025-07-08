@@ -9,7 +9,7 @@ export const GetOngoingChallegeInfo = async (
   challangeType: string,
 ): Promise<GetOngoingChallegeInfoResponse> => {
   const response = await apiClient.get(
-    `housingChallenge/filter/${challangeType}`,
+    `/housingChallenge/filter/${challangeType}`,
   );
   return response.data;
 };

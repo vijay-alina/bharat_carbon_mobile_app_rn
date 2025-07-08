@@ -9,6 +9,7 @@ import {
   getMealType,
   getTravelMode,
   getTripType,
+  getWasteType,
   getWaterSource,
 } from './dropdownThunks';
 import {dropdownState} from './dropdownType';
@@ -24,6 +25,7 @@ const initialState: dropdownState = {
   leisureActivity: [],
   travelMode: [],
   tripType: [],
+  wasteType: [],
   status: 'idle',
   error: null,
 };
@@ -166,6 +168,19 @@ const dropdownSlice = createSlice({
         state.travelMode = action.payload.data;
       })
       .addCase(getTravelMode.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+      })
+
+      .addCase(getWasteType.pending, state => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(getWasteType.fulfilled, (state, action: PayloadAction<any>) => {
+        state.status = 'succeeded';
+        state.wasteType = action.payload.data;
+      })
+      .addCase(getWasteType.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
       });

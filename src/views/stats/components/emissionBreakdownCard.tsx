@@ -198,7 +198,7 @@ const EmissionBreakdownCard = ({
                 'Housing',
                 'Mobility',
                 'Goods',
-                'Leisure',
+                'Leisure and service',
               ] as TabType[]
             ).map(tab => (
               <TouchableOpacity
@@ -328,6 +328,8 @@ const CategoryWise = ({item}: {item: AnalyticsCategory}) => {
   const size = (radius + strokeWidth) * 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference * (1 - item.percent / 100);
+
+  console.log('item.bgFill', item.category);
 
   return (
     <View>
@@ -563,7 +565,7 @@ const styles = StyleSheet.create({
   categoryIconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: 80,
+    width: 140,
     height: 40,
   },
 

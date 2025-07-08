@@ -14,11 +14,11 @@ const StatisticsItemComp = (props: StatisticsItemCompProps) => {
   return (
     <View style={styles.wrapper}>
       <View style={styles.container}>
-          <Image source={props.icon} style={styles.statIcon} />
-          <View style={styles.marginLeft}>
-            <Text style={styles.labelText}>{props.statType}</Text>
-            <Text style={styles.valueText}>{props.statValue}</Text>
-          </View>
+        <Image source={props.icon} style={styles.statIcon} />
+        <View style={styles.marginLeft}>
+          <Text style={styles.labelText}>{props.statType}</Text>
+          <Text style={styles.valueText}>{props.statValue}</Text>
+        </View>
       </View>
     </View>
   );
@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 1,
     paddingBottom: 4,
     paddingTop: 1,
-    marginLeft: 16,
     marginTop: 16,
   },
   container: {
@@ -44,7 +43,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.White,
     borderRadius: 16,
-    paddingHorizontal: 16,
+    paddingHorizontal: 5,
     paddingVertical: 8,
   },
   statIcon: {

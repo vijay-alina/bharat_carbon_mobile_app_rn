@@ -402,6 +402,10 @@ const Leaderboard = () => {
     state => state.leaderboard.leaderboard,
   );
 
+  const currentYear = new Date().getFullYear();
+
+  console.log('currentYear', currentYear);
+
   useEffect(() => {
     const getUser = async () => {
       const userData: any = await AsyncStorage.getItem('user');
@@ -414,12 +418,13 @@ const Leaderboard = () => {
   console.log('student', student);
 
   // Get filtered data based on activeTab and activeFilter
-  // Get filtered data based on activeTab and activeFilter
   const getFilteredData = (): Student[] => {
-    const filterKey = activeFilter as keyof typeof data.leaderboard;
+    if (!leaderboardData?.leaderboard) return [];
+
+    const filterKey = activeFilter as keyof typeof leaderboardData.leaderboard;
     const tabKey = activeTab as 'school' | 'class';
 
-    const filteredData = data.leaderboard[filterKey]?.[tabKey] || [];
+    const filteredData = leaderboardData.leaderboard[filterKey]?.[tabKey] || [];
 
     // Sort by appropriate rank (ascending order - rank 1 first)
     const sortedData = filteredData.sort((a, b) => {
@@ -546,9 +551,9 @@ const Leaderboard = () => {
   const fetchData = async () => {
     setDataLoading(true);
     try {
-      await dispatch(leaderboardGet()).unwrap();
+      await dispatch(leaderboardGet(currentYear)).unwrap();
     } catch (error) {
-      console.error('Error fetching food items:', error);
+      console.error('Error fetching leaderboard data:', error);
     } finally {
       setDataLoading(false);
     }
@@ -564,6 +569,8 @@ const Leaderboard = () => {
   // Get the current filtered data
   const top3Students = getTop3Students();
   const remainingStudents = getRemainingStudents();
+
+  console.log('leaderboardData:', leaderboardData);
 
   return (
     <>
@@ -620,7 +627,7 @@ const Leaderboard = () => {
             <View style={styles.winnersWrapper}>
               <View style={styles.winnerRow}>
                 {/* 2nd Place */}
-                <View style={[styles.winnerContainer, {top: 20}]}>
+                <View style={[styles.winnerContainer, {top: 10}]}>
                   <WinnersCard student={top3Students.second} />
                 </View>
                 {/* 1st Place */}
@@ -628,7 +635,7 @@ const Leaderboard = () => {
                   <WinnerCardOne student={top3Students.first} />
                 </View>
                 {/* 3rd Place */}
-                <View style={[styles.winnerContainer, {top: 30}]}>
+                <View style={[styles.winnerContainer, {top: 20}]}>
                   <WinnersCardThree student={top3Students.third} />
                 </View>
               </View>
@@ -722,8 +729,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   podiumImage: {
-    width: '87%',
-    height: 160,
+    width: '100%',
+    height: 110,
     resizeMode: 'contain',
   },
   winnersCardWrapper: {

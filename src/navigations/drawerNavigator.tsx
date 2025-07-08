@@ -13,6 +13,8 @@ import MyProfileScreen from '../views/drawerScreens/MyProfile/MyProfile';
 import ReedemPointsScreen from '../views/drawerScreens/ReedemPoints/ReedemPointsScreen';
 import ActivitiesScreen from '../views/drawerScreens/Activities/Activities';
 import FAQScreen from '../views/Faq/FaqScreen';
+import {useEffect, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type DrawerParamList = {
   MainTabs: undefined;
@@ -44,19 +46,6 @@ function ProfileScreen() {
   );
 }
 
-const profileData = {
-  name: 'Sanjana Dutta',
-  points: 590,
-  pointsToNextLevel: 800,
-  level: 1,
-  classRank: 6,
-  schoolRank: 1438,
-};
-
-const CustomDrawerContentWrapper = (props: DrawerContentComponentProps) => (
-  <CustomDrawerContent {...props} {...profileData} />
-);
-
 type DrawerIconProps = {
   focused: boolean;
   size: number;
@@ -65,6 +54,30 @@ type DrawerIconProps = {
 const PersonIconWrapper = (_props: DrawerIconProps) => <UserIcon />;
 
 export const DrawerNavigator = () => {
+  const [student, setStudent] = useState<any>({});
+  console.log('student', student);
+  const profileData = {
+    name: student?.firstName + ' ' + student?.lastName,
+    points: 590,
+    pointsToNextLevel: 800,
+    level: 1,
+    classRank: 6,
+    schoolRank: 1438,
+  };
+
+  const CustomDrawerContentWrapper = (props: DrawerContentComponentProps) => (
+    <CustomDrawerContent {...props} {...profileData} />
+  );
+
+  useEffect(() => {
+    const getUser = async () => {
+      const userData: any = await AsyncStorage.getItem('user');
+      const user = JSON.parse(userData);
+      setStudent(user);
+    };
+    getUser();
+  }, []);
+
   return (
     <Drawer.Navigator
       initialRouteName="MainTabs"
@@ -72,6 +85,7 @@ export const DrawerNavigator = () => {
         drawerStyle: {
           backgroundColor: '#ff0000',
           width: '100%',
+          
         },
         headerShown: false,
         drawerType: 'back',

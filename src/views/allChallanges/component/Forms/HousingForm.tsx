@@ -33,6 +33,7 @@ import {
   getAppliences,
   getFuelType,
   getGasUsed,
+  getWasteType,
   getWaterSource,
 } from '../../../../features/dropdown/dropdownThunks';
 
@@ -53,11 +54,12 @@ const HousingForm = () => {
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const [category, setCategory] = useState('Electricity');
-  const [fuelType, setFuelType] = useState<number | undefined>();
+  const [fuelType, setFuelType] = useState<any>();
   const [waterSource, setWaterSource] = useState<number | undefined>();
   const [applianceType, setApplianceType] = useState<number | undefined>();
+  const [wasteType, setWasteType] = useState<any>();
   const [brandName, setBrandName] = useState('');
-  const [gasFilled, setGasFilled] = useState<number | undefined>();
+  const [gasFilled, setGasFilled] = useState<any>();
   const [refrigerantCharge, setRefrigerantCharge] = useState('');
   const [consumed, setConsumed] = useState('');
   const [quantity, setQuantity] = useState('');
@@ -79,6 +81,7 @@ const HousingForm = () => {
   const waterSourceList = useAppSelector(state => state.dropdown.waterSource);
   const applianceTypeList = useAppSelector(state => state.dropdown.appliance);
   const gasusedList = useAppSelector(state => state.dropdown.gasUsed);
+  const wasteTypeList = useAppSelector(state => state.dropdown.wasteType);
 
   // Reset form fields and set appropriate date when category changes
   useEffect(() => {
@@ -413,8 +416,6 @@ const HousingForm = () => {
           break;
 
         case 'Fuel':
-          unit = fuelTypeList.find(item => item.value === fuelType)?.state;
-
           requestBody = {
             fuels: [
               {
@@ -431,10 +432,6 @@ const HousingForm = () => {
           break;
 
         case 'Water':
-          unit = waterSourceList.find(
-            item => item.value === waterSource,
-          )?.state;
-
           requestBody = {
             waters: [
               {
@@ -442,7 +439,7 @@ const HousingForm = () => {
                 consumed: parseFloat(consumed),
                 waterSource: waterSource,
                 notes: description,
-                unit,
+                unit: 'liters',
                 image: imageData,
               },
             ],
@@ -456,7 +453,7 @@ const HousingForm = () => {
               {
                 date: date.toISOString(),
                 quantity: parseFloat(quantity),
-                wasteType: 1,
+                wasteType,
                 notes: description,
                 unit: 'kg',
                 image: imageData,
@@ -467,7 +464,7 @@ const HousingForm = () => {
           break;
 
         case 'Appliances':
-          unit = gasusedList.find(item => item.value === gasFilled)?.state;
+          unit = gasusedList.find(item => item.value === gasFilled.value)?.unit;
 
           requestBody = {
             appliances: [
@@ -486,6 +483,8 @@ const HousingForm = () => {
           apiAction = uploadAppliancesData;
           break;
       }
+
+      console.log('requestBody', requestBody);
 
       // Call the appropriate API based on category
       await dispatch(apiAction(requestBody)).unwrap();
@@ -514,6 +513,7 @@ const HousingForm = () => {
       await dispatch(getWaterSource()).unwrap();
       await dispatch(getAppliences()).unwrap();
       await dispatch(getGasUsed()).unwrap();
+      await dispatch(getWasteType()).unwrap();
     } catch (error) {
       console.error('Error fetching food items:', error);
     } finally {
@@ -539,11 +539,14 @@ const HousingForm = () => {
       waterSourceList.length > 0 &&
       gasusedList.length > 0
     ) {
-      setFuelType(fuelTypeList[0].value);
+      setFuelType(fuelTypeList[0]);
       setWaterSource(waterSourceList[0].value);
-      setGasFilled(gasusedList[0].value);
+      setGasFilled(gasusedList[0]);
+      setWasteType(wasteTypeList[0]);
     }
   }, [fuelTypeList, waterSourceList, gasusedList]);
+
+  console.log('wasteTypeLiost', wasteTypeList);
 
   return (
     <KeyboardAvoidingView
@@ -609,16 +612,7 @@ const HousingForm = () => {
               onChange={
                 category === 'Electricity' ? handleDateChange : dateChange
               }
-              minimumDate={
-                category === 'Electricity'
-                  ? new Date(currentYear, 0, 1)
-                  : undefined
-              }
-              maximumDate={
-                category === 'Electricity'
-                  ? new Date(currentYear, 11, 31)
-                  : new Date()
-              }
+              maximumDate={new Date()}
             />
           )}
 
@@ -649,7 +643,7 @@ const HousingForm = () => {
                     <Picker.Item
                       key={fuelType.dataId}
                       label={fuelType.label}
-                      value={fuelType.value}
+                      value={fuelType}
                     />
                   ))}
                 </Picker>
@@ -704,6 +698,18 @@ const HousingForm = () => {
           {/* Waste Form */}
           {category === 'Waste' && (
             <>
+              <Text style={styles.label}>Choose Waste Type</Text>
+              <View style={styles.pickerBox}>
+                <Picker selectedValue={wasteType} onValueChange={setWasteType}>
+                  {wasteTypeList.map(wasteType => (
+                    <Picker.Item
+                      key={wasteType.dataId}
+                      label={wasteType.label}
+                      value={wasteType}
+                    />
+                  ))}
+                </Picker>
+              </View>
               <Text style={styles.label}>Quantity of waste Generated (kg)</Text>
               <TextInput
                 placeholder="Enter quantity"
@@ -762,7 +768,7 @@ const HousingForm = () => {
                       <Picker.Item
                         key={gasFilled.dataId}
                         label={gasFilled.label}
-                        value={gasFilled.value}
+                        value={gasFilled}
                       />
                     ))}
                   </Picker>

@@ -32,12 +32,12 @@ const CustomDrawerItem: React.FC<DrawerItemProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: Colors.White,
-    padding: 16,
+    padding: 10,
     borderRadius: 10,
     marginTop: 12,
     minHeight: 56,

@@ -9,6 +9,7 @@ import {
   mealTypeList,
   travelModeList,
   travelType,
+  wasteType,
   waterSourceList,
 } from '../../services/dropdownService';
 
@@ -134,6 +135,19 @@ export const getTripType = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       return await travelType();
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Fetch failed',
+      );
+    }
+  },
+);
+
+export const getWasteType = createAsyncThunk(
+  'dropdown/getWasteType',
+  async (_, thunkAPI) => {
+    try {
+      return await wasteType();
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || 'Fetch failed',

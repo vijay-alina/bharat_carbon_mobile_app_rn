@@ -61,6 +61,7 @@ const NutritionForm = () => {
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [photoBase64, setPhotoBase64] = useState<string | null>(null);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [quantityErrors, setQuantityErrors] = useState<{[key: number]: boolean}>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dataLoading, setDataLoading] = useState(false);
   const dispatch = useAppDispatch();
@@ -151,6 +152,24 @@ const NutritionForm = () => {
         },
         {abortEarly: false},
       );
+      
+      // Validate quantities
+      const newQuantityErrors: {[key: number]: boolean} = {};
+      let hasQuantityError = false;
+      
+      selectedItems.forEach((item, index) => {
+        if (!item.quantity || item.quantity <= 0) {
+          newQuantityErrors[index] = true;
+          hasQuantityError = true;
+        }
+      });
+      
+      setQuantityErrors(newQuantityErrors);
+      
+      if (hasQuantityError) {
+        return false;
+      }
+      
       setErrors({});
       return true;
     } catch (error) {
@@ -193,6 +212,8 @@ const NutritionForm = () => {
         ],
       };
 
+      console.log('Request Body:', requestBody);
+
       await dispatch(uploadNutrition(requestBody)).unwrap();
       Alert.alert('Success', 'Nutrition data submitted successfully!', [
         {
@@ -226,19 +247,27 @@ const NutritionForm = () => {
     const updated = [...selectedItems];
     updated[index] = {
       ...updated[index],
-      quantity: parseFloat(text),
+      quantity: parseFloat(text) || 0,
     };
     setSelectedItems(updated);
+    
+    // Clear quantity error for this item if text is provided
+    if (text.trim()) {
+      setQuantityErrors(prev => ({...prev, [index]: false}));
+    }
   };
 
   const renderItem = ({item, index}: any) => (
     <View style={styles.itemContainer}>
       <Text style={styles.itemText}>{item.label}</Text>
-      <Text style={styles.points}>{item.Points || 0} pts</Text>
+      <Text style={styles.points}>{item.points || 0} pts</Text>
       <TextInput
         placeholder="gm"
-        style={styles.inputSmall}
-        value={item.quantity || ''}
+        style={[
+          styles.inputSmall,
+          quantityErrors[index] && styles.inputSmallError
+        ]}
+        value={item.quantity ? item.quantity.toString() : ''}
         onChangeText={text => handleQuantityChange(text, index)}
         keyboardType="numeric"
       />
@@ -310,6 +339,7 @@ const NutritionForm = () => {
               mode="date"
               display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               onChange={handleDateChange}
+              maximumDate={new Date()}
             />
           )}
 
@@ -514,6 +544,11 @@ const styles = StyleSheet.create({
     width: 60,
     textAlign: 'center',
     fontSize: 14,
+  },
+  inputSmallError: {
+    borderColor: '#ff4d4d',
+    borderWidth: 1,
+    backgroundColor: '#fff',
   },
   itemContainer: {
     flexDirection: 'row',

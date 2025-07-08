@@ -46,7 +46,7 @@ const MobilityForm = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [transportMode, setTransportMode] = useState<number | undefined>();
+  const [transportMode, setTransportMode] = useState<any>();
   const [tripType, setTripType] = useState<number | undefined>();
   const [travelledFrom, setTravelledFrom] = useState<string>('');
   const [travelledTo, setTravelledTo] = useState<string>('');
@@ -163,17 +163,19 @@ const MobilityForm = () => {
         mobilities: [
           {
             date: date.toISOString(),
-            transportMode,
+            transportMode: transportMode,
             tripType,
-            travelledFrom,
-            travelledTo,
-            distanceTravelled: parseFloat(distanceTravelled),
+            traveledFrom: travelledFrom,
+            traveledTo: travelledTo,
+            distanceTraveled: parseFloat(distanceTravelled),
             notes,
             image: [],
             // image: photoBase64 ? [photoBase64] : [],
           },
         ],
       };
+
+      console.log('Request Body:', requestBody);
 
       // Replace with your actual housing API call
       await dispatch(uploadMobility(requestBody)).unwrap();
@@ -214,7 +216,7 @@ const MobilityForm = () => {
 
   useEffect(() => {
     if (travelModes.length > 0 && tripTypes.length > 0) {
-      setTransportMode(travelModes[0].value);
+      setTransportMode(travelModes[0]);
       setTripType(tripTypes[0].value);
     }
   }, [travelModes, tripTypes]);
@@ -250,6 +252,7 @@ const MobilityForm = () => {
               mode="date"
               display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               onChange={handleDateChange}
+              maximumDate={new Date()}
             />
           )}
 
@@ -262,7 +265,7 @@ const MobilityForm = () => {
                 <Picker.Item
                   key={item.dataId}
                   label={item.label}
-                  value={item.value}
+                  value={item}
                 />
               ))}
             </Picker>
@@ -326,6 +329,7 @@ const MobilityForm = () => {
             placeholder="Enter Distance in Kilometers"
             value={distanceTravelled}
             onChangeText={setDistanceTravelled}
+            keyboardType="numeric"
             style={[
               styles.inputBox,
               errors.distanceTravelled && styles.inputError,

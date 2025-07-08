@@ -15,15 +15,15 @@ const WinnersCardThree = ({student}: {student: any}) => {
           <Image source={BedgeImage} style={styles.bdgImage} />
         </View>
       </View>
-      <Text style={styles.name}>{student.name}</Text>
-      <Text style={styles.grade}>{student.class}</Text>
+      <Text style={styles.name}>{student?.name}</Text>
+      <Text style={styles.grade}>{student?.class}</Text>
       <View style={styles.bedge}>
-        <Text style={styles.bedgeText}>{student.points} pts</Text>
+        <Text style={styles.bedgeText}>{student?.points} pts</Text>
       </View>
     </View>
   );
 };
-const AVATAR_SIZE = 50;
+const AVATAR_SIZE = 25;
 const BORDER_WIDTH = 11;
 const Bedge_IMAGE_SIZE = 50;
 const styles = StyleSheet.create({
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     width: 120,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
+    // marginTop: 40,
   },
   avtarSection: {
     alignItems: 'center',

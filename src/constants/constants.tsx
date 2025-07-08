@@ -1,4 +1,4 @@
-import {CalendarEvent} from '../components/Calendar';
+// import {CalendarEvent} from '../components/Calendar';
 import {
   WaveycheckIcon,
   Leaficon,
@@ -310,106 +310,339 @@ export const dropdownItems = [
 
 export const activities = [
   {
-    title: 'April 2025',
-    data: [
-      {
-        id: '1',
-        title: 'Quiona Salad',
-        timestamp: 'Tue, 8 Apr 2025',
-        name: 'Akshay',
-        activityType: 'Nutrition',
-      },
-      {
-        id: '2',
-        title: 'Cycled 4 km',
-        timestamp: 'Wed, 9 Apr 2025',
-        name: 'Aarav',
-        activityType: 'Mobility',
-      },
-      {
-        id: '3',
-        title: 'Reduced AC usage',
-        timestamp: 'Wed, 9 Apr 2025',
-        name: 'Kavya',
-        activityType: 'Housing',
-      },
-    ],
+    id: '1',
+    title: 'Quiona Salad',
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
   },
   {
-    title: 'May 2025',
-    data: [
-      {
-        id: '4',
-        title: 'Watched documentry on climate',
-        timestamp: 'Tue, 8 May 2025',
-        name: 'Akshay',
-        activityType: 'Nutrition',
-      },
-      {
-        id: '5',
-        title: 'Conduct a home energey audit',
-        timestamp: 'Tue, 8 May 2025',
-        name: 'Aarav',
-        activityType: 'Nutrition',
-      },
-    ],
+    id: '2',
+    title: 'Cycled 4 km',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  },
+  {
+    id: '3',
+    title: 'Reduced AC usage',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
+  },
+  {
+    id: '4',
+    title: 'Quiona Salad',
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '5',
+    title: 'Cycled 4 km',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  },
+  {
+    id: '6',
+    title: 'Reduced AC usage',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
+  },
+  {
+    id: '7',
+    title: 'Quiona Salad',
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '8',
+    title: 'Cycled 4 km',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  },
+  {
+    id: '9',
+    title: 'Reduced AC usage',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
+  },
+  {
+    id: '10',
+    title: 'Quiona Salad',
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '11',
+    title: 'Cycled 4 km',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  },
+  {
+    id: '12',
+    title: 'Reduced AC usage',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
+  },
+  {
+    id: '13',
+    title: 'Quiona Salad',
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '14',
+    title: 'Cycled 4 km',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  },
+  {
+    id: '15',
+    title: 'Reduced AC usage',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
+  },
+  {
+    id: '16',
+    title: 'Quiona Salad',
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '17',
+    title: 'Cycled 4 km',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  },
+  {
+    id: '18',
+    title: 'Reduced AC usage',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
+  },
+  {
+    id: '19',
+    title: 'Quiona Salad',
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '20',
+    title: 'Cycled 4 km',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  }
+];
+
+export const activityTwo = [
+   {
+    id: '21',
+    title: 'Reduced AC usage',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
+  },
+  {
+    id: '22',
+    title: 'Quiona Salad',
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '23',
+    title: 'Cycled 4 km',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  },
+  {
+    id: '24',
+    title: 'Reduced AC usage',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
+  },
+  {
+    id: '25',
+    title: 'Quiona Salad',
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '26',
+    title: 'Cycled 4 km',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  },
+  {
+    id: '27',
+    title: 'Reduced AC usage',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
+  },
+  {
+    id: '28',
+    title: 'Quiona Salad',
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '29',
+    title: 'Cycled 4 km',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  },
+  {
+    id: '30',
+    title: 'Reduced AC usage',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
+  },
+  {
+    id: '31',
+    title: 'Quiona Salad',
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '32',
+    title: 'Cycled 4 km',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  },
+  {
+    id: '33',
+    title: 'Reduced AC usage',
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
+  },
+  {
+    id: '34',
+    title: 'Watched documentry on climate',
+    timestamp: 'Tue, 8 May 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '35',
+    title: 'Conduct a home energey audit',
+    timestamp: 'Wed, 9 May 2025',
+    name: 'Aarav',
+    activityType: 'Nutrition',
+  },
+]
+
+export const monthActivities = [
+  {
+    id: '1',
+    title: 'Quiona Salad 111',
+    date: 8,
+    events: {color: '#FF6B6B', type: 'dot'},
+    timestamp: 'Tue, 8 Apr 2025',
+    name: 'Akshay',
+    activityType: 'Nutrition',
+  },
+  {
+    id: '2',
+    title: 'Cycled 4 km 222',
+    date: 9,
+    events: {color: '#FF6B6B', type: 'dot'},
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Aarav',
+    activityType: 'Mobility',
+  },
+  {
+    id: '3',
+    title: 'Reduced AC usage 333',
+    date: 9,
+    events: {color: '#FF6B6B', type: 'dot'},
+    timestamp: 'Wed, 9 Apr 2025',
+    name: 'Kavya',
+    activityType: 'Housing',
   },
 ];
 
-export const sampleEvents: CalendarEvent[] = [
-  {
-    date: 1,
-    events: [
-      {color: '#FF6B6B', type: 'dot'},
-      {color: '#4ECDC4', type: 'dot'},
-    ],
-  },
-  {
-    date: 2,
-    events: [
-      {color: '#45B7D1', type: 'dot'},
-      {color: '#96CEB4', type: 'dot'},
-      {color: '#FFEAA7', type: 'dot'},
-    ],
-  },
-  {
-    date: 3,
-    events: [
-      {color: '#FF6B6B', type: 'dot'},
-      {color: '#4ECDC4', type: 'dot'},
-    ],
-  },
-  {
-    date: 5,
-    events: [{color: '#96CEB4', type: 'dot'}],
-  },
-  {
-    date: 6,
-    events: [
-      {color: '#FF6B6B', type: 'dot'},
-      {color: '#4ECDC4', type: 'dot'},
-    ],
-  },
-  {
-    date: 8,
-    events: [{color: '#96CEB4', type: 'dot'}],
-  },
-  {
-    date: 9,
-    events: [
-      {color: '#45B7D1', type: 'dot'},
-      {color: '#96CEB4', type: 'dot'},
-      {color: '#FF6B6B', type: 'dot'},
-    ],
-  },
-  {
-    date: 12,
-    events: [
-      {color: '#45B7D1', type: 'dot'},
-      {color: '#4ECDC4', type: 'dot'},
-    ],
-  },
-];
+// export const sampleEvents: CalendarEvent[] = [
+//   {
+//     date: 1,
+//     events: [
+//       {color: '#FF6B6B', type: 'dot'},
+//       {color: '#4ECDC4', type: 'dot'},
+//     ],
+//   },
+//   {
+//     date: 2,
+//     events: [
+//       {color: '#45B7D1', type: 'dot'},
+//       {color: '#96CEB4', type: 'dot'},
+//       {color: '#FFEAA7', type: 'dot'},
+//     ],
+//   },
+//   {
+//     date: 3,
+//     events: [
+//       {color: '#FF6B6B', type: 'dot'},
+//       {color: '#4ECDC4', type: 'dot'},
+//     ],
+//   },
+//   {
+//     date: 5,
+//     events: [{color: '#96CEB4', type: 'dot'}],
+//   },
+//   {
+//     date: 6,
+//     events: [
+//       {color: '#FF6B6B', type: 'dot'},
+//       {color: '#4ECDC4', type: 'dot'},
+//     ],
+//   },
+//   {
+//     date: 8,
+//     events: [{color: '#96CEB4', type: 'dot'}],
+//   },
+//   {
+//     date: 9,
+//     events: [
+//       {color: '#45B7D1', type: 'dot'},
+//       {color: '#96CEB4', type: 'dot'},
+//       {color: '#FF6B6B', type: 'dot'},
+//     ],
+//   },
+//   {
+//     date: 12,
+//     events: [
+//       {color: '#45B7D1', type: 'dot'},
+//       {color: '#4ECDC4', type: 'dot'},
+//     ],
+//   },
+// ];
 
 export const aboutAppTasks: TAppTask[] = [
   {

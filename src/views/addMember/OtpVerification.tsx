@@ -28,6 +28,7 @@ const OTPVerificationScreen = () => {
       newOtp[index] = text;
       setOtp(newOtp);
       if (text !== '' && index < 3) {
+        console.log('hello');
         inputs.current[index + 1].focus();
       }
     }
@@ -51,10 +52,10 @@ const OTPVerificationScreen = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
-          <Text style={styles.title}>
+          {/* <Text style={styles.title}>
             We have sent a verification code to{'\n'}
             <Text style={styles.phone}>+91 78122 45690</Text>
-          </Text>
+          </Text> */}
 
           <View style={styles.otpContainer}>
             {otp.map((digit, index) => (

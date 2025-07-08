@@ -1,5 +1,13 @@
 import React from 'react';
-import {ImageSourcePropType, StyleSheet, Text, View, Image} from 'react-native';
+import {
+  ImageSourcePropType,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import {Colors} from '../../../constants/colors';
 import {
   MoreVerticalCircleIcon,
@@ -23,6 +31,7 @@ type ActivityCompProps = {
   subHeader: string;
   avatar?: ImageSourcePropType;
   name: string;
+  item: any;
 };
 
 const ActivityComp = (props: ActivityCompProps) => {
@@ -77,6 +86,67 @@ const ActivityComp = (props: ActivityCompProps) => {
     }
   };
 
+  const handleEditActivity = (item: any) => {
+    Alert.alert('Edit Activity', `Edit ${item.title}?`, [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Edit',
+        onPress: () => {
+          // Navigate to edit screen or open edit modal
+          console.log('Edit activity:', item);
+          // navigation.navigate('EditActivity', { activity: item });
+        },
+      },
+    ]);
+  };
+
+  const handleDeleteActivity = (item: any) => {
+    Alert.alert(
+      'Delete Activity',
+      `Are you sure you want to delete "${item.title}"?`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            // Handle delete logic here
+            console.log('Delete activity:', item);
+            // You can call an API or update local state
+          },
+        },
+      ],
+    );
+  };
+
+  const handleActivityPress = (item: any) => {
+    Alert.alert(
+      'Activity Options',
+      `What would you like to do with "${item.title}"?`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Edit',
+          onPress: () => handleEditActivity(item),
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => handleDeleteActivity(item),
+        },
+      ],
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.activityTypeContainer}>
@@ -86,9 +156,19 @@ const ActivityComp = (props: ActivityCompProps) => {
             {backgroundColor: getChipBgColor(props.activityType)},
           ]}>
           <NutritionAppleIcon />
-          <Text style={[styles.chipText, {color: getChipTextColor(props.activityType)}]}>{getChipText(props.activityType)}</Text>
+          <Text
+            style={[
+              styles.chipText,
+              {color: getChipTextColor(props.activityType)},
+            ]}>
+            {getChipText(props.activityType)}
+          </Text>
         </View>
-        <MoreVerticalCircleIcon />
+        <TouchableOpacity
+          onPress={() => handleActivityPress(props.item)}
+          activeOpacity={0.7}>
+          <MoreVerticalCircleIcon />
+        </TouchableOpacity>
       </View>
       <Text style={styles.titleText}>{props.header}</Text>
       <Text style={styles.timestampText}>{props.subHeader}</Text>
@@ -107,20 +187,21 @@ export default ActivityComp; // Export the component
 
 const styles = StyleSheet.create({
   container: {
-    width: DEVICE_WIDTH * 0.9,
-    marginHorizontal: 16,
+    // width: DEVICE_WIDTH * 0.9,
+    // marginHorizontal: 16,
     borderColor: Colors.Neutral200,
     borderRadius: 12,
     borderWidth: 1,
     padding: 12,
     backgroundColor: Colors.White,
-    alignSelf: 'center',
+    // alignSelf: 'center',
     marginTop: 8,
   },
   activityTypeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 8,
   },
   activityChipContainer: {
     flexDirection: 'row',
@@ -129,6 +210,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 10,
     borderRadius: 24,
+    // marginBottom: 8,
   },
   chipText: {
     fontFamily: 'Montserrat',
@@ -140,6 +222,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginTop: 8,
   },
   avatarAndNameContainer: {
     flexDirection: 'row',

@@ -1,7 +1,7 @@
 export interface FoodItem {
   EF_Value_Unit: string;
   Final_EF_Value: number;
-  Points: number;
+  points: number;
   label: string;
   value: number;
   quantity?: number;
@@ -22,14 +22,15 @@ export interface MealStyle {
 export interface Fueltype {
   value: number;
   label: string;
-  state: string;
   dataId: string;
+  factor: number;
+  unit: string;
+  points: number;
 }
 
 export interface WaterSourceType {
   value: number;
   label: string;
-  state: string;
   dataId: string;
 }
 
@@ -42,28 +43,42 @@ export interface ApplianceType {
 export interface GasUsedType {
   value: number;
   label: string;
-  state: string;
   dataId: string;
+  factor: number;
+  unit: string;
+  points: number;
 }
 
 export interface leisureActivityNameType {
   value: number;
   label: string;
   dataId: string;
+  factor: number;
+  unit: string;
+  points: number;
 }
 
 export interface TravelMode {
-  dataId: string;
-  iconUrl: string;
-  label: string;
-  state: string;
-  type: string;
   value: number;
+  label: string;
+  dataId: string;
+  factor: number;
+  unit: string;
+  points: number;
 }
 
 export interface TripType {
   value: number;
   label: string;
+}
+
+export interface WasteType {
+  value: number;
+  label: string;
+  dataId: string;
+  factor: number;
+  unit: string;
+  points: number;
 }
 
 export interface dropdownState {
@@ -77,6 +92,7 @@ export interface dropdownState {
   leisureActivity: leisureActivityNameType[] | [];
   travelMode: TravelMode[] | [];
   tripType: TripType[] | [];
+  wasteType: WasteType[] | [];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }

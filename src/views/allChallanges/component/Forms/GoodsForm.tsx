@@ -64,7 +64,7 @@ const GoodsForm = () => {
   const [errors, setErrors] = useState<{[key: string]: string}>({});
   const [goodsType, setGoodsType] = useState<number | undefined>();
   const [applianceType, setApplianceType] = useState<number | undefined>();
-  const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [selectedItems, setSelectedItems] = useState<any>();
   const [clothsType, setClothsType] = useState<number | undefined>();
   const [description, setDescription] = useState('');
   const [photoUri, setPhotoUri] = useState<string | null>(null);
@@ -191,9 +191,9 @@ const GoodsForm = () => {
 
   useEffect(() => {
     if (goodsType === 1) {
-      setSelectedItems([appliances[0]]);
+      setSelectedItems(appliances[0]);
     } else {
-      setSelectedItems([cloths[0]]);
+      setSelectedItems(cloths[0]);
     }
   }, [goodsType]);
 
@@ -292,6 +292,7 @@ const GoodsForm = () => {
               mode="date"
               display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               onChange={handleDateChange}
+              maximumDate={new Date()}
             />
           )}
 
@@ -333,7 +334,7 @@ const GoodsForm = () => {
                   (item: TGoodsType) => item.value === Number(value),
                 );
                 console.log('selectedType', selectedType);
-                setSelectedItems([selectedType]);
+                setSelectedItems(selectedType);
               }}>
               {getSelectedGoodsTypeDataList().map((it, i) => {
                 return (
@@ -351,6 +352,7 @@ const GoodsForm = () => {
             placeholder="Amount Spent INR"
             value={amount}
             onChangeText={setAmount}
+            keyboardType="numeric"
             style={styles.inputBox}
           />
           {errors.amount && (

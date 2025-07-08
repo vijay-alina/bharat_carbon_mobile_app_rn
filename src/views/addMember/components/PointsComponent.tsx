@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {PointsIcon} from '../../../images/icons';
 
 type TPointsProps = {
-  points: number;
+  points: string;
 };
 
 const PointsComponent: React.FC<TPointsProps> = ({points}) => {
@@ -15,7 +15,7 @@ const PointsComponent: React.FC<TPointsProps> = ({points}) => {
       style={{borderRadius: 20}}>
       <View style={styles.container}>
         <PointsIcon />
-        <Text style={{marginLeft: 5}}>{`${points}`} pts</Text>
+        <Text style={{marginLeft: 5}}>{`${points}`}</Text>
       </View>
     </LinearGradient>
   );
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     paddingHorizontal: 8,
-    paddingVertical: 3,
+    paddingVertical: 1,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',

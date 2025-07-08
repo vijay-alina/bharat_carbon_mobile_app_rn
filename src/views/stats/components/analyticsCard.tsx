@@ -253,8 +253,8 @@ const AnalyticsCard = ({dataLoading}: AnalyticsCardProps) => {
 
   const arcPaths = analyticsData?.category?.map((p, idx) => {
     console.log('ppppppppppppppp', p);
-    // const sweep = (p?.percent / 100) * 180;
-    const sweep = (50 / 100) * 180;
+    const sweep = (p?.percent / 100) * 180;
+    // const sweep = (50 / 100) * 180;
     let startAngle = currentAngle;
     let endAngle = currentAngle + sweep;
 

@@ -16,11 +16,14 @@ export type TGoodsState = {
   error: string | null;
 };
 
-
 export type TClothesType = {
+  fabric_type: string;
   value: number;
   label: string;
   dataId: string;
+  factor: number;
+  unit: string;
+  points: number;
 };
 
 export type TClothesTypeResponse = {
@@ -39,33 +42,36 @@ export type TApplianceType = {
   value: number;
   label: string;
   dataId: string;
-}
+  factor: number;
+  unit: string;
+  points: number;
+};
 export type TApplianceTypeResponse = {
   status: string;
   message: string;
   data: TApplianceType[];
-}
+};
 
 export type TApplianceState = {
   appliances: TApplianceType[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
-}
+};
 
 export type TGoodsFormPayload = {
-  goodsType: number,
-  date: Date
-  applianceType: number
-  notes: string
-  image: string[]
-}
+  goodsType: number;
+  date: Date;
+  // applianceType: number;
+  item: TApplianceType[] | TClothesType[];
+  notes: string;
+  image: string[];
+};
 
 export type TGoodsFormState = {
-  goodsType: any
+  goodsType: any;
   status: 'idle' | 'loading' | 'succeded' | 'failed';
   error: string | null;
-
-}
+};
 
 export type TMember = {
   _id: string;
@@ -98,6 +104,3 @@ export type TGetMembersResponse = {
   message: string;
   data: TMember[];
 };
-
-
-

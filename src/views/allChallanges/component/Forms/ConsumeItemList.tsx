@@ -59,7 +59,7 @@ const ConsumItemList = () => {
         <Text style={styles.itemText}>{item.label}</Text>
         <View style={styles.pointsBadge}>
           <BedgeIcon width={20} height={20} />
-          <Text style={styles.pointsText}>{item?.Points} pts</Text>
+          <Text style={styles.pointsText}>{item?.points} pts</Text>
         </View>
       </TouchableOpacity>
 

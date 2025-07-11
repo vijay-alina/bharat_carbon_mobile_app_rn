@@ -7,12 +7,18 @@ import {Header} from '../../../common/header';
 import {useNavigation} from '@react-navigation/native';
 
 const ReedemPointsScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   return (
     <SafeAreaView style={styles.container}>
       <Header
         title="Reedem your Points"
+        isHomeScreen={true}
+        onHomeClick={() => {
+          navigation.navigate('MainTabs', {
+            screen: 'Home',
+          });
+        }}
         onBackClick={() => {
           navigation.goBack();
         }}

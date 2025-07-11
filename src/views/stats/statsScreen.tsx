@@ -12,7 +12,7 @@ export const StatsScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [dataLoading, setDataLoading] = useState<boolean>(false);
   const scrollViewRef = useRef<ScrollView>(null);
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   // Array of slides - you can modify this based on your data
   const slides = [
@@ -57,6 +57,9 @@ export const StatsScreen = () => {
       <Header
         title="Analytics"
         isHomeScreen={true}
+        onHomeClick={() => {
+          navigation.navigate('Home');
+        }}
         onBackClick={() => {
           navigation.goBack();
         }}

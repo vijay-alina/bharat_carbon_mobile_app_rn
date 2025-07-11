@@ -1,13 +1,17 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AcceptChallenge,
+  GetChallengeStatusList,
   GetOngoingChallegeInfo,
 } from '../../services/manageChallengeService';
-import {ChallengePaylodType} from './manageChallengeType';
+import {
+  ChallengePaylodType,
+  GetChallengeQueryParamType,
+} from './manageChallengeType';
 
 export const ongoingChallengeGet = createAsyncThunk(
   'manageChallenge/ongoingChallengeGet',
-  async (challangeType:string, thunkAPI) => {
+  async (challangeType: string, thunkAPI) => {
     try {
       return await GetOngoingChallegeInfo(challangeType);
     } catch (error: any) {
@@ -23,6 +27,19 @@ export const challengeAccept = createAsyncThunk(
   async (payload: ChallengePaylodType, thunkAPI) => {
     try {
       return await AcceptChallenge(payload);
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Fetch failed',
+      );
+    }
+  },
+);
+
+export const ChallengeStatusWiseList = createAsyncThunk(
+  'manageChallenge/ChallengeStatusWiseList',
+  async (payload: GetChallengeQueryParamType, thunkAPI) => {
+    try {
+      return await GetChallengeStatusList(payload);
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || 'Fetch failed',

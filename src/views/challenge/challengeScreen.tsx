@@ -11,9 +11,11 @@ import {Header} from '../../common/header';
 import {getLineHeight} from '../../utils/utils';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import React from 'react';
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 
 export const ChallengeScreen = () => {
   const navigation = useNavigation<any>();
+  const tabBarHeight = useBottomTabBarHeight();
 
   const handleBack = () => {
     navigation.navigate('Home');
@@ -37,10 +39,13 @@ export const ChallengeScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {paddingBottom: tabBarHeight - 30}]}>
       <Header
         title="Challenges"
         isHomeScreen={true}
+        onHomeClick={() => {
+          navigation.navigate('Home');
+        }}
         onBackClick={() => handleBack()}
       />
       <Text style={styles.title}>Choose Your Challenge Category</Text>
@@ -91,7 +96,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingBottom: 100,
+    // paddingBottom: 50,
   },
   title: {
     fontFamily: 'Montserrat-Regular',

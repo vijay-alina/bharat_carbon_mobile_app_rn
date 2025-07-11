@@ -21,7 +21,7 @@ const getBaseURL = () => {
 };
 
 const apiClient = axios.create({
-  baseURL: 'http://192.168.29.127:3000/dev',
+  baseURL: 'https://iccdevapi.bharatcarbon.earth',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',

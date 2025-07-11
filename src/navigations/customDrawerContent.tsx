@@ -123,13 +123,6 @@ export const CustomDrawerContent = (
             }}
           />
           <CustomDrawerItem
-            icon={<UsersGroupIcon />}
-            label="FAQs"
-            onPress={() => {
-              props.navigation.navigate('FAQs');
-            }}
-          />
-          <CustomDrawerItem
             icon={<UserIcon />}
             label="Activities"
             onPress={() => {
@@ -139,13 +132,22 @@ export const CustomDrawerContent = (
           <CustomDrawerItem
             icon={<UserIcon />}
             label="Challenge"
-            onPress={() => {}}
+            onPress={() => {
+              props.navigation.navigate('Challenges');
+            }}
           />
           <CustomDrawerItem
             icon={<UserIcon />}
             label="Redeem Points"
             onPress={() => {
               props.navigation.navigate('RedeemPoints');
+            }}
+          />
+          <CustomDrawerItem
+            icon={<UsersGroupIcon />}
+            label="FAQs"
+            onPress={() => {
+              props.navigation.navigate('FAQs');
             }}
           />
           <CustomDrawerItem
@@ -156,12 +158,16 @@ export const CustomDrawerContent = (
           <CustomDrawerItem
             icon={<UserIcon />}
             label="Settings"
-            onPress={() => {}}
+            onPress={() => {
+              props.navigation.navigate('Settings');
+            }}
           />
           <CustomDrawerItem
             icon={<UserIcon />}
             label="Help Center"
-            onPress={() => {}}
+            onPress={() => {
+              props.navigation.navigate('HelpCenter');
+            }}
           />
           <CustomDrawerItem
             icon={<UserIcon />}

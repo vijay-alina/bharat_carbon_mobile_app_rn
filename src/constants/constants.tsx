@@ -10,6 +10,13 @@ import {
   ListDarkIcon,
   CalendarLightIcon,
   CalendarDarkIcon,
+  TapIcon,
+  WasteIcon,
+  ElectricityIcon,
+  CyclingIcon,
+  PublicTransportIcon,
+  CarpoolIcon,
+  EleticScotterIcon,
 } from '../images/icons';
 import {TAppTask} from '../types';
 
@@ -448,11 +455,11 @@ export const activities = [
     timestamp: 'Wed, 9 Apr 2025',
     name: 'Aarav',
     activityType: 'Mobility',
-  }
+  },
 ];
 
 export const activityTwo = [
-   {
+  {
     id: '21',
     title: 'Reduced AC usage',
     timestamp: 'Wed, 9 Apr 2025',
@@ -557,7 +564,7 @@ export const activityTwo = [
     name: 'Aarav',
     activityType: 'Nutrition',
   },
-]
+];
 
 export const monthActivities = [
   {
@@ -689,3 +696,123 @@ export const aboutAppTasks: TAppTask[] = [
     buttonText2: 'View Dashboard',
   },
 ];
+
+export const challengesStatus = [
+  {
+    id: '1',
+    icon: TapIcon,
+    header: 'Save Water Challenge',
+    duration: 7,
+    description: 'Keep it up! Every drop counts.',
+    color: '#1692DC',
+    points: 100,
+    completedDays: 3,
+  },
+  {
+    id: '2',
+    icon: ElectricityIcon,
+    header: 'Energy Saver Challenge',
+    duration: 3,
+    description: 'Keep it up! Every drop counts.',
+    color: '#1692DC',
+    points: 100,
+    completedDays: 2,
+  },
+  {
+    id: '3',
+    icon: WasteIcon,
+    header: 'Waste Challenge',
+    duration: 30,
+    description: 'Keep it up! Every drop counts.',
+    color: '#1692DC',
+    points: 100,
+    completedDays: 20,
+  },
+  {
+    id: '4',
+    icon: CyclingIcon,
+    header: 'Walk or Cycle Challenge',
+    duration: 4,
+    description: 'Keep it up! Every drop counts.',
+    color: '#EE7926',
+    points: 100,
+    completedDays: 3,
+  },
+  {
+    id: '5',
+    icon: PublicTransportIcon,
+    header: 'Use Public Transport',
+    duration: 4,
+    description: 'Keep it up! Every drop counts.',
+    color: '#EE7926',
+    points: 100,
+    completedDays: 3,
+  },
+  {
+    id: '6',
+    icon: CarpoolIcon,
+    header: 'Carpool with Others',
+    duration: 4,
+    description: 'Keep it up! Every drop counts.',
+    color: '#EE7926',
+    points: 100,
+    completedDays: 3,
+  },
+  {
+    id: '7',
+    icon: EleticScotterIcon,
+    header: 'Low-Emission Vehicle',
+    duration: 4,
+    description: 'Keep it up! Every drop counts.',
+    color: '#EE7926',
+    points: 100,
+    completedDays: 3,
+  },
+];
+
+export const termsCondition = `These Terms and Conditions ("Terms") define the access to and use of the Bharat Carbon application (the "App"), developed by Alina softwares ("we," "us," or "our"). By accessing or using the App, you agree to these Terms and the Privacy Policy.
+
+1. Acceptance of terms
+By using the App, you agree to all of these Terms. If you do not agree, you must stop using the App immediately. 
+
+2. User representations
+When using the App, you confirm that you are at least [Minimum Age]. You also confirm having the legal right to agree to these Terms. Furthermore, you are not in a country under U.S. embargo or considered a "terrorist supporting" country, nor are you on any U.S. prohibited or restricted lists.
+
+3. User registration
+You may need to register for the App. You are responsible for keeping your password secure. 
+
+4. Intellectual property rights
+The App, its content (including code, designs, and graphics), and trademarks are owned or licensed by the company. They are protected by law. 
+
+5. Prohibited activities
+You can only use the App for its intended purpose and not for unauthorized commercial activities. You agree not to: 
+Collect data from the App without permission.
+Use the App improperly, such as collecting user information for unsolicited emails or creating fake accounts.
+Interfere with the App's security features.
+Link to or frame the App without authorization.
+Upload or transmit viruses or other harmful material.
+Use automated tools like scripts or data mining robots. 
+
+6. User generated contributions
+You may be able to contribute content ("Contributions") to the App. You grant the company a worldwide, royalty-free license to use your Contributions on the platform. You confirm that you own or have the necessary rights to use your Contributions, that they are accurate and not misleading, and do not violate any third party's privacy or publicity rights. 
+
+7. App management
+The company can monitor the App for violations, take legal action against users who break the law or these Terms, and remove or disable content or files at its discretion. 
+
+8. Privacy policy
+Your data privacy is important. By using the App, you agree to the Privacy Policy, which is part of these Terms. The App is hosted in [Your Jurisdiction]. 
+
+9. Term and termination
+These Terms are valid while you use the App. The company can end your use of the App at any time for any reason without notice. 
+
+10. Modifications and interruptions
+The company can change, modify, or remove App content or discontinue the App at any time without notice. 
+
+11. Governing law
+These Terms and your use of the App are governed by the laws of India. 
+12. Limitation of liability
+The company and its representatives are not liable for any damages, including lost profits or data, from your use of the App, even if aware of the possibility. The liability to you is limited to the amount you paid in the [Time Period] before any issue arose. 
+
+13. Contact us
+For questions about these Terms, contact us at: [Your Contact Information]. 
+Please note: This is a basic template. You may need to add or remove clauses depending on your app. Consulting legal counsel is recommended to ensure your terms are legally sound and specific to your needs.`;

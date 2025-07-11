@@ -49,6 +49,12 @@ import CalendarDarkIcon from './calendar_dark_icon.svg';
 import EditPencilIcon from './edit_pencil_icon.svg';
 import TrashIcon from './trash_icon.svg';
 import AddGreenIcon from './add_green_icon.svg';
+import WasteIcon from './waste_box.png';
+import CyclingIcon from './cycle.png';
+import PublicTransportIcon from './publicTransport.png';
+import ElectricityIcon from './save_energy.png';
+import EleticScotterIcon from './elctricScooter.png';
+import CarpoolIcon from './carpool.png';
 
 export {
   BackIcon,
@@ -102,4 +108,10 @@ export {
   EditPencilIcon,
   TrashIcon,
   AddGreenIcon,
+  WasteIcon,
+  CyclingIcon,
+  ElectricityIcon,
+  EleticScotterIcon,
+  CarpoolIcon,
+  PublicTransportIcon,
 };

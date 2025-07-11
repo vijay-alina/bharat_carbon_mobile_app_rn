@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, View, TouchableOpacity, Switch} from 'react-native';
 import {ChevronRightIcon} from '../images/icons';
 import {Colors} from '../constants/colors';
 
@@ -14,6 +14,8 @@ const CustomDrawerItem: React.FC<DrawerItemProps> = ({
   label,
   onPress,
 }) => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   return (
     <TouchableOpacity
       style={styles.container}
@@ -24,7 +26,17 @@ const CustomDrawerItem: React.FC<DrawerItemProps> = ({
         <Text style={styles.label}>{label}</Text>
       </View>
       <View style={styles.constentRightContainer}>
-        <ChevronRightIcon />
+        {label === 'Notification' ? (
+          <Switch
+            trackColor={{false: '#767577', true: '#3D9D91'}}
+            thumbColor={'#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        ) : (
+          label !== 'Logout' && <ChevronRightIcon style={{marginRight: 10}} />
+        )}
       </View>
     </TouchableOpacity>
   );

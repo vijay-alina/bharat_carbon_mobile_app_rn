@@ -101,7 +101,7 @@ export const HomeScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <ListHeaderContent />
       <View
         style={{width: DEVICE_WIDTH, flexDirection: 'row', flexWrap: 'wrap'}}>

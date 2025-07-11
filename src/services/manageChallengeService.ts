@@ -1,6 +1,9 @@
+import {challengesStatus} from '../constants/constants';
 import {
   AcceptChallengeResponse,
+  ChallengeListResponse,
   ChallengePaylodType,
+  GetChallengeQueryParamType,
   GetOngoingChallegeInfoResponse,
 } from '../features/manageChallege/manageChallengeType';
 import apiClient from './apiClient';
@@ -31,4 +34,23 @@ export const AcceptChallenge = async (
   );
 
   return response.data;
+};
+
+export const GetChallengeStatusList = async (
+  param: GetChallengeQueryParamType,
+): Promise<ChallengeListResponse> => {
+  // const response = await apiClient.get(
+  //   `/housingChallenge/filter/${param.status}?page=${param.page}`,
+  // );
+  console.log('param', param);
+  const data = {
+    status: 'success',
+    message: '',
+    data: challengesStatus,
+    totalLength: 35,
+    page: param.page,
+    listType: param.status,
+  };
+
+  return data;
 };

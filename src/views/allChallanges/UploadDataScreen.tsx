@@ -18,7 +18,7 @@ import {TChallenge} from '../../types';
 import {useAppSelector} from '../../hooks/hooks';
 
 const UploadDataScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const [selectedChallenge, setSelectedChallenge] = useState<TChallenge>(
     Categories[0],
   );
@@ -42,6 +42,15 @@ const UploadDataScreen = () => {
     <>
       <Header
         title="Upload Data"
+        isHomeScreen={true}
+        onHomeClick={() => {
+          navigation.navigate('DrawerNavigator', {
+            screen: 'MainTabs',
+            params: {
+              screen: 'Home',
+            },
+          });
+        }}
         onBackClick={() => {
           navigation.goBack();
         }}

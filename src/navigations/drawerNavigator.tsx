@@ -15,16 +15,22 @@ import ActivitiesScreen from '../views/drawerScreens/Activities/Activities';
 import FAQScreen from '../views/Faq/FaqScreen';
 import {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ChallengeScreen from '../views/drawerScreens/challenge/Challenge';
+import SettingsScreen from '../views/drawerScreens/Settings/Settings';
+import HelpCenterScreen from '../views/drawerScreens/HelpCenter/HelpCenter';
 
 export type DrawerParamList = {
   MainTabs: undefined;
   MemberStackNavigator: undefined;
   MyProfile: undefined;
   Activities: undefined;
+  Challenges: undefined;
   Challenge: undefined;
   RedeemPoints: undefined;
   FAQs: undefined;
   Notifications: undefined;
+  Settings: undefined;
+  HelpCenter: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -85,7 +91,6 @@ export const DrawerNavigator = () => {
         drawerStyle: {
           backgroundColor: '#ff0000',
           width: '100%',
-          
         },
         headerShown: false,
         drawerType: 'back',
@@ -112,6 +117,8 @@ export const DrawerNavigator = () => {
 
       <Drawer.Screen name="Activities" component={ActivitiesScreen} />
 
+      <Drawer.Screen name="Challenges" component={ChallengeScreen} />
+
       <Drawer.Screen name="Challenge" component={ProfileScreen} />
 
       <Drawer.Screen name="RedeemPoints" component={ReedemPointsScreen} />
@@ -119,6 +126,8 @@ export const DrawerNavigator = () => {
       <Drawer.Screen name="FAQs" component={FAQScreen} />
 
       <Drawer.Screen name="Notifications" component={ProfileScreen} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} />
+      <Drawer.Screen name="HelpCenter" component={HelpCenterScreen} />
     </Drawer.Navigator>
   );
 };

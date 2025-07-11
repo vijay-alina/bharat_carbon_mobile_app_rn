@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     color: '#f0f0f0',
   },
   button: {
+    // paddingVertical: 5,
     // Add any ViewStyle properties for the button here if needed
   },
   buttonText: {

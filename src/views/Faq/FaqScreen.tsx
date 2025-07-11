@@ -9,17 +9,25 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  ScrollView,
 } from 'react-native';
 import {Header} from '../../common/header';
 import {useNavigation} from '@react-navigation/native';
-import { Colors } from '../../constants/colors';
+import {Colors} from '../../constants/colors';
 
 if (Platform.OS === 'android') {
   UIManager.setLayoutAnimationEnabledExperimental &&
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const tabs = ['General', 'Points & Rewards', 'Activities & Logs'] as const;
+const tabs = [
+  'General',
+  'Points & Rewards',
+  'Activities & Logs',
+  'Challenges',
+  'Family & Sharing',
+  'Privacy & Data',
+] as const;
 
 type TabKey = (typeof tabs)[number];
 
@@ -50,6 +58,36 @@ const faqData: Record<TabKey, FAQItem[]> = {
     },
   ],
   'Activities & Logs': [
+    {
+      question: 'Can I log past activities?',
+      answer: 'Yes, you can add past logs from the calendar view.',
+    },
+    {
+      question: 'How do I delete an activity?',
+      answer: 'Swipe left on the activity to delete it.',
+    },
+  ],
+  Challenges: [
+    {
+      question: 'Can I log past activities?',
+      answer: 'Yes, you can add past logs from the calendar view.',
+    },
+    {
+      question: 'How do I delete an activity?',
+      answer: 'Swipe left on the activity to delete it.',
+    },
+  ],
+  'Family & Sharing': [
+    {
+      question: 'Can I log past activities?',
+      answer: 'Yes, you can add past logs from the calendar view.',
+    },
+    {
+      question: 'How do I delete an activity?',
+      answer: 'Swipe left on the activity to delete it.',
+    },
+  ],
+  'Privacy & Data': [
     {
       question: 'Can I log past activities?',
       answer: 'Yes, you can add past logs from the calendar view.',
@@ -109,27 +147,29 @@ export default function FAQScreen() {
         />
       </View>
       <View style={styles.tabsContainer}>
-        {tabs.map(tab => (
-          <TouchableOpacity
-            key={tab}
-            style={[
-              styles.tabButton,
-              selectedTab === tab && styles.activeTabButton,
-            ]}
-            onPress={() => {
-              setSelectedTab(tab);
-              setExpandedIndex(null);
-              setSearchQuery('');
-            }}>
-            <Text
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {tabs.map(tab => (
+            <TouchableOpacity
+              key={tab}
               style={[
-                styles.tabText,
-                selectedTab === tab && styles.activeTabText,
-              ]}>
-              {tab}
-            </Text>
-          </TouchableOpacity>
-        ))}
+                styles.tabButton,
+                selectedTab === tab && styles.activeTabButton,
+              ]}
+              onPress={() => {
+                setSelectedTab(tab);
+                setExpandedIndex(null);
+                setSearchQuery('');
+              }}>
+              <Text
+                style={[
+                  styles.tabText,
+                  selectedTab === tab && styles.activeTabText,
+                ]}>
+                {tab}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
       <FlatList
         data={filteredData}

@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignItems: 'center',
     alignSelf: 'flex-start',
+    zIndex: 1,
   },
   pointsText: {
     color: '#fff',

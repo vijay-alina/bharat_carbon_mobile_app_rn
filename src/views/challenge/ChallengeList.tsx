@@ -127,6 +127,9 @@ const ChallengeList = () => {
         <Header
           title={challengeType}
           isHomeScreen={true}
+          onHomeClick={() => {
+            navigaion.navigate('Home');
+          }}
           onBackClick={() => {
             handleBack();
           }}
@@ -138,8 +141,7 @@ const ChallengeList = () => {
         </Text>
         <Text style={styles.descriptionText}>
           {challengeType === 'Housing Challenge'
-            ? `Reduce Your household's carbon impact with daily, weekly and monthly
-        energy-saving actions.`
+            ? `Reduce Your household's carbon impact with daily, weekly and monthly energy-saving actions.`
             : 'Choose eco-friendly ways to move around and earn rewards while making a difference.'}
         </Text>
         <FlatList

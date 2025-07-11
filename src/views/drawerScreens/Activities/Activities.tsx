@@ -33,7 +33,7 @@ import {
 const ITEMS_PER_PAGE = 20;
 
 const ActivitiesScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const sectionListRef = useRef<any>(null);
   const [activeTab, setActiveTab] = useState<number>(0);
   const [selectedActivity, setSelectedActivity] = useState<string>(
@@ -479,6 +479,11 @@ const ActivitiesScreen: React.FC = () => {
       <Header
         title="Activities"
         isHomeScreen={true}
+        onHomeClick={() => {
+          navigation.navigate('MainTabs', {
+            screen: 'Home',
+          });
+        }}
         onBackClick={() => {
           navigation.goBack();
         }}
@@ -628,9 +633,9 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingVertical: 5,
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: 10,
   },
   sectionHeaderText: {
     fontSize: 16,

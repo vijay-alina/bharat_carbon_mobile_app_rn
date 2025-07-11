@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   },
   dayContainer: {
     width: '14.28%',
-    height: 42,
+    height: 35,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
   },
   eventsContainer: {
     position: 'absolute',
-    bottom: 8,
+    bottom: 4,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

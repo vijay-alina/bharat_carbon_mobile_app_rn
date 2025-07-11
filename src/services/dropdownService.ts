@@ -52,7 +52,7 @@ export const gasUsedList = async (): Promise<GasUsedType[]> => {
 export const leisureActivityName = async (): Promise<
   leisureActivityNameType[]
 > => {
-  const response = await apiClient.get(`/dropdown/leisureActivityName `);
+  const response = await apiClient.get(`/dropdown/leisureAndServices`);
   return response.data;
 };
 

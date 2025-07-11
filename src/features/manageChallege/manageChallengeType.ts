@@ -40,8 +40,39 @@ export interface ChallengePaylodType {
   challangeType: string;
 }
 
+export interface ChallengeStatusWiseList {
+  id: string;
+  icon: any;
+  header: string;
+  duration: number;
+  description: string;
+  color: string;
+  points: number;
+  completedDays: number;
+}
+
+export interface ChallengeListResponse {
+  status: string;
+  message: string;
+  data: ChallengeStatusWiseList[];
+  totalLength: number;
+  page: number;
+  listType: string;
+}
+
+export interface GetChallengeQueryParamType {
+  status: string;
+  page: number;
+}
+
 export interface ManageChallengeState {
   ongoingChallenge: OngoingChallenge[] | [];
+  ongoingChallengeList: ChallengeStatusWiseList[] | [];
+  completedChallengeList: ChallengeStatusWiseList[] | [];
+  notCompletedCahallengeList: ChallengeStatusWiseList[] | [];
+  totalLengthOngoingChallenge: number;
+  totalLengthCompletedChallenge: number;
+  totalLengthNotCompletedChallenge: number;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }

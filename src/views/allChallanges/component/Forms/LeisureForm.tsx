@@ -262,7 +262,10 @@ const LeisureForm = () => {
           <TextInput
             placeholder="No of people involved"
             value={people}
-            onChangeText={setPeople}
+            onChangeText={(text: string) => {
+              setPeople(text);
+              setErrors({...errors, people: ''});
+            }}
             keyboardType="numeric"
             style={[styles.inputBox, errors.people && styles.inputError]}
           />
@@ -273,7 +276,10 @@ const LeisureForm = () => {
           <TextInput
             placeholder={'Amount spent (INR)'}
             value={amount}
-            onChangeText={setAmount}
+            onChangeText={(text: string) => {
+              setAmount(text);
+              setErrors({...errors, amount: ''});
+            }}
             keyboardType="numeric"
             style={[styles.inputBox, errors.amount && styles.inputError]}
           />

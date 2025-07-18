@@ -295,7 +295,10 @@ const MobilityForm = () => {
                     errors.travelledFrom && styles.inputError,
                   ]}
                   value={travelledFrom}
-                  onChangeText={setTravelledFrom}
+                  onChangeText={(text: string) => {
+                    setTravelledFrom(text);
+                    setErrors({...errors, travelledFrom: ''});
+                  }}
                 />
                 <MapIcon width={20} height={20} />
               </View>
@@ -314,7 +317,10 @@ const MobilityForm = () => {
                     errors.travelledTo && styles.inputError,
                   ]}
                   value={travelledTo}
-                  onChangeText={setTravelledTo}
+                  onChangeText={(text: string) => {
+                    setTravelledTo(text);
+                    setErrors({...errors, travelledTo: ''});
+                  }}
                 />
                 <MapIcon width={20} height={20} />
               </View>
@@ -328,7 +334,10 @@ const MobilityForm = () => {
           <TextInput
             placeholder="Enter Distance in Kilometers"
             value={distanceTravelled}
-            onChangeText={setDistanceTravelled}
+            onChangeText={(text: string) => {
+              setDistanceTravelled(text);
+              setErrors({...errors, distanceTravelled: ''});
+            }}
             keyboardType="numeric"
             style={[
               styles.inputBox,

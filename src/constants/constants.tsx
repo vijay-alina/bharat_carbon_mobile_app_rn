@@ -308,7 +308,7 @@ export const activityTabs = [
 ];
 
 export const dropdownItems = [
-  'All Activities',
+  'All',
   'Nutrition',
   'Mobility',
   'Housing',
@@ -816,3 +816,67 @@ The company and its representatives are not liable for any damages, including lo
 13. Contact us
 For questions about these Terms, contact us at: [Your Contact Information]. 
 Please note: This is a basic template. You may need to add or remove clauses depending on your app. Consulting legal counsel is recommended to ensure your terms are legally sound and specific to your needs.`;
+
+export const profileData = {
+  name: 'ravi singh',
+  earnedPoints: 1000,
+  schoolRank: 123,
+  classRank: 123,
+  statistics: [
+    {
+      id: '1',
+      icon: TapIcon,
+      title: 'Emissions',
+      value: 123,
+    },
+    {
+      id: '2',
+      icon: TapIcon,
+      title: 'Points',
+      value: 123,
+    },
+    {
+      id: '3',
+      icon: TapIcon,
+      title: 'Days',
+      value: 123,
+    },
+    {
+      id: '4',
+      icon: TapIcon,
+      title: 'Challenges',
+      value: 123,
+    },
+  ],
+  myBadges: [
+    {
+      id: '1',
+      icon: TapIcon,
+      title: 'bage Name',
+    },
+  ],
+  unFinishedChallenges: [
+    {
+      id: '1',
+      icon: TapIcon,
+      header: 'save water challenge',
+      duration: 4,
+      description: 'Keep it up! Every drop counts.',
+      color: '#1692DC',
+      completedDays: 3,
+    },
+  ],
+  familyRecord: {
+    totalEmissions: 123,
+    topContributer: 'ravi singh',
+    familyList: [
+      {
+        id: '1',
+        relation: 'father',
+        name: 'ravi singh',
+        pointEarned: 123,
+        emissions: 123,
+      },
+    ],
+  },
+};

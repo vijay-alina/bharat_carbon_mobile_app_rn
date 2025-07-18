@@ -351,7 +351,10 @@ const GoodsForm = () => {
           <TextInput
             placeholder="Amount Spent INR"
             value={amount}
-            onChangeText={setAmount}
+            onChangeText={(text: string) => {
+              setAmount(text);
+              setErrors({...errors, amount: ''});
+            }}
             keyboardType="numeric"
             style={styles.inputBox}
           />

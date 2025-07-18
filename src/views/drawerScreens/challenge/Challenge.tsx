@@ -16,6 +16,15 @@ import {challengesStatus} from '../../../constants/constants';
 import {useAppDispatch, useAppSelector} from '../../../hooks/hooks';
 import {ChallengeStatusWiseList} from '../../../features/manageChallege/manageChallengeThunks';
 import {Colors} from '../../../constants/colors';
+import {
+  TapIcon,
+  WasteIcon,
+  ElectricityIcon,
+  CyclingIcon,
+  PublicTransportIcon,
+  CarpoolIcon,
+  EleticScotterIcon,
+} from '../../../images/icons';
 
 const Data_Per_Page = 10;
 
@@ -44,6 +53,22 @@ const ChallengeScreen = () => {
     state => state.manageChallenge.totalLengthNotCompletedChallenge,
   );
 
+  const currentYear = new Date().getFullYear();
+
+  const categoryIconMap: {[key: string]: any} = {
+    water: TapIcon,
+    waste: WasteIcon,
+    electricity: ElectricityIcon,
+    cycling: CyclingIcon,
+    publicTransport: PublicTransportIcon,
+    carpool: CarpoolIcon,
+    electricScooter: EleticScotterIcon,
+  };
+
+  function getIconByCategory(category: string) {
+    return categoryIconMap[category] || null;
+  }
+
   const fetchData = async (page: number, status: string) => {
     if (page === 1) {
       setLoading(true);
@@ -51,6 +76,8 @@ const ChallengeScreen = () => {
     const param = {
       page: page,
       status: status,
+      currentYear: currentYear,
+      limit: Data_Per_Page,
     };
     try {
       await dispatch(ChallengeStatusWiseList(param)).unwrap();
@@ -64,6 +91,7 @@ const ChallengeScreen = () => {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+    setPage(1);
     let isFetched = false;
     if (tab === 'ongoing') {
       isFetched = ongoingChallengeList.length > 0;
@@ -73,7 +101,7 @@ const ChallengeScreen = () => {
       isFetched = notCompletedChallengeList.length > 0;
     }
     if (!isFetched) {
-      fetchData(page, tab);
+      fetchData(1, tab);
     }
   };
 
@@ -151,7 +179,7 @@ const ChallengeScreen = () => {
   useEffect(() => {
     const isFetched = ongoingChallengeList.length > 0;
     if (!isFetched) {
-      fetchData(page, activeTab);
+      fetchData(1, activeTab);
     }
   }, []);
 
@@ -240,17 +268,20 @@ const ChallengeScreen = () => {
             <FlatList
               data={renderData}
               keyExtractor={item => item.id}
-              renderItem={({item}) => (
-                <ChallengeCard
-                  icon={item.icon}
-                  header={item.header}
-                  duration={item.duration}
-                  description={item.description}
-                  color={item.color}
-                  points={item.points}
-                  completedDays={item.completedDays}
-                />
-              )}
+              renderItem={({item}) => {
+                const icon = getIconByCategory(item.icon);
+                return (
+                  <ChallengeCard
+                    icon={icon}
+                    header={item.header}
+                    duration={item.duration}
+                    description={item.description}
+                    color={item.color}
+                    points={item.points}
+                    completedDays={item.completedDays}
+                  />
+                );
+              }}
               showsVerticalScrollIndicator={false}
               ListEmptyComponent={() => (
                 <View style={styles.emptyContainer}>

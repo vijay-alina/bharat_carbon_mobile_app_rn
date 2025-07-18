@@ -5,7 +5,7 @@ import * as Constants from '../../constants/constants';
 import CustomButton from '../../common/button';
 import {Header} from '../../common/header';
 import {Colors} from '../../constants/colors';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const ClimateManifestoScreen = () => {
   const navigation = useNavigation();
@@ -13,7 +13,7 @@ const ClimateManifestoScreen = () => {
   const handleClick = () => {
     //@ts-ignore
     navigation.navigate('ProfileCompletedScreen');
-  }
+  };
   return (
     <ScrollView
       contentContainerStyle={styles.wrapper}
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   containerStyle: {
-    marginTop: 44,
+    // marginTop: 44,
   },
   title: {
     fontFamily: 'Montserrat-Bold',

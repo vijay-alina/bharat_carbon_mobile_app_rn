@@ -39,18 +39,18 @@ export const AcceptChallenge = async (
 export const GetChallengeStatusList = async (
   param: GetChallengeQueryParamType,
 ): Promise<ChallengeListResponse> => {
-  // const response = await apiClient.get(
-  //   `/housingChallenge/filter/${param.status}?page=${param.page}`,
-  // );
-  console.log('param', param);
-  const data = {
-    status: 'success',
-    message: '',
-    data: challengesStatus,
-    totalLength: 35,
-    page: param.page,
-    listType: param.status,
-  };
+  const response = await apiClient.get(
+    `/analytics/activity/challangeList/${param.currentYear}/${param.status}?page=${param.page}&limit=${param.limit}`,
+  );
+  // console.log('param', param);
+  // const data = {
+  //   status: 'success',
+  //   message: '',
+  //   data: challengesStatus,
+  //   totalLength: 35,
+  //   page: param.page,
+  //   listType: param.status,
+  // };
 
-  return data;
+  return response.data;
 };

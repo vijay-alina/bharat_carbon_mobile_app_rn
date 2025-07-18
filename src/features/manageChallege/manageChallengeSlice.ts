@@ -87,11 +87,11 @@ const manageChallengeSlice = createSlice({
               ...action.payload.data,
             ];
           } else {
-            state.totalLengthNotCompletedChallenge = 0;
-            // state.notCompletedCahallengeList = [
-            //   ...state.notCompletedCahallengeList,
-            //   ...action.payload.data,
-            // ];
+            state.totalLengthNotCompletedChallenge = action.payload.totalLength;
+            state.notCompletedCahallengeList = [
+              ...state.notCompletedCahallengeList,
+              ...action.payload.data,
+            ];
           }
         },
       )

@@ -19,9 +19,9 @@ export const activityGet = createAsyncThunk(
 
 export const monthlyActivityGet = createAsyncThunk(
   'activities/monthlyActivityGet',
-  async (_, thunkAPI) => {
+  async (param:any, thunkAPI) => {
     try {
-      return await monthWiseGetActivitiesList();
+      return await monthWiseGetActivitiesList(param);
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || 'Fetch failed',

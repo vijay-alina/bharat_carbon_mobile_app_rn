@@ -11,6 +11,7 @@ import analyticsReducer from '../features/analytics/analyticsSlice';
 import leaderboardReducer from '../features/leaderboard/leaderboardSlice';
 import memberReducer from '../features/challenge/addMember/addMemberSlice';
 import activitiesReducer from '../features/activities/activitySlice';
+import myProfileReducer from '../features/myProfile/myProfileSlice';
 
 const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
     leaderboard: leaderboardReducer,
     members: memberReducer,
     activities: activitiesReducer,
+    myProfile: myProfileReducer,
   },
 });
 

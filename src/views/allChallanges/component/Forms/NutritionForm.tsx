@@ -61,7 +61,9 @@ const NutritionForm = () => {
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [photoBase64, setPhotoBase64] = useState<string | null>(null);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
-  const [quantityErrors, setQuantityErrors] = useState<{[key: number]: boolean}>({});
+  const [quantityErrors, setQuantityErrors] = useState<{
+    [key: number]: boolean;
+  }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dataLoading, setDataLoading] = useState(false);
   const dispatch = useAppDispatch();
@@ -152,24 +154,24 @@ const NutritionForm = () => {
         },
         {abortEarly: false},
       );
-      
+
       // Validate quantities
       const newQuantityErrors: {[key: number]: boolean} = {};
       let hasQuantityError = false;
-      
+
       selectedItems.forEach((item, index) => {
         if (!item.quantity || item.quantity <= 0) {
           newQuantityErrors[index] = true;
           hasQuantityError = true;
         }
       });
-      
+
       setQuantityErrors(newQuantityErrors);
-      
+
       if (hasQuantityError) {
         return false;
       }
-      
+
       setErrors({});
       return true;
     } catch (error) {
@@ -250,7 +252,7 @@ const NutritionForm = () => {
       quantity: parseFloat(text) || 0,
     };
     setSelectedItems(updated);
-    
+
     // Clear quantity error for this item if text is provided
     if (text.trim()) {
       setQuantityErrors(prev => ({...prev, [index]: false}));
@@ -265,7 +267,7 @@ const NutritionForm = () => {
         placeholder="gm"
         style={[
           styles.inputSmall,
-          quantityErrors[index] && styles.inputSmallError
+          quantityErrors[index] && styles.inputSmallError,
         ]}
         value={item.quantity ? item.quantity.toString() : ''}
         onChangeText={text => handleQuantityChange(text, index)}
@@ -387,12 +389,13 @@ const NutritionForm = () => {
           <Text style={styles.label}>Select Items Consumed</Text>
           <TouchableOpacity
             style={[styles.inputBox, errors.selectedItems && styles.inputError]}
-            onPress={() =>
+            onPress={() => {
+              setErrors({...errors, selectedItems: ''});
               navigation.navigate('ConsumItemList', {
                 selectedItems,
                 onSelect: (items: FoodItem[]) => setSelectedItems(items),
-              })
-            }>
+              });
+            }}>
             <Text>Add items</Text>
             <AddIcon width={20} height={20} fill="#007AFF" />
           </TouchableOpacity>

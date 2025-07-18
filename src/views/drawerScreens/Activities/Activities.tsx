@@ -119,6 +119,7 @@ const ActivitiesScreen: React.FC = () => {
           activityGet({
             page,
             limit: ITEMS_PER_PAGE,
+            currentYear,
             activityType: selectedActivity,
           }),
         ).unwrap();
@@ -158,7 +159,12 @@ const ActivitiesScreen: React.FC = () => {
 
     try {
       // Simulate API delay
-      const response = await dispatch(monthlyActivityGet()).unwrap();
+      const response = await dispatch(
+        monthlyActivityGet({
+          month: selectedMonth + 1,
+          year: selectedYear,
+        }),
+      ).unwrap();
 
       setTimeout(() => {
         setMonthActivitiesState((prev: any) => ({

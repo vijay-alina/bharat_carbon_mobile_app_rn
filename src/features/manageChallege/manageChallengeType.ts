@@ -63,6 +63,8 @@ export interface ChallengeListResponse {
 export interface GetChallengeQueryParamType {
   status: string;
   page: number;
+  currentYear: number;
+  limit: number;
 }
 
 export interface ManageChallengeState {

@@ -55,6 +55,14 @@ import PublicTransportIcon from './publicTransport.png';
 import ElectricityIcon from './save_energy.png';
 import EleticScotterIcon from './elctricScooter.png';
 import CarpoolIcon from './carpool.png';
+import CalenderIcon from './days.png';
+import AchievedIcon from './achieved.png';
+import AverageScoreIcon from './averageScore.png';
+import EcoMoverIcon from './ecoMover.png';
+import EcoShooperIcon from './ecoShooper.png';
+import WaterSaverIcon from './waterSaver.png';
+import EarthIcon from './save_earth.png';
+import  AddPlusCircle from './Add_Plus_Circle.svg';
 
 export {
   BackIcon,
@@ -114,4 +122,12 @@ export {
   EleticScotterIcon,
   CarpoolIcon,
   PublicTransportIcon,
+  CalenderIcon,
+  AchievedIcon,
+  AverageScoreIcon,
+  EcoMoverIcon,
+  EcoShooperIcon,
+  WaterSaverIcon,
+  EarthIcon,
+  AddPlusCircle
 };

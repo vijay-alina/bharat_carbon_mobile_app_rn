@@ -3,22 +3,10 @@ import {StyleSheet, Text, View, Image} from 'react-native';
 import {Header} from '../common/header';
 
 export type ProfileProps = {
-  name: string;
-  points: number;
-  pointsToNextLevel: number;
-  level: number;
-  classRank: number;
-  schoolRank: number;
   onBackPress: () => void;
 };
 
 export const ProfileHeader: FC<ProfileProps> = ({
-  name,
-  points,
-  pointsToNextLevel,
-  level,
-  classRank,
-  schoolRank,
   onBackPress,
 }) => (
   <View style={styles.profileContainer}>

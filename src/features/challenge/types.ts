@@ -83,7 +83,7 @@ export type TMember = {
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
-  __v: number;
+  // __v: number;
 };
 
 export type TAddMemberFormPayload = {

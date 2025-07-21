@@ -38,3 +38,10 @@ export const profileUpdate = async (
   const response = await apiClient.put(`/studentInfo/${id}`, payload);
   return response.data.data;
 };
+
+export const getOtpFamily = async (mobile: string): Promise<User> => {
+  const response = await apiClient.post(`/familyMember/login`, {
+    mobileNumber: mobile,
+  });
+  return response.data;
+};

@@ -104,7 +104,13 @@ export const HomeScreen = () => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <ListHeaderContent />
       <View
-        style={{width: DEVICE_WIDTH, flexDirection: 'row', flexWrap: 'wrap'}}>
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          // backgroundColor: 'red',
+          marginHorizontal: 5,
+          justifyContent: 'space-between',
+        }}>
         {list1.map((item, index) => (
           <VerticalClimateCard
             key={index.toString()}
@@ -132,7 +138,12 @@ export const HomeScreen = () => {
       </View>
 
       <View
-        style={{width: DEVICE_WIDTH, flexDirection: 'row', flexWrap: 'wrap'}}>
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          marginHorizontal: 5,
+          justifyContent: 'space-between',
+        }}>
         {list2.map((item, index) => (
           <VerticalClimateCard
             key={index.toString()}

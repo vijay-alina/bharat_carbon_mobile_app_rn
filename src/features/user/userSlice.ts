@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {UserState} from './userTypes';
-import {fetchUser, otpGet, otpVerify} from './userThunks';
+import {fetchUser, otpGet, otpGetFamily, otpVerify} from './userThunks';
 
 const initialState: UserState = {
   user: null,
@@ -51,6 +51,10 @@ const userSlice = createSlice({
       .addCase(otpVerify.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
+      })
+
+      .addCase(otpGetFamily.fulfilled, (state, action: PayloadAction<any>) => {
+        state.status = 'succeeded';
       });
   },
 });

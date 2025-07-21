@@ -7,9 +7,10 @@ import AnimatedProgressBar from '../common/AnimatedProgressBar';
 type ChallengeCompProps = {
   icon: ImageSourcePropType;
   header: string;
-  duration?: number;
+  duration: number;
   description: string;
   showPointsBadge?: boolean;
+  completedDays: number;
 };
 
 const ChallengeComp: React.FC<ChallengeCompProps> = ({
@@ -17,8 +18,10 @@ const ChallengeComp: React.FC<ChallengeCompProps> = ({
   header,
   duration,
   description,
+  completedDays,
   //   showPointsBadge,
 }) => {
+  const progress = (completedDays / duration) * 100;
   return (
     <View style={styles.container}>
       <Image source={icon} style={styles.icon} />
@@ -27,7 +30,7 @@ const ChallengeComp: React.FC<ChallengeCompProps> = ({
         {duration && <Text>{duration}</Text>}
         <Text>{description}</Text>
         <AnimatedProgressBar
-          progress={0.43}
+          progress={progress}
           //   title="Alternative colors!"
           //   color1="#34D399"
           //   color2="#10B981"
@@ -44,7 +47,7 @@ export default ChallengeComp;
 
 const styles = StyleSheet.create({
   container: {
-    // width: 100,
+    flex: 1,
     flexDirection: 'row',
     borderRadius: 16,
     borderColor: Colors.Neutral200,
@@ -52,14 +55,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderBottomWidth: 4,
     alignItems: 'center',
+    marginBottom: 10,
   },
   contentContainer: {
     // marginLeft: 10,
+    // width:
+    flex: 1,
     marginTop: 10,
     paddingHorizontal: 10,
   },
   icon: {
     width: 100,
     height: 100,
+    resizeMode: 'contain',
   },
 });

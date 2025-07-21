@@ -6,6 +6,7 @@ import UploadDataScreen from '../views/allChallanges/UploadDataScreen';
 import ChallengeFormSelectionScreen from '../views/allChallanges/ChallengeFormSelectionScreen';
 import ConsumItemList from '../views/allChallanges/component/Forms/ConsumeItemList';
 import {FoodItem} from '../features/dropdown/dropdownType';
+import StatisticsScreen from '../views/drawerScreens/MyProfile/Statistics';
 
 export type RootStackParamList = {
   DrawerNavigator: undefined;
@@ -15,6 +16,7 @@ export type RootStackParamList = {
     selectedItems: FoodItem[];
     onSelect: (items: FoodItem[]) => void;
   };
+  Statistics: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -31,6 +33,7 @@ export const RootStackNavigator = () => {
         component={ChallengeFormSelectionScreen}
       />
       <Stack.Screen name="ConsumItemList" component={ConsumItemList} />
+      <Stack.Screen name="Statistics" component={StatisticsScreen} />
     </Stack.Navigator>
   );
 };

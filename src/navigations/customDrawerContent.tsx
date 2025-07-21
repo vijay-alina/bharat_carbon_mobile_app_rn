@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Alert, StatusBar, Text, StyleSheet, View, Image} from 'react-native';
 import {
   DrawerContentComponentProps,
@@ -16,29 +16,15 @@ import {
   LevelBadgeIcon,
   SchoolRankIcon,
 } from '../images/icons';
+import {useAppDispatch, useAppSelector} from '../hooks/hooks';
+import {profileDataGet} from '../features/myProfile/myProfileThunks';
 
-type ProfileProps = {
-  name: string;
-  points: number;
-  pointsToNextLevel: number;
-  level: number;
-  classRank: number;
-  schoolRank: number;
-};
+export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+  const {...rest} = props;
 
-export const CustomDrawerContent = (
-  props: DrawerContentComponentProps & ProfileProps,
-) => {
-  const {
-    name,
-    points,
-    pointsToNextLevel,
-    level,
-    classRank,
-    schoolRank,
-    ...rest
-  } = props;
-
+  const [isLoading, setIsLoading] = React.useState(true);
+  const dispatch = useAppDispatch();
+  const profiledata = useAppSelector(state => state.myProfile.myProfile);
   const {handleLogout} = useAppContext();
   const logout = () => {
     try {
@@ -59,15 +45,26 @@ export const CustomDrawerContent = (
     }
   };
 
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      await dispatch(profileDataGet());
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!profiledata) {
+      fetchData();
+    }
+  }, []);
+
   return (
     <View style={styles.mainContainer}>
       <ProfileHeader
-        name={name}
-        points={points}
-        pointsToNextLevel={pointsToNextLevel}
-        level={level}
-        classRank={classRank}
-        schoolRank={schoolRank}
         onBackPress={() => {
           props.navigation.toggleDrawer();
         }}
@@ -84,26 +81,26 @@ export const CustomDrawerContent = (
         <View style={styles.profileInfo}>
           <Image source={LevelBadgeIcon} style={styles.levelBadge} />
           <Text style={styles.pointsToNext}>
-            {pointsToNextLevel} pts to Level {level + 1}
+            {'700'} pts to Level {2 + 1}
           </Text>
-          <Text style={styles.userName}>{name}</Text>
+          <Text style={styles.userName}>{profiledata?.name}</Text>
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
               <EarnedPointsIcon />
               <Text style={styles.statLabel}>EARNED POINTS</Text>
-              <Text style={styles.statValue}>{points}</Text>
+              <Text style={styles.statValue}>{profiledata?.earnedPoints}</Text>
             </View>
             <View style={styles.statDivider} />
             <View style={styles.statItem}>
               <ClassRankIcon />
               <Text style={styles.statLabel}>CLASS RANK</Text>
-              <Text style={styles.statValue}>#{classRank}</Text>
+              <Text style={styles.statValue}>#{profiledata?.classRank}</Text>
             </View>
             <View style={styles.statDivider} />
             <View style={styles.statItem}>
               <SchoolRankIcon />
               <Text style={styles.statLabel}>SCHOOL RANK</Text>
-              <Text style={styles.statValue}>#{schoolRank}</Text>
+              <Text style={styles.statValue}>#{profiledata?.schoolRank}</Text>
             </View>
           </View>
         </View>

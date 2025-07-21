@@ -62,17 +62,9 @@ const PersonIconWrapper = (_props: DrawerIconProps) => <UserIcon />;
 export const DrawerNavigator = () => {
   const [student, setStudent] = useState<any>({});
   console.log('student', student);
-  const profileData = {
-    name: student?.firstName + ' ' + student?.lastName,
-    points: 590,
-    pointsToNextLevel: 800,
-    level: 1,
-    classRank: 6,
-    schoolRank: 1438,
-  };
 
   const CustomDrawerContentWrapper = (props: DrawerContentComponentProps) => (
-    <CustomDrawerContent {...props} {...profileData} />
+    <CustomDrawerContent {...props} />
   );
 
   useEffect(() => {

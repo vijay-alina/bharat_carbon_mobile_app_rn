@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, use} from 'react';
 import {
   View,
   Text,
@@ -15,18 +15,29 @@ import {
   Image,
 } from 'react-native';
 import bharatCarbonImageWhite from '../../images/icons/bharat_carbon_image_white.png';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import CustomButton from '../../common/button';
 import {useAppDispatch} from '../../hooks/hooks';
-import {otpGet} from '../../features/user/userThunks';
+import {otpGet, otpGetFamily} from '../../features/user/userThunks';
 // const { width, height } = Dimensions.get('window');
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [error, setError] = useState('');
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const route = useRoute();
   const dispatch = useAppDispatch();
+
+  const {type} = route.params as {type: string};
+
+  console.log('type', type);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -55,22 +66,40 @@ const LoginScreen = () => {
 
   const handleSendOTP = async () => {
     Keyboard.dismiss();
-    if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email address');
-      return;
-    }
 
-    if (!validateEmail(email.trim())) {
-      Alert.alert('Error', 'Please enter a valid email address');
-      return;
+    if (type === 'student') {
+      if (!email.trim()) {
+        Alert.alert('Error', 'Please enter your email address');
+        return;
+      }
+
+      if (!validateEmail(email.trim())) {
+        Alert.alert('Error', 'Please enter a valid email address');
+        return;
+      }
+    } else {
+      if (!mobileNumber.trim()) {
+        Alert.alert('Error', 'Please enter your mobile number');
+        return;
+      }
+      const isValid = /^[6-9]\d{9}$/.test(mobileNumber.trim());
+
+      if (mobileNumber.trim().length !== 10 || !isValid) {
+        Alert.alert('Error', 'Please enter a valid mobile number');
+        return;
+      }
     }
 
     setIsLoading(true);
 
     try {
-      await dispatch(otpGet(email.trim())).unwrap();
+      type === 'student'
+        ? await dispatch(otpGet(email.trim())).unwrap()
+        : await dispatch(otpGetFamily(mobileNumber.trim())).unwrap();
       //@ts-ignore
-      navigation.navigate('OTPVerificationScreen', {email: email.trim()});
+      navigation.navigate('OTPVerificationScreen', {
+        email: type === 'student' ? email.trim() : mobileNumber.trim(),
+      });
     } catch (error) {
       console.error('Error sending OTP: login ', error);
       Alert.alert('Error', 'Failed to send OTP. Please try again.');
@@ -147,22 +176,44 @@ const LoginScreen = () => {
             >
               <Image source={bharatCarbonImageWhite} style={styles.image} />
               <View style={styles.formSection}>
-                <Text style={styles.title}>Log In with Email</Text>
+                <Text style={styles.title}>
+                  {type === 'student'
+                    ? 'Log In with Email'
+                    : 'Log In with Phone Number'}
+                </Text>
 
-                <View>
-                  <TextInput
-                    style={styles.emailInput}
-                    placeholder="Enter your email"
-                    placeholderTextColor="#8A8A8A"
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    // autoCompleteType="email"
-                    textContentType="emailAddress"
-                  />
-                </View>
+                {type === 'student' ? (
+                  <View>
+                    <TextInput
+                      style={styles.emailInput}
+                      placeholder="Enter your email"
+                      placeholderTextColor="#8A8A8A"
+                      value={email}
+                      onChangeText={setEmail}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      // autoCompleteType="email"
+                      textContentType="emailAddress"
+                    />
+                  </View>
+                ) : (
+                  <View>
+                    <TextInput
+                      style={styles.emailInput}
+                      placeholder="Enter your phone number"
+                      placeholderTextColor="#8A8A8A"
+                      value={mobileNumber}
+                      maxLength={10}
+                      onChangeText={setMobileNumber}
+                      keyboardType="phone-pad"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      // autoCompleteType="email"
+                      // textContentType="phoneNumber"
+                    />
+                  </View>
+                )}
               </View>
             </View>
           </View>

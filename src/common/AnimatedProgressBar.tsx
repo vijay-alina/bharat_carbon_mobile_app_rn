@@ -8,8 +8,8 @@ const AnimatedProgressBar = ({
   //   title = 'Keep it up! Slowly drop down!',
   height = 8,
   backgroundColor = '#E5E7EB',
-  color1 = '#60A5FA', // Light blue
-  color2 = '#2563EB', // Dark blue
+  color1 = Colors.DarkGreen, // Light blue
+  color2 = Colors.GreenNormal, // Dark blue
   segmentCount = 8,
   animationDuration = 1500,
   skewAngle = 15, // Skew angle in degrees
@@ -85,11 +85,11 @@ export default AnimatedProgressBar;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingVertical: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-
   },
   title: {
     fontSize: 16,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   progressContainer: {
-    width: '60%',
+    width: '80%',
     borderRadius: 4,
     overflow: 'hidden',
     // marginBottom: 8,
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     transform: [{rotate: '15deg'}],
   },
   percentage: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
     color: Colors.DarkGreen,
     // textAlign: 'right',

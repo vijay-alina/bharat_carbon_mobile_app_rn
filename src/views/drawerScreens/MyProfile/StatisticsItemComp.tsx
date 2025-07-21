@@ -28,6 +28,7 @@ export default StatisticsItemComp;
 
 const styles = StyleSheet.create({
   wrapper: {
+    width: '48%',
     backgroundColor: Colors.Neutral200,
     borderRadius: 16,
     alignItems: 'center',
@@ -38,12 +39,13 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   container: {
+    width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: Colors.White,
     borderRadius: 16,
-    paddingHorizontal: 5,
+    paddingHorizontal: 2,
     paddingVertical: 8,
   },
   statIcon: {
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
   },
   valueText: {
     fontFamily: 'Montserrat-Bold',
-    fontSize: 16,
+    fontSize: 12,
     color: Colors.Black2,
   },
   marginLeft: {

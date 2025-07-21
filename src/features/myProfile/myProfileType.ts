@@ -1,24 +1,26 @@
 interface Statistic {
   id: string;
-  icon: any;
+  icon: string;
   title: string;
   value: number;
+  unit: string;
 }
 
 interface Badge {
   id: string;
-  icon: any;
+  icon: string;
   title: string;
 }
 
-interface UnfinishedChallenge {
+interface Challenge {
   id: string;
-  icon: any;
+  icon: string;
   header: string;
   duration: number;
-  description: string;
-  color: string;
+  points: number;
   completedDays: number;
+  color: string;
+  description: string;
 }
 
 interface FamilyMember {
@@ -42,10 +44,9 @@ export interface ProfileData {
   classRank: number;
   statistics: Statistic[];
   myBadges: Badge[];
-  unFinishedChallenges: UnfinishedChallenge[];
+  unFinishedChallenges: Challenge[];
   familyRecord: FamilyRecord;
 }
-
 
 export interface getProfiledataResponse {
   status: string;

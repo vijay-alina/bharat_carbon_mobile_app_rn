@@ -22,15 +22,15 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
+    padding: 8,
   },
   badgeIcon: {
     width: 86,
     height: 64,
   },
   badgeText: {
-    fontFamily: 'Montserrat-Regular',
-    fontSize: 14,
-    color: Colors.PrimaryBlue,
+    fontWeight: '500',
+    fontSize: 12,
+    color: Colors.Black,
   },
 });

@@ -21,8 +21,8 @@ const {width, height} = Dimensions.get('window');
 const WelcomeScreen: React.FC = () => {
   const navigation = useNavigation<any>();
 
-  const handleLogin = () => {
-    navigation.navigate('LoginScreen');
+  const handleLogin = (type: string) => {
+    navigation.navigate('LoginScreen', {type});
   };
 
   return (
@@ -46,8 +46,19 @@ const WelcomeScreen: React.FC = () => {
           Learn simple ways to lower your Carbon footprint
         </Text>
         <CustomButton
-          onPress={handleLogin}
+          onPress={() => {
+            handleLogin('student');
+          }}
           text="Login"
+          textColor={Colors.BlueShades900}
+          style={styles.button}
+        />
+        <CustomButton
+          onPress={() => {
+            handleLogin('family');
+          }}
+          text="Family Member Login"
+          showIcon={true}
           textColor={Colors.BlueShades900}
           style={styles.button}
         />

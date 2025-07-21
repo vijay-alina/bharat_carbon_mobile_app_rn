@@ -8,6 +8,8 @@ import {
   Text,
   ScrollView,
   ActivityIndicator,
+  Touchable,
+  TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import BgImage from '../../../images/icons/background_image.png';
@@ -27,16 +29,52 @@ import Divider from '../../../images/icons/divider.png';
 import PointsIcon from '../../../images/icons/phonepe-icon.png';
 import {useAppDispatch, useAppSelector} from '../../../hooks/hooks';
 import {profileDataGet} from '../../../features/myProfile/myProfileThunks';
+import {
+  TapIcon,
+  WasteIcon,
+  ElectricityIcon,
+  CyclingIcon,
+  PublicTransportIcon,
+  CarpoolIcon,
+  EleticScotterIcon,
+  CalenderIcon,
+  AchievedIcon,
+  AverageScoreIcon,
+  WaterSaverIcon,
+  EcoMoverIcon,
+  EcoShooperIcon,
+  EarthIcon,
+} from '../../../images/icons';
+
+const categoryIconMap: {[key: string]: any} = {
+  water: TapIcon,
+  waste: WasteIcon,
+  electricity: ElectricityIcon,
+  cycling: CyclingIcon,
+  publicTransport: PublicTransportIcon,
+  carpool: CarpoolIcon,
+  electricScooter: EleticScotterIcon,
+  emission: TapIcon,
+  emissionCount: EarthIcon,
+  activeDays: CalenderIcon,
+  achieved: AchievedIcon,
+  averageScore: AverageScoreIcon,
+  waterWarrior: WaterSaverIcon,
+  ecoMover: EcoMoverIcon,
+  ecoShopper: EcoShooperIcon,
+};
 
 const MyProfileScreen = () => {
-  const [isLoading, setIsLoading] = React.useState(true);
-  const navigation = useNavigation();
-  const dispatch = useAppDispatch();
+  const navigation = useNavigation<any>();
   const profiledata = useAppSelector(state => state.myProfile.myProfile);
 
   const handleBackClick = () => {
     navigation.goBack();
   };
+
+  function getIconByCategory(category: string) {
+    return categoryIconMap[category] || null;
+  }
 
   // TODO: Uncomment and implement status bar configuration when needed
   // useFocusEffect(
@@ -54,153 +92,148 @@ const MyProfileScreen = () => {
   //   }, []),
   // );
 
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      await dispatch(profileDataGet());
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!profiledata) {
-      fetchData();
-    }
-  }, []);
-
   console.log('profiledata', profiledata);
 
   return (
     <View style={styles.container}>
-      {isLoading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#23B397" />
-        </View>
-      ) : (
-        profiledata && (
-          <ImageBackground
-            source={BgImage}
-            style={styles.backgroundImage}
-            imageStyle={styles.backgroundImageStyle}
-            resizeMode="cover">
-            <SafeAreaView style={styles.content}>
-              {/* Fixed header section - non-scrollable */}
-              <View style={styles.headerSection}>
-                <Header
-                  isHomeScreen={false}
-                  title="My Profile"
-                  hasTransparentBackground={true}
-                  textStyle={{color: Colors.White}}
-                  onBackClick={handleBackClick}
-                />
-                <View style={styles.avatarContainer}>
-                  <Image source={AvatarPlaceholder} style={styles.avatar} />
-                </View>
-                <Image source={LevelBadgeImage} style={styles.levelBadge} />
-                <Text style={styles.nameText}>{profiledata.name}</Text>
-                <RankComponent
-                  earnedPoints={profiledata?.earnedPoints}
-                  schoolRank={profiledata?.schoolRank}
-                  classRank={profiledata?.classRank}
-                />
+      {profiledata && (
+        <ImageBackground
+          source={BgImage}
+          style={styles.backgroundImage}
+          imageStyle={styles.backgroundImageStyle}
+          resizeMode="cover">
+          <SafeAreaView style={styles.content}>
+            {/* Fixed header section - non-scrollable */}
+            <View style={styles.headerSection}>
+              <Header
+                isHomeScreen={false}
+                title="My Profile"
+                hasTransparentBackground={true}
+                textStyle={{color: Colors.White}}
+                onBackClick={handleBackClick}
+              />
+              <View style={styles.avatarContainer}>
+                <Image source={AvatarPlaceholder} style={styles.avatar} />
               </View>
+              <Image source={LevelBadgeImage} style={styles.levelBadge} />
+              <Text style={styles.nameText}>{profiledata.name}</Text>
+              <RankComponent
+                earnedPoints={profiledata?.earnedPoints}
+                schoolRank={profiledata?.schoolRank}
+                classRank={profiledata?.classRank}
+              />
+            </View>
 
-              {/* Scrollable content section */}
-              <ScrollView
-                style={styles.scrollContainer}
-                contentContainerStyle={styles.scrollContent}
-                showsVerticalScrollIndicator={false}>
-                <View style={styles.rowHeaderContainer}>
-                  <Text style={{fontWeight: 'bold'}}>Statistics</Text>
+            {/* Scrollable content section */}
+            <ScrollView
+              style={styles.scrollContainer}
+              contentContainerStyle={styles.scrollContent}
+              showsVerticalScrollIndicator={false}>
+              <View style={styles.rowHeaderContainer}>
+                <Text style={{fontWeight: 'bold'}}>Statistics</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('Statistics');
+                  }}>
                   <Text style={{color: Colors.DarkGreen, fontSize: 10}}>
                     VIEW ALL
                   </Text>
-                </View>
-                {/* Statistics row - 4 items in a grid */}
-                <View style={styles.statRowContainer}>
-                  {profiledata?.statistics?.map((item, i) => (
+                </TouchableOpacity>
+              </View>
+              {/* Statistics row - 4 items in a grid */}
+              <View style={styles.statRowContainer}>
+                {profiledata?.statistics?.map((item, i) => {
+                  const icon = getIconByCategory(item.icon);
+                  return (
                     <StatisticsItemComp
                       key={i}
-                      icon={require('../../../images/icons/stat_earth_icon.png')}
+                      icon={icon}
                       statType={item?.title}
-                      statValue={`${item?.value} kg CO2e `}
+                      statValue={`${item?.value} ${item?.unit}`}
                     />
-                  ))}
-                </View>
+                  );
+                })}
+              </View>
 
-                <View style={styles.rowHeaderContainer}>
-                  <Text style={{fontWeight: 'bold', marginBottom: 10}}>
-                    My Badges
-                  </Text>
-                </View>
-                {/* Badges section */}
-                <View style={styles.badgeContainer}>
-                  {profiledata?.myBadges?.map((item, i) => (
+              <View style={styles.rowHeaderContainer}>
+                <Text style={{fontWeight: 'bold', marginBottom: 10}}>
+                  My Badges
+                </Text>
+              </View>
+              {/* Badges section */}
+              <View style={styles.badgeContainer}>
+                {profiledata?.myBadges?.map((item, i) => {
+                  const icon = getIconByCategory(item.icon);
+                  return (
                     <BadgeComp
                       key={i}
-                      badgeIcon={require('../../../images/icons/badge_green_eater.png')}
+                      badgeIcon={icon}
                       badgeName={item?.title}
                     />
-                  ))}
-                </View>
+                  );
+                })}
+              </View>
 
-                <View style={styles.rowHeaderContainer}>
-                  <Text style={{fontWeight: 'bold'}}>
-                    Unfinished Challenges
-                  </Text>
-                </View>
-                {/* Challenge component */}
-                <View style={styles.challengeContainer}>
-                  {profiledata?.unFinishedChallenges?.map((item, i) => (
+              <View style={styles.rowHeaderContainer}>
+                <Text style={{fontWeight: 'bold'}}>Unfinished Challenges</Text>
+              </View>
+              {/* Challenge component */}
+              <View style={styles.challengeContainer}>
+                {profiledata?.unFinishedChallenges?.map((item, i) => {
+                  const icon = getIconByCategory(item.icon);
+                  return (
                     <ChallengeComp
                       key={i}
-                      icon={require('../../../images/icons/badge_green_eater.png')}
+                      icon={icon}
                       header={item?.header}
                       duration={item?.duration}
                       description={item?.description}
+                      completedDays={item?.completedDays}
                     />
-                  ))}
-                </View>
+                  );
+                })}
+              </View>
 
-                <View style={styles.rowHeaderContainer}>
-                  <Text style={{fontWeight: 'bold'}}>
-                    Your Family's Green Impact
-                  </Text>
-                </View>
-                {/* Family's Green Impact section */}
-                <View style={styles.lowerContainer}>
-                  {/* Family statistics gradient card */}
-                  <LinearGradient
-                    colors={[Colors.LightGreen, Colors.DarkGreen]}
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 0}}
-                    style={styles.statContainer}>
-                    <View style={styles.leftStat}>
-                      <LeafIcon width={24} height={24} fill="white" />
-                      <Text style={styles.statDescription}>TOTAL EMISSION</Text>
-                      <Text style={styles.statTitle}>
-                        {profiledata?.familyRecord?.totalEmissions} KG CO2e
-                      </Text>
-                    </View>
-                    <Image
-                      source={Verticaldevider}
-                      style={styles.verticalDivider}
-                    />
-                    <View style={styles.leftStat}>
-                      <LeafIcon width={24} height={24} fill="white" />
-                      <Text style={styles.statDescription}>
-                        TOP CONTRIBUTOR
-                      </Text>
-                      <Text style={styles.statTitle}>
-                        {profiledata?.familyRecord?.topContributer}
-                      </Text>
-                    </View>
-                  </LinearGradient>
+              <View style={styles.rowHeaderContainer}>
+                <Text style={{fontWeight: 'bold'}}>
+                  Your Family's Green Impact
+                </Text>
+              </View>
+              {/* Family's Green Impact section */}
+              <View style={styles.lowerContainer}>
+                {/* Family statistics gradient card */}
+                <LinearGradient
+                  colors={[Colors.LightGreen, Colors.DarkGreen]}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.statContainer}>
+                  <View style={styles.leftStat}>
+                    <LeafIcon width={24} height={24} fill="white" />
+                    <Text style={styles.statDescription}>TOTAL EMISSION</Text>
+                    <Text style={styles.statTitle}>
+                      {profiledata?.familyRecord?.totalEmissions} KG CO2e
+                    </Text>
+                  </View>
+                  <Image
+                    source={Verticaldevider}
+                    style={styles.verticalDivider}
+                  />
+                  <View style={styles.leftStat}>
+                    <LeafIcon width={24} height={24} fill="white" />
+                    <Text style={styles.statDescription}>TOP CONTRIBUTOR</Text>
+                    <Text style={styles.statTitle}>
+                      {profiledata?.familyRecord?.topContributer}
+                    </Text>
+                  </View>
+                </LinearGradient>
 
-                  {/* Family member card */}
+                {/* Family member card */}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                  }}>
                   {profiledata?.familyRecord?.familyList?.map((item, i) => {
                     return (
                       <View style={styles.card} key={i}>
@@ -253,10 +286,10 @@ const MyProfileScreen = () => {
                     );
                   })}
                 </View>
-              </ScrollView>
-            </SafeAreaView>
-          </ImageBackground>
-        )
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+        </ImageBackground>
       )}
     </View>
   );
@@ -333,13 +366,13 @@ const styles = StyleSheet.create({
   statRowContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     justifyContent: 'space-between',
     marginBottom: 10,
     // marginRight: 15,
   },
   badgeContainer: {
-    width: DEVICE_WIDTH * 0.94,
+    width: DEVICE_WIDTH - 40,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -354,12 +387,12 @@ const styles = StyleSheet.create({
   challengeContainer: {
     marginVertical: 10,
     // width: '100%',
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
   },
   lowerContainer: {
     alignItems: 'flex-start',
     width: '100%',
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     paddingTop: 10,
   },
   title: {
@@ -401,7 +434,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   card: {
-    width: '50%',
+    width: '45%',
     backgroundColor: Colors.White,
     borderRadius: 16,
     borderWidth: 1,

@@ -20,7 +20,12 @@ import CustomButton from '../../common/button';
 import {getLineHeight} from '../../utils/utils';
 import {RedoIcon} from '../../images/icons';
 import {useAppDispatch, useAppSelector} from '../../hooks/hooks';
-import {otpGet, otpVerify} from '../../features/user/userThunks';
+import {
+  otpGet,
+  otpGetFamily,
+  otpVerify,
+  otpVerifyFamily,
+} from '../../features/user/userThunks';
 import {CommonActions, useFocusEffect} from '@react-navigation/native';
 import {useAppContext} from '../../context/AppContext';
 
@@ -39,8 +44,10 @@ const OTPVerificationScreen = ({
   const [activeInputIndex, setActiveInputIndex] = useState(0);
 
   const inputRefs = useRef<TextInput[]>([]);
-  const email = route?.params?.email || 'user@abcschool.edu';
-  const {completeOnboarding} = useAppContext();
+  const email = route?.params?.email;
+  const type = route?.params?.type;
+  const {completeOnboarding, completeProfile, completeSubscription} =
+    useAppContext();
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.user);
 
@@ -120,8 +127,10 @@ const OTPVerificationScreen = ({
     setActiveInputIndex(0);
 
     try {
-      await dispatch(otpGet(email)).unwrap();
-      Alert.alert('Success', 'OTP has been resent to your email');
+      type === 'student'
+        ? await dispatch(otpGet(email)).unwrap()
+        : await dispatch(otpGetFamily(email)).unwrap();
+      Alert.alert('Success', 'OTP has been sent successfully');
       setTimeout(() => {
         inputRefs.current[0]?.focus();
       }, 100);
@@ -142,15 +151,31 @@ const OTPVerificationScreen = ({
     setIsLoading(true);
 
     try {
-      await dispatch(
-        otpVerify({
-          email,
-          otp: otpString,
-        }),
-      ).unwrap();
-      completeOnboarding();
+      type === 'student'
+        ? await dispatch(
+            otpVerify({
+              email,
+              otp: otpString,
+            }),
+          ).unwrap()
+        : await dispatch(
+            otpVerifyFamily({
+              mobileNumber: email,
+              otp: otpString,
+            }),
+          ).unwrap();
+      if (type === 'family') {
+        await Promise.all([
+          completeOnboarding(),
+          completeProfile(),
+          completeSubscription(),
+        ]);
+      } else {
+        completeOnboarding();
+      }
       // navigation.navigate('CreateProfileScreen');
     } catch (error) {
+      console.log(error);
       Alert.alert('Error', 'Invalid OTP. Please try again.');
       setOtp(['', '', '', '']);
       inputRefs.current[0]?.focus();

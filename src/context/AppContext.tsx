@@ -22,6 +22,7 @@ export interface IAppContext {
   isNotesViewed: boolean;
   isTouchTourComplete: boolean;
   handleLogout: () => void;
+  user: null | any;
 }
 
 const AppContext = createContext<IAppContext>({
@@ -39,6 +40,7 @@ const AppContext = createContext<IAppContext>({
   isNotesViewed: false,
   isTouchTourComplete: false,
   handleLogout: () => {},
+  user: null,
 });
 
 export const useAppContext = () => {
@@ -58,15 +60,21 @@ export const AppProvider: React.FC<{children: ReactElement}> = ({children}) => {
     isLoading: true,
     isNotesViewed: false,
     isTouchTourComplete: false,
+    user: null,
   });
 
   // Simulate loading saved state (in real app, load from AsyncStorage)
   useEffect(() => {
     const loadAppState = async () => {
       try {
+        const user = await AsyncStorage.getItem('user');
         const savedState = await AsyncStorage.getItem('appState');
-        if (savedState) {
-          setAppState({...JSON.parse(savedState), isLoading: false});
+        if (savedState && user) {
+          setAppState({
+            ...JSON.parse(savedState),
+            user: JSON.parse(user),
+            isLoading: false,
+          });
         } else {
           setAppState(prev => ({...prev, isLoading: false}));
         }
@@ -86,25 +94,33 @@ export const AppProvider: React.FC<{children: ReactElement}> = ({children}) => {
   };
 
   const completeOnboarding = async () => {
-    const newState = {...appState, hasCompletedOnboarding: true};
-    setAppState(newState);
-    await AsyncStorage.setItem('appState', JSON.stringify(newState));
+    setAppState(prev => {
+      const newState = {...prev, hasCompletedOnboarding: true};
+      AsyncStorage.setItem('appState', JSON.stringify(newState));
+      return newState;
+    });
   };
 
   const completeProfile = async () => {
-    const newState = {...appState, hasCompletedProfile: true};
-    setAppState(newState);
-    await AsyncStorage.setItem('appState', JSON.stringify(newState));
+    setAppState(prev => {
+      const newState = {...prev, hasCompletedProfile: true};
+      AsyncStorage.setItem('appState', JSON.stringify(newState));
+      return newState;
+    });
   };
 
   const completeSubscription = async () => {
-    const newState = {...appState, hasCompletedSubscription: true};
-    setAppState(newState);
-    await AsyncStorage.setItem('appState', JSON.stringify(newState));
+    setAppState(prev => {
+      const newState = {...prev, hasCompletedSubscription: true};
+      AsyncStorage.setItem('appState', JSON.stringify(newState));
+      return newState;
+    });
   };
 
   const handleLogout = async () => {
     const newState = {...appState, hasCompletedOnboarding: false};
+    await AsyncStorage.removeItem('user');
+    await AsyncStorage.removeItem('accessToken');
     setAppState(newState);
     await AsyncStorage.setItem('appState', JSON.stringify(newState));
   };
@@ -129,6 +145,7 @@ export const AppProvider: React.FC<{children: ReactElement}> = ({children}) => {
       isLoading: false,
       isNotesViewed: false,
       isTouchTourComplete: false,
+      user: null,
     };
     setAppState(newState);
     // In real app: await AsyncStorage.removeItem('appState');

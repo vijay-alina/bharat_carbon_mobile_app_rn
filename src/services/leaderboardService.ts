@@ -1,4 +1,7 @@
-import {LeaderboardResponse} from '../features/leaderboard/leaderboardType';
+import {
+  FamilyLeaderboardResponse,
+  LeaderboardResponse,
+} from '../features/leaderboard/leaderboardType';
 import apiClient from './apiClient';
 
 export const getLeaderboardData = async (
@@ -7,3 +10,9 @@ export const getLeaderboardData = async (
   const response = await apiClient.get(`/analytics/board/${year}/all`);
   return response.data;
 };
+
+export const getFamilyLeaderboardData =
+  async (): Promise<FamilyLeaderboardResponse> => {
+    const response = await apiClient.get(`/analytics/familyBoard`);
+    return response.data;
+  };

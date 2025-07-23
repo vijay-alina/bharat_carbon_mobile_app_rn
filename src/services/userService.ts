@@ -23,6 +23,7 @@ export const getOtp = async (email: string): Promise<User> => {
 
 export const verifyOtp = async (payload: any): Promise<User> => {
   const response = await apiClient.post(`/studentInfo/verify-otp`, payload);
+  console.log('response', response);
   setAccessToken(response.data.data.access_token);
   await AsyncStorage.setItem(
     'user',
@@ -39,9 +40,22 @@ export const profileUpdate = async (
   return response.data.data;
 };
 
-export const getOtpFamily = async (mobile: string): Promise<User> => {
+export const getOtpFamily = async (mobile: string): Promise<any> => {
   const response = await apiClient.post(`/familyMember/login`, {
     mobileNumber: mobile,
   });
   return response.data;
+};
+
+export const familyOtpVerify = async (payload: any): Promise<any> => {
+  console.log('payload', payload);
+  const response = await apiClient.post(`/familyMember/otpVerify`, {
+    otp: payload.otp,
+    mobileNumber: payload.mobileNumber,
+  });
+  console.log('response', response);
+  setAccessToken(response.data.data.access_token);
+  await AsyncStorage.setItem('user', JSON.stringify(response.data.data.family));
+
+  return response.data.data;
 };

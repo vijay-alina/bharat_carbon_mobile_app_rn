@@ -1,9 +1,14 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {LeaderboardResponse, LeaderboardState} from './leaderboardType';
-import {leaderboardGet} from './leaderboardThunk';
+import {
+  FamilyLeaderboardResponse,
+  LeaderboardResponse,
+  LeaderboardState,
+} from './leaderboardType';
+import {familyLeaderboardGet, leaderboardGet} from './leaderboardThunk';
 
 const initialState: LeaderboardState = {
   leaderboard: null,
+  familyLeaderboard: null,
   status: 'idle',
   error: null,
 };
@@ -28,7 +33,15 @@ const leaderboardSlice = createSlice({
       .addCase(leaderboardGet.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
-      });
+      })
+
+      .addCase(
+        familyLeaderboardGet.fulfilled,
+        (state, action: PayloadAction<FamilyLeaderboardResponse>) => {
+          state.status = 'succeeded';
+          state.familyLeaderboard = action.payload.data;
+        },
+      );
   },
 });
 

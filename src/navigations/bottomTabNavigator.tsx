@@ -10,6 +10,8 @@ import {StatsScreen} from '../views/stats/statsScreen';
 import HousingDataForm from '../views/add/HousingDataForm';
 import LeaderboardScreen from '../views/Leaderboard/LeaderboardScreen';
 import {ChallengeStackNavigator} from './challengeStackNavigator';
+import {useAppContext} from '../context/AppContext';
+import FamilyLeaderboardScreen from '../views/Leaderboard/FamilyLeaderboardScreen';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -18,6 +20,8 @@ const CustomTabBarWrapper = (props: BottomTabBarProps) => (
 );
 
 export const TabNavigator = () => {
+  const {user} = useAppContext();
+  console.log('User:', user);
   return (
     <Tab.Navigator
       tabBar={CustomTabBarWrapper}
@@ -39,7 +43,11 @@ export const TabNavigator = () => {
         })}
       />
       <Tab.Screen name="Stats" component={StatsScreen} />
-      <Tab.Screen name="Profile" component={LeaderboardScreen} />
+      {user.type === 'student' ? (
+        <Tab.Screen name="Profile" component={LeaderboardScreen} />
+      ) : (
+        <Tab.Screen name="Profile" component={FamilyLeaderboardScreen} />
+      )}
     </Tab.Navigator>
   );
 };

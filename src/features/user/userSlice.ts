@@ -1,6 +1,12 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {UserState} from './userTypes';
-import {fetchUser, otpGet, otpGetFamily, otpVerify} from './userThunks';
+import {
+  fetchUser,
+  otpGet,
+  otpGetFamily,
+  otpVerify,
+  otpVerifyFamily,
+} from './userThunks';
 
 const initialState: UserState = {
   user: null,
@@ -55,7 +61,15 @@ const userSlice = createSlice({
 
       .addCase(otpGetFamily.fulfilled, (state, action: PayloadAction<any>) => {
         state.status = 'succeeded';
-      });
+      })
+      .addCase(
+        otpVerifyFamily.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          console.log('action.payload', action.payload);
+          state.status = 'succeeded';
+          state.user = action.payload.family;
+        },
+      );
   },
 });
 

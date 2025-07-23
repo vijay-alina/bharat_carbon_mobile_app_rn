@@ -6,8 +6,14 @@ import {
   TMember,
 } from '../features/challenge/types';
 
-export const getMember = async (): Promise<TGetMembersResponse> => {
-  const response = await apiClient.get('/familyMember');
+export const getMember = async (
+  userType: string,
+): Promise<TGetMembersResponse> => {
+  if (userType === 'student') {
+    const response = await apiClient.get('/familyMember');
+    return response.data;
+  }
+  const response = await apiClient.get('/familyMember/memberFamily');
   return response.data;
 };
 

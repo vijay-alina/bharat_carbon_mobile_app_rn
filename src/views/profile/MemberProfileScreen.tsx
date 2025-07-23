@@ -26,10 +26,12 @@ import {useAppDispatch} from '../../hooks/hooks';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../app/store';
 import BottomSheet from '@gorhom/bottom-sheet';
+import {useAppContext} from '../../context/AppContext';
 
 const MemberProfileScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const {user} = useAppContext();
   const dispatch = useAppDispatch();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['50%'], []);
@@ -134,22 +136,24 @@ const MemberProfileScreen = () => {
       </View>
       <ChallengeHistoryItem />
 
-      <View style={styles.buttonContainer}>
-        <View style={styles.editButtonContainer}>
-          <CustomButton
-            text="Edit Profile"
-            onPress={handleUpdate}
-            style={styles.addButton}
-            iconComponent={EditPencilIcon}
-            showIcon={true}
-            isLeftIcon={false} // Icon on right
-          />
-        </View>
+      {user.type === 'student' && (
+        <View style={styles.buttonContainer}>
+          <View style={styles.editButtonContainer}>
+            <CustomButton
+              text="Edit Profile"
+              onPress={handleUpdate}
+              style={styles.addButton}
+              iconComponent={EditPencilIcon}
+              showIcon={true}
+              isLeftIcon={false} // Icon on right
+            />
+          </View>
 
-        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-          <TrashIcon />
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+            <TrashIcon />
+          </TouchableOpacity>
+        </View>
+      )}
 
       <BottomSheet
         ref={bottomSheetRef}

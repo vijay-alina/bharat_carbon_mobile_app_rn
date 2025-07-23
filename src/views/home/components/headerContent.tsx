@@ -59,7 +59,10 @@ const ListHeaderContent = (props: Props) => {
           />
         </View>
       </View>
-      <Text style={styles.greetingText}>Good Morning, {student.firstName}</Text>
+      <Text style={styles.greetingText}>
+        Good Morning,{' '}
+        {student?.firstName ? student?.firstName : student?.fullName}
+      </Text>
       <HomeHorizontalCard />
     </ImageBackground>
   );

@@ -9,6 +9,7 @@ export interface User {
   section: string;
   year: string;
   class: number;
+  type: string;
   location: string;
   isActive: boolean;
   isDeleted: boolean;

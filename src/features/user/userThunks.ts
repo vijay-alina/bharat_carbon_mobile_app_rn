@@ -1,5 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
+  familyOtpVerify,
   getOtp,
   getOtpFamily,
   getUserById,
@@ -73,6 +74,20 @@ export const otpGetFamily = createAsyncThunk(
   async (mobile: string, thunkAPI) => {
     try {
       return await getOtpFamily(mobile);
+    } catch (error: any) {
+      console.error('Error fetching OTP thunk:', error);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Fetch failed',
+      );
+    }
+  },
+);
+
+export const otpVerifyFamily = createAsyncThunk(
+  'user/otpVerifyFamily',
+  async (payload: any, thunkAPI) => {
+    try {
+      return await familyOtpVerify(payload);
     } catch (error: any) {
       console.error('Error fetching OTP thunk:', error);
       return thunkAPI.rejectWithValue(

@@ -93,16 +93,20 @@ const LoginScreen = () => {
     setIsLoading(true);
 
     try {
-      type === 'student'
-        ? await dispatch(otpGet(email.trim())).unwrap()
-        : await dispatch(otpGetFamily(mobileNumber.trim())).unwrap();
+      const response =
+        type === 'student' && (await dispatch(otpGet(email.trim())).unwrap());
+      // : await dispatch(otpGetFamily(mobileNumber.trim())).unwrap();
+
+      console.log('response', response);
+
       //@ts-ignore
       navigation.navigate('OTPVerificationScreen', {
         email: type === 'student' ? email.trim() : mobileNumber.trim(),
+        type,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending OTP: login ', error);
-      Alert.alert('Error', 'Failed to send OTP. Please try again.');
+      Alert.alert('Error', error.message);
     } finally {
       setIsLoading(false);
     }

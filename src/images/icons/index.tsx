@@ -62,7 +62,10 @@ import EcoMoverIcon from './ecoMover.png';
 import EcoShooperIcon from './ecoShooper.png';
 import WaterSaverIcon from './waterSaver.png';
 import EarthIcon from './save_earth.png';
-import  AddPlusCircle from './Add_Plus_Circle.svg';
+import AddPlusCircle from './Add_Plus_Circle.svg';
+import Vactor from './vactor_icon.svg';
+import GroupIcon from './group_icon.svg';
+import GroupIcons from './group_icons.svg';
 
 export {
   BackIcon,
@@ -129,5 +132,8 @@ export {
   EcoShooperIcon,
   WaterSaverIcon,
   EarthIcon,
-  AddPlusCircle
+  AddPlusCircle,
+  Vactor,
+  GroupIcon,
+  GroupIcons,
 };

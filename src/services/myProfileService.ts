@@ -1,14 +1,23 @@
-import {profileData} from '../constants/constants';
-import {getProfiledataResponse} from '../features/myProfile/myProfileType';
+import {profileData, statisticsData} from '../constants/constants';
+import {
+  getProfiledataResponse,
+  StatisticsResponse,
+} from '../features/myProfile/myProfileType';
 import apiClient from './apiClient';
 
 export const getProfiledata = async (): Promise<getProfiledataResponse> => {
   const response = await apiClient.get(`/profile/profileInfo`);
+  return response.data;
+};
 
-  // const data = {
-  //   status: 'success',
-  //   message: 'succuss Full fetch profile Data',
-  //   data: profileData,
-  // };
+export const getFamilyMemberProfiledata =
+  async (): Promise<getProfiledataResponse> => {
+    const response = await apiClient.get(`/profile/familyMember/profileInfo`);
+    return response.data;
+  };
+
+export const getStatisticsdata = async (): Promise<StatisticsResponse> => {
+  const response = await apiClient.get(`/analytics/statistics`);
+  // const response = statisticsData;
   return response.data;
 };

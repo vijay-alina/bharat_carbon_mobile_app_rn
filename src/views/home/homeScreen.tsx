@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import ListHeaderContent from './components/headerContent';
 import VerticalClimateCard from './components/home-vertical-card';
@@ -19,6 +20,11 @@ import {aboutAppTasks} from '../../constants/constants';
 import EarthWithCheckImage from '../../images/icons/earth_with_check.png';
 import {useAppContext} from '../../context/AppContext';
 import {useNavigation} from '@react-navigation/native';
+import {useAppDispatch, useAppSelector} from '../../hooks/hooks';
+import {
+  familyMemberProfileDataGet,
+  profileDataGet,
+} from '../../features/myProfile/myProfileThunks';
 
 const _item = {
   imageUri: require('../../images/icons/girl_with_phone.png'),
@@ -60,7 +66,10 @@ const list2 = [_itemThree, _itemFour];
 
 export const HomeScreen = () => {
   const navigation = useNavigation<any>();
-  const {completeNotesViewed, isNotesViewed} = useAppContext();
+  const [isLoading, setIsLoading] = React.useState(true);
+  const dispatch = useAppDispatch();
+  const profiledata = useAppSelector(state => state.myProfile.myProfile);
+  const {completeNotesViewed, isNotesViewed, user} = useAppContext();
   const [currentStep, setCurrentStep] = useState(0);
   const GRADIENT_COLORS = ['#E8FFE8', '#80A380'];
   const PLAIN_COLORS = ['#FFFFFF', '#FFFFFF'];
@@ -100,135 +109,160 @@ export const HomeScreen = () => {
     }
   };
 
-  return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <ListHeaderContent />
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          // backgroundColor: 'red',
-          marginHorizontal: 5,
-          justifyContent: 'space-between',
-        }}>
-        {list1.map((item, index) => (
-          <VerticalClimateCard
-            key={index.toString()}
-            imageUri={item.imageUri}
-            title={item.title}
-            subtitle={item.subtitle}
-            buttonText={item.buttonText}
-            gradientColors={item.gradientColors}
-            icon={item.icon}
-            press={() => {
-              item.title === 'Take Your First Climate Action!'
-                ? navigation.navigate('UploadDataScreen')
-                : navigation.navigate('MemberStackNavigator', {
-                    screen: 'AddNewMemberScreen',
-                  });
-            }}
-          />
-        ))}
-      </View>
-      <View style={styles.sectionDividerContainer}>
-        <Text style={styles.labelText}>Explore Challenges</Text>
-        <TouchableOpacity>
-          <Text style={styles.viewAllText}>View All</Text>
-        </TouchableOpacity>
-      </View>
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      user.type === 'student'
+        ? await dispatch(profileDataGet()).unwrap()
+        : await dispatch(familyMemberProfileDataGet()).unwrap();
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          marginHorizontal: 5,
-          justifyContent: 'space-between',
-        }}>
-        {list2.map((item, index) => (
-          <VerticalClimateCard
-            key={index.toString()}
-            imageUri={item.imageUri}
-            title={item.title}
-            subtitle={item.subtitle}
-            buttonText={item.buttonText}
-            gradientColors={item.gradientColors}
-            icon={item.icon}
-            press={() => {
-              navigation.navigate('History', {
-                screen: 'ChallengeList',
-                params: {
-                  challengeType: item.title,
-                },
-              });
-            }}
-          />
-        ))}
-      </View>
-      <View style={styles.sectionDividerContainer}>
-        <Text style={styles.labelText}>Recommended Articles</Text>
-        <TouchableOpacity>
-          <Text style={styles.viewAllText}>View All</Text>
-        </TouchableOpacity>
-      </View>
-      <ListFooterContent />
-      <View style={styles.height} />
-      <Modal
-        isVisible={!isNotesViewed}
-        animationIn="fadeIn"
-        animationInTiming={300}
-        animationOut="fadeOut"
-        animationOutTiming={300}>
-        <LinearGradient
-          colors={gradientColors}
-          style={
-            currentStep === 6
-              ? styles.modalContentContainer2
-              : styles.modalContentContainer
-          }>
-          <Text
-            style={[
-              styles.titleText,
-              currentStep > 0 && {color: Colors.PrimaryBlue},
-            ]}>
-            {aboutAppTasks[currentStep].title}
-          </Text>
-          <Text style={getDescriptionTextStyle()}>
-            {aboutAppTasks[currentStep].description}
-          </Text>
-          {currentStep === 6 && (
-            <Image source={EarthWithCheckImage} style={styles.earth} />
-          )}
-          <View style={getButtonWrapperStyle()}>
-            {currentStep === 6 ? (
-              <>
-                <TouchableOpacity
-                  style={styles.filledButtonContainer}
-                  onPress={handleGetStartedClick}>
-                  <Text style={styles.buttonText2}>
-                    {aboutAppTasks[currentStep].buttonText}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.outlinedButtonContainer}
-                  onPress={handleViewDashboardClick}>
-                  <Text style={styles.buttonText3}>
-                    {aboutAppTasks[currentStep].buttonText2}
-                  </Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={handleNextClick}>
-                <Text style={styles.buttonText2}>
-                  {aboutAppTasks[currentStep].buttonText}
-                </Text>
-              </TouchableOpacity>
-            )}
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  return (
+    <>
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#23B397" />
+        </View>
+      ) : (
+        <ScrollView
+          style={styles.container}
+          showsVerticalScrollIndicator={false}>
+          <ListHeaderContent />
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              // backgroundColor: 'red',
+              marginHorizontal: 5,
+              justifyContent: 'space-between',
+            }}>
+            {list1.map((item, index) => (
+              <VerticalClimateCard
+                key={index.toString()}
+                imageUri={item.imageUri}
+                title={item.title}
+                subtitle={item.subtitle}
+                buttonText={item.buttonText}
+                gradientColors={item.gradientColors}
+                icon={item.icon}
+                press={() => {
+                  item.title === 'Take Your First Climate Action!'
+                    ? navigation.navigate('UploadDataScreen')
+                    : navigation.navigate('MemberStackNavigator', {
+                        screen: 'AddNewMemberScreen',
+                      });
+                }}
+              />
+            ))}
           </View>
-        </LinearGradient>
-      </Modal>
-      {/* <FlatList
+          <View style={styles.sectionDividerContainer}>
+            <Text style={styles.labelText}>Explore Challenges</Text>
+            <TouchableOpacity>
+              <Text style={styles.viewAllText}>View All</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              marginHorizontal: 5,
+              justifyContent: 'space-between',
+            }}>
+            {list2.map((item, index) => (
+              <VerticalClimateCard
+                key={index.toString()}
+                imageUri={item.imageUri}
+                title={item.title}
+                subtitle={item.subtitle}
+                buttonText={item.buttonText}
+                gradientColors={item.gradientColors}
+                icon={item.icon}
+                press={() => {
+                  navigation.navigate('History', {
+                    screen: 'ChallengeList',
+                    params: {
+                      challengeType: item.title,
+                    },
+                  });
+                }}
+              />
+            ))}
+          </View>
+          <View style={styles.sectionDividerContainer}>
+            <Text style={styles.labelText}>Recommended Articles</Text>
+            <TouchableOpacity>
+              <Text style={styles.viewAllText}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          <ListFooterContent />
+          <View style={styles.height} />
+          <Modal
+            isVisible={!isNotesViewed}
+            animationIn="fadeIn"
+            animationInTiming={300}
+            animationOut="fadeOut"
+            animationOutTiming={300}>
+            <LinearGradient
+              colors={gradientColors}
+              style={
+                currentStep === 6
+                  ? styles.modalContentContainer2
+                  : styles.modalContentContainer
+              }>
+              <Text
+                style={[
+                  styles.titleText,
+                  currentStep > 0 && {color: Colors.PrimaryBlue},
+                ]}>
+                {aboutAppTasks[currentStep].title}
+              </Text>
+              <Text style={getDescriptionTextStyle()}>
+                {aboutAppTasks[currentStep].description}
+              </Text>
+              {currentStep === 6 && (
+                <Image source={EarthWithCheckImage} style={styles.earth} />
+              )}
+              <View style={getButtonWrapperStyle()}>
+                {currentStep === 6 ? (
+                  <>
+                    <TouchableOpacity
+                      style={styles.filledButtonContainer}
+                      onPress={handleGetStartedClick}>
+                      <Text style={styles.buttonText2}>
+                        {aboutAppTasks[currentStep].buttonText}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.outlinedButtonContainer}
+                      onPress={handleViewDashboardClick}>
+                      <Text style={styles.buttonText3}>
+                        {aboutAppTasks[currentStep].buttonText2}
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.buttonContainer}
+                    onPress={handleNextClick}>
+                    <Text style={styles.buttonText2}>
+                      {aboutAppTasks[currentStep].buttonText}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </LinearGradient>
+          </Modal>
+          {/* <FlatList
         ListHeaderComponent={ListHeaderContent}
         data={list}
         numColumns={2}
@@ -247,11 +281,18 @@ export const HomeScreen = () => {
         ListFooterComponent={ListFooterContent}
         ListFooterComponentStyle={styles.footerContainerStyle}
       /> */}
-    </ScrollView>
+        </ScrollView>
+      )}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',

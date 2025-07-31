@@ -67,12 +67,10 @@ export const AppProvider: React.FC<{children: ReactElement}> = ({children}) => {
   useEffect(() => {
     const loadAppState = async () => {
       try {
-        const user = await AsyncStorage.getItem('user');
         const savedState = await AsyncStorage.getItem('appState');
-        if (savedState && user) {
+        if (savedState) {
           setAppState({
             ...JSON.parse(savedState),
-            user: JSON.parse(user),
             isLoading: false,
           });
         } else {
@@ -94,8 +92,13 @@ export const AppProvider: React.FC<{children: ReactElement}> = ({children}) => {
   };
 
   const completeOnboarding = async () => {
+    const user = await AsyncStorage.getItem('user');
     setAppState(prev => {
-      const newState = {...prev, hasCompletedOnboarding: true};
+      const newState = {
+        ...prev,
+        hasCompletedOnboarding: true,
+        user: user ? JSON.parse(user) : null,
+      };
       AsyncStorage.setItem('appState', JSON.stringify(newState));
       return newState;
     });
@@ -118,7 +121,7 @@ export const AppProvider: React.FC<{children: ReactElement}> = ({children}) => {
   };
 
   const handleLogout = async () => {
-    const newState = {...appState, hasCompletedOnboarding: false};
+    const newState = {...appState, hasCompletedOnboarding: false, user: null};
     await AsyncStorage.removeItem('user');
     await AsyncStorage.removeItem('accessToken');
     setAppState(newState);

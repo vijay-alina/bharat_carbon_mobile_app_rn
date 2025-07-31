@@ -9,14 +9,17 @@ import {
   EarnedPointsGreenIcon,
   SchoolRankGreenIcon,
 } from '../../../images/icons';
+import {useAppContext} from '../../../context/AppContext';
 
 type RankCompProps = {
   earnedPoints: number;
-  schoolRank: number;
-  classRank: number;
+  schoolRank?: number;
+  classRank?: number;
+  familyRank?: number;
 };
 
 const RankComponent = (props: RankCompProps) => {
+  const {user} = useAppContext();
   return (
     <View style={styles.wrapper}>
       <View style={styles.container}>
@@ -26,17 +29,27 @@ const RankComponent = (props: RankCompProps) => {
           <Text style={styles.valueText}>{props.earnedPoints}</Text>
         </View>
         <Image source={VerticalDivider} style={styles.divider} />
-        <View style={styles.content}>
-          <SchoolRankGreenIcon />
-          <Text style={styles.labelText}>SCHOOL RANK</Text>
-          <Text style={styles.valueText}>{`#${props.schoolRank}`}</Text>
-        </View>
-        <Image source={VerticalDivider} style={styles.divider} />
-        <View style={styles.content}>
-          <ClassRankGreenIcon />
-          <Text style={styles.labelText}>CLASS RANK</Text>
-          <Text style={styles.valueText}>{`#${props.classRank}`}</Text>
-        </View>
+        {user.type === 'student' ? (
+          <>
+            <View style={styles.content}>
+              <SchoolRankGreenIcon />
+              <Text style={styles.labelText}>SCHOOL RANK</Text>
+              <Text style={styles.valueText}>{`#${props.schoolRank}`}</Text>
+            </View>
+            <Image source={VerticalDivider} style={styles.divider} />
+            <View style={styles.content}>
+              <ClassRankGreenIcon />
+              <Text style={styles.labelText}>CLASS RANK</Text>
+              <Text style={styles.valueText}>{`#${props.classRank}`}</Text>
+            </View>
+          </>
+        ) : (
+          <View style={styles.content}>
+            <SchoolRankGreenIcon />
+            <Text style={styles.labelText}>Family RANK</Text>
+            <Text style={styles.valueText}>{`#${props.familyRank}`}</Text>
+          </View>
+        )}
       </View>
     </View>
   );

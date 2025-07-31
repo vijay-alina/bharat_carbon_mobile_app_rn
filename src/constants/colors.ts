@@ -1,4 +1,5 @@
 export const Colors = {
+  bodyBackground: '#f3f4f8',
   PrimaryBlue: '#024064',
   NeutralsDark: '#000000',
   White: '#FFFFFF',
@@ -45,5 +46,4 @@ export const Colors = {
   RedDark: '#FF4D4F',
   Neutrals900: '#101223',
   Neutrals800: '#101223',
-
 };

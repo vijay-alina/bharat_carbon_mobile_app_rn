@@ -41,7 +41,7 @@ export const profileUpdate = async (
 };
 
 export const getOtpFamily = async (mobile: string): Promise<any> => {
-  const response = await apiClient.post(`/familyMember/login`, {
+  const response = await apiClient.post(`/familyAuth/login`, {
     mobileNumber: mobile,
   });
   return response.data;
@@ -49,7 +49,7 @@ export const getOtpFamily = async (mobile: string): Promise<any> => {
 
 export const familyOtpVerify = async (payload: any): Promise<any> => {
   console.log('payload', payload);
-  const response = await apiClient.post(`/familyMember/otpVerify`, {
+  const response = await apiClient.post(`/familyAuth/otpVerify`, {
     otp: payload.otp,
     mobileNumber: payload.mobileNumber,
   });

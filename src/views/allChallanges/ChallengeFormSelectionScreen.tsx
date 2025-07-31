@@ -11,21 +11,23 @@ import GoodsForm from './component/Forms/GoodsForm';
 const ChallengeFormSelectionScreen = () => {
   const route = useRoute();
   //@ts-ignore
-  const {id, headerLabel} = route.params;
+  const {id, headerLabel, activityId, subCategory} = route.params;
   const navigation = useNavigation();
 
   const showFormById = () => {
     switch (id) {
       case 1:
-        return <NutritionForm />;
+        return <NutritionForm activityId={activityId} />;
       case 2:
-        return <HousingForm />;
+        return (
+          <HousingForm activityId={activityId} subCategory={subCategory} />
+        );
       case 3:
-        return <MobilityForm />;
+        return <MobilityForm activityId={activityId} />;
       case 4:
-        return <GoodsForm />;
+        return <GoodsForm activityId={activityId} />;
       case 5:
-        return <LeisureForm />;
+        return <LeisureForm activityId={activityId} />;
     }
   };
   return (

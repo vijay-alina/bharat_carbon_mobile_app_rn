@@ -32,7 +32,11 @@ import {
 } from '../../../../features/challenge/goods/goodsThunk';
 import {TGoodsType} from '../../../../features/challenge/types';
 import * as yup from 'yup';
-import {getClothes} from '../../../../services/challengeService';
+import {
+  getClothes,
+  getGoodsDetailsById,
+  goodsUpdate,
+} from '../../../../services/challengeService';
 import {fetchClothes} from '../../../../features/challenge/cloths/clothsThunk';
 import {fetchAppliances} from '../../../../features/challenge/appliance/appliancesThunk';
 import {ImagePickerService} from '../../../../services/ImagePickerService';
@@ -56,7 +60,11 @@ const goodsValidationSchema = yup.object().shape({
   selectedItems: yup.array().min(1, 'At least one item must be selected'),
 });
 
-const GoodsForm = () => {
+type GoodsFormProps = {
+  activityId?: string; // mark as optional if needed
+};
+
+const GoodsForm: React.FC<GoodsFormProps> = ({activityId}) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
@@ -76,6 +84,9 @@ const GoodsForm = () => {
   const {goods} = useAppSelector(state => state.goods);
   const {cloths} = useAppSelector(state => state.cloths);
   const {appliances} = useAppSelector(state => state.appliances);
+
+  const cleanId = activityId?.split(' ')[0];
+  console.log('Clean ID:', cleanId);
 
   const handleDateChange = (_: any, selected?: Date) => {
     const currentDate = selected || date;
@@ -137,7 +148,9 @@ const GoodsForm = () => {
 
       console.log('requestBody', requestBody);
 
-      await dispatch(uploadGoods(requestBody)).unwrap();
+      cleanId
+        ? await goodsUpdate({id: cleanId, payloadData: requestBody})
+        : await dispatch(uploadGoods(requestBody)).unwrap();
       Alert.alert('success', 'Goods data submitted Successfully!', [
         {
           text: 'ok',
@@ -258,6 +271,33 @@ const GoodsForm = () => {
       },
     ]);
   };
+
+  const fetchDetailsData = async () => {
+    try {
+      if (cleanId) {
+        try {
+          const response = await getGoodsDetailsById(cleanId);
+          console.log('Response:', response);
+          setDate(new Date(response.data.date));
+          setGoodsType(response.data.goodsType);
+          setDescription(response.data.notes);
+          setAmount(response.data.amount.toString());
+          setSelectedItems(response.data.item);
+          if (response.data.goodsType === 1) {
+            setApplianceType(response.data.item.value);
+          } else {
+            setClothsType(response.data.item.value);
+          }
+        } catch (error) {
+          console.error('Error fetching nutrition details:', error);
+        }
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchDetailsData();
+  }, [cleanId]);
 
   return (
     <KeyboardAvoidingView

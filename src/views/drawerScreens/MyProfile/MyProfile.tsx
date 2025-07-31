@@ -45,6 +45,7 @@ import {
   EcoShooperIcon,
   EarthIcon,
 } from '../../../images/icons';
+import {useAppContext} from '../../../context/AppContext';
 
 const categoryIconMap: {[key: string]: any} = {
   water: TapIcon,
@@ -67,6 +68,7 @@ const categoryIconMap: {[key: string]: any} = {
 const MyProfileScreen = () => {
   const navigation = useNavigation<any>();
   const profiledata = useAppSelector(state => state.myProfile.myProfile);
+  const {user} = useAppContext();
 
   const handleBackClick = () => {
     navigation.goBack();
@@ -121,6 +123,7 @@ const MyProfileScreen = () => {
                 earnedPoints={profiledata?.earnedPoints}
                 schoolRank={profiledata?.schoolRank}
                 classRank={profiledata?.classRank}
+                familyRank={profiledata?.familyRank}
               />
             </View>
 

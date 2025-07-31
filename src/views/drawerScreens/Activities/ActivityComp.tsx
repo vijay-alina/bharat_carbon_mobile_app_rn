@@ -16,6 +16,8 @@ import {
 import AvatarPlaceholder from '../../../images/icons/avatar_placeholder.png';
 import PointsComponent from '../../addMember/components/PointsComponent';
 import {DEVICE_WIDTH, getLineHeight} from '../../../utils/utils';
+import {useNavigation} from '@react-navigation/native';
+import {Categories} from '../../../constants/constants';
 
 export enum ActivityType {
   Nutrition,
@@ -35,6 +37,8 @@ type ActivityCompProps = {
 };
 
 const ActivityComp = (props: ActivityCompProps) => {
+  const navigation = useNavigation<any>();
+
   const getChipBgColor = (activityType: ActivityType) => {
     switch (activityType) {
       case ActivityType.Nutrition:
@@ -87,6 +91,9 @@ const ActivityComp = (props: ActivityCompProps) => {
   };
 
   const handleEditActivity = (item: any) => {
+    const category = Categories.find(
+      category => category.label === item.activityType,
+    );
     Alert.alert('Edit Activity', `Edit ${item.title}?`, [
       {
         text: 'Cancel',
@@ -97,7 +104,12 @@ const ActivityComp = (props: ActivityCompProps) => {
         onPress: () => {
           // Navigate to edit screen or open edit modal
           console.log('Edit activity:', item);
-          // navigation.navigate('EditActivity', { activity: item });
+          navigation.navigate('ChallengeFormSelectionScreen', {
+            id: category?.id,
+            headerLabel: category?.heaaderLabel,
+            activityId: item.id,
+            subCategory: item.subCategory,
+          });
         },
       },
     ]);

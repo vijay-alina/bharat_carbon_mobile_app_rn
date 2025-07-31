@@ -18,14 +18,13 @@ import {
 } from '../images/icons';
 import {useAppDispatch, useAppSelector} from '../hooks/hooks';
 import {profileDataGet} from '../features/myProfile/myProfileThunks';
+import {useDispatch} from 'react-redux';
 
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const {...rest} = props;
-
-  const [isLoading, setIsLoading] = React.useState(true);
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const profiledata = useAppSelector(state => state.myProfile.myProfile);
-  const {handleLogout} = useAppContext();
+  const {handleLogout, user} = useAppContext();
   const logout = () => {
     try {
       Alert.alert('Logout', 'Are you Sure you want to logout?', [
@@ -37,6 +36,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           text: 'OK',
           onPress: () => {
             handleLogout();
+            dispatch({type: 'RESET_APP'});
           },
         },
       ]);
@@ -44,23 +44,6 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       console.error('Logout error:', error);
     }
   };
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      await dispatch(profileDataGet());
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!profiledata) {
-      fetchData();
-    }
-  }, []);
 
   return (
     <View style={styles.mainContainer}>
@@ -91,17 +74,31 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
               <Text style={styles.statValue}>{profiledata?.earnedPoints}</Text>
             </View>
             <View style={styles.statDivider} />
-            <View style={styles.statItem}>
-              <ClassRankIcon />
-              <Text style={styles.statLabel}>CLASS RANK</Text>
-              <Text style={styles.statValue}>#{profiledata?.classRank}</Text>
-            </View>
-            <View style={styles.statDivider} />
-            <View style={styles.statItem}>
-              <SchoolRankIcon />
-              <Text style={styles.statLabel}>SCHOOL RANK</Text>
-              <Text style={styles.statValue}>#{profiledata?.schoolRank}</Text>
-            </View>
+            {user.type === 'student' ? (
+              <>
+                <View style={styles.statItem}>
+                  <ClassRankIcon />
+                  <Text style={styles.statLabel}>CLASS RANK</Text>
+                  <Text style={styles.statValue}>
+                    #{profiledata?.classRank}
+                  </Text>
+                </View>
+                <View style={styles.statDivider} />
+                <View style={styles.statItem}>
+                  <SchoolRankIcon />
+                  <Text style={styles.statLabel}>SCHOOL RANK</Text>
+                  <Text style={styles.statValue}>
+                    #{profiledata?.schoolRank}
+                  </Text>
+                </View>
+              </>
+            ) : (
+              <View style={styles.statItem}>
+                <ClassRankIcon />
+                <Text style={styles.statLabel}>Family RANK</Text>
+                <Text style={styles.statValue}>#{profiledata?.familyRank}</Text>
+              </View>
+            )}
           </View>
         </View>
         <View style={styles.itemsContainer}>

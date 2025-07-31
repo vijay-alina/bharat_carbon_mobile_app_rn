@@ -40,8 +40,9 @@ interface FamilyRecord {
 export interface ProfileData {
   name: string;
   earnedPoints: number;
-  schoolRank: number;
-  classRank: number;
+  schoolRank?: number;
+  classRank?: number;
+  familyRank?: number;
   statistics: Statistic[];
   myBadges: Badge[];
   unFinishedChallenges: Challenge[];
@@ -54,8 +55,50 @@ export interface getProfiledataResponse {
   data: ProfileData;
 }
 
+export interface EcoImpact {
+  key: number;
+  value: number;
+  svg: {
+    fill: string;
+  };
+  label: string;
+  point: string;
+}
+
+export interface GrowthGraph {
+  pointsData: number[];
+  emissionsData: number[];
+}
+
+export interface GoalTracking {
+  totalPoints: number;
+}
+
+export interface ChallengeOverview {
+  housingAccepetedPoint: number;
+  housingEarnedPoint: number;
+  mobilityAcceptedPoint: number;
+  mobilityEarnedPoint: number;
+  housingChallengeDone: number;
+  mobilityChallengeDone: number;
+}
+
+export interface StatisticsData {
+  ChallengeOverview: ChallengeOverview;
+  goalTracking: GoalTracking;
+  growtgGraph: GrowthGraph;
+  ecoImpact: EcoImpact[];
+}
+
+export interface StatisticsResponse {
+  status: string;
+  message: string;
+  data: StatisticsData;
+}
+
 export interface myProfileState {
   myProfile: ProfileData | null;
+  statistics: StatisticsData | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }

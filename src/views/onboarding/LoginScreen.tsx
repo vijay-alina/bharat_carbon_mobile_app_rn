@@ -94,8 +94,9 @@ const LoginScreen = () => {
 
     try {
       const response =
-        type === 'student' && (await dispatch(otpGet(email.trim())).unwrap());
-      // : await dispatch(otpGetFamily(mobileNumber.trim())).unwrap();
+        type === 'student'
+          ? await dispatch(otpGet(email.trim())).unwrap()
+          : await dispatch(otpGetFamily(mobileNumber.trim())).unwrap();
 
       console.log('response', response);
 

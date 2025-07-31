@@ -29,6 +29,10 @@ import {
   getTripType,
 } from '../../../../features/dropdown/dropdownThunks';
 import {uploadMobility} from '../../../../features/mobility/mobilityThunks';
+import {
+  getMobilityDetailsById,
+  mobilityUpdate,
+} from '../../../../services/mobilityService';
 
 type RootStackParamList = {
   MobilityForm: undefined;
@@ -42,7 +46,11 @@ const MobilityValidationSchema = yup.object().shape({
   distanceTravelled: yup.string().required('End Date is required'),
 });
 
-const MobilityForm = () => {
+type MobilityFormProps = {
+  activityId?: string; // mark as optional if needed
+};
+
+const MobilityForm: React.FC<MobilityFormProps> = ({activityId}) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
@@ -58,6 +66,9 @@ const MobilityForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dataLoading, setDataLoading] = useState(false);
   const dispatch = useAppDispatch();
+
+  const cleanId = activityId?.split(' ')[0];
+  console.log('Clean ID:', cleanId);
 
   const travelModes = useAppSelector(state => state.dropdown.travelMode);
   const tripTypes = useAppSelector(state => state.dropdown.tripType);
@@ -177,8 +188,9 @@ const MobilityForm = () => {
 
       console.log('Request Body:', requestBody);
 
-      // Replace with your actual housing API call
-      await dispatch(uploadMobility(requestBody)).unwrap();
+      cleanId
+        ? await mobilityUpdate({id: cleanId, payloadData: requestBody})
+        : await dispatch(uploadMobility(requestBody)).unwrap();
 
       Alert.alert('Success', 'mobility data submitted successfully!', [
         {
@@ -221,6 +233,32 @@ const MobilityForm = () => {
     }
   }, [travelModes, tripTypes]);
 
+  const fetchDetailsData = async () => {
+    try {
+      if (cleanId) {
+        try {
+          const response = await getMobilityDetailsById(cleanId);
+          console.log('Response:', response);
+          setTransportMode(response.data.transportMode);
+          setTripType(response.data.tripType);
+          setTravelledFrom(response.data.traveledFrom);
+          setTravelledTo(response.data.traveledTo);
+          setDistanceTravelled(response.data.distanceTraveled.toString());
+          setDate(new Date(response.data.date));
+          setNotes(response.data.notes);
+        } catch (error) {
+          console.error('Error fetching nutrition details:', error);
+        }
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchDetailsData();
+  }, [cleanId]);
+
+  console.log('transportMode', transportMode);
+
   return (
     <KeyboardAvoidingView
       style={styles.keyboardAvoidingView}
@@ -259,13 +297,15 @@ const MobilityForm = () => {
           <Text style={styles.label}>How Did You Travel?</Text>
           <View style={styles.pickerBox}>
             <Picker
-              selectedValue={transportMode}
-              onValueChange={setTransportMode}>
+              selectedValue={transportMode?.value}
+              onValueChange={val => {
+                setTransportMode(travelModes.find(x => x.value === val));
+              }}>
               {travelModes.map(item => (
                 <Picker.Item
                   key={item.dataId}
                   label={item.label}
-                  value={item}
+                  value={item?.value}
                 />
               ))}
             </Picker>

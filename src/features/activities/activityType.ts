@@ -4,6 +4,7 @@ export interface Activity {
   timestamp: string;
   name: string;
   activityType: string;
+  subCategory: string;
 }
 
 export interface EventIndicator {

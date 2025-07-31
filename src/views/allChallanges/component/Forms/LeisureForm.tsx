@@ -23,6 +23,10 @@ import {ImagePickerService} from '../../../../services/ImagePickerService';
 import {useAppDispatch, useAppSelector} from '../../../../hooks/hooks';
 import {uploadLesiure} from '../../../../features/leisure/leisureThunks';
 import {getLeisureActivity} from '../../../../features/dropdown/dropdownThunks';
+import {
+  getLeisureDetailsById,
+  leisureUpdate,
+} from '../../../../services/leisureService';
 
 type RootStackParamList = {
   MobilityForm: undefined;
@@ -35,7 +39,11 @@ const LeisureValidationSchema = yup.object().shape({
   amount: yup.string().required('Amount is required'),
 });
 
-const LeisureForm = () => {
+type LeisureFormProps = {
+  activityId?: string; // mark as optional if needed
+};
+
+const LeisureForm: React.FC<LeisureFormProps> = ({activityId}) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
@@ -53,6 +61,9 @@ const LeisureForm = () => {
   const leisureActivities = useAppSelector(
     state => state.dropdown.leisureActivity,
   );
+
+  const cleanId = activityId?.split(' ')[0];
+  console.log('Clean ID:', cleanId);
 
   const handleDateChange = (_: any, selected?: Date) => {
     const currentDate = selected || date;
@@ -168,8 +179,9 @@ const LeisureForm = () => {
 
       console.log('Request Body:', requestBody);
 
-      // Replace with your actual housing API call
-      await dispatch(uploadLesiure(requestBody)).unwrap();
+      cleanId
+        ? await leisureUpdate({id: cleanId, payloadData: requestBody})
+        : await dispatch(uploadLesiure(requestBody)).unwrap();
 
       Alert.alert('Success', 'Leisure data submitted successfully!', [
         {
@@ -210,6 +222,28 @@ const LeisureForm = () => {
     }
   }, [leisureActivities]);
 
+  const fetchDetailsData = async () => {
+    try {
+      if (cleanId) {
+        try {
+          const response = await getLeisureDetailsById(cleanId);
+          console.log('Response:', response);
+          setDate(new Date(response.data.date));
+          setPeople(response.data.people.toString());
+          setAmount(response?.data.amount.toString());
+          setNotes(response?.data.notes);
+          setLeisureActivity(response?.data.leisureActivity);
+        } catch (error) {
+          console.error('Error fetching nutrition details:', error);
+        }
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchDetailsData();
+  }, [cleanId]);
+
   console.log('Leisure Activity:', leisureActivities);
 
   return (
@@ -247,13 +281,18 @@ const LeisureForm = () => {
           <Text style={styles.label}>Activity Name</Text>
           <View style={styles.pickerBox}>
             <Picker
-              selectedValue={leisureActivity}
-              onValueChange={setLeisureActivity}>
+              selectedValue={leisureActivity?.value}
+              // onValueChange={setLeisureActivity}
+              onValueChange={val => {
+                setLeisureActivity(
+                  leisureActivities.find(x => x.value === val),
+                );
+              }}>
               {leisureActivities?.map(item => (
                 <Picker.Item
                   key={item.dataId}
                   label={item.label}
-                  value={item}
+                  value={item?.value}
                 />
               ))}
             </Picker>

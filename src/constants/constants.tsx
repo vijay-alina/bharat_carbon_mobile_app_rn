@@ -880,3 +880,67 @@ export const profileData = {
     ],
   },
 };
+
+export const statisticsData = {
+  status: 'success',
+  message: 'fetych successfully',
+  data: {
+    ChallengeOverview: {
+      housingAccepetedPoint: 500,
+      housingEarnedPoint: 250,
+      mobilityAcceptedPoint: 400,
+      mobilityEarnedPoint: 200,
+      housingChallengeDone: 5,
+      mobilityChallengeDone: 3,
+    },
+    goalTracking: {
+      totalPoints: 600,
+    },
+    growtgGraph: {
+      pointsData: [120, 170, 360, 280, 380, 300, 300],
+      emissionsData: [10, 15, 30, 100, 32, 36, 25],
+    },
+    ecoImpact: [
+      {
+        key: 1,
+        value: 420,
+        svg: {fill: '#1DCEAC'},
+        label: 'Nutrition',
+        point: '420',
+        done:2
+      },
+      {
+        key: 2,
+        value: 229,
+        svg: {fill: '#3B82F6'},
+        label: 'Housing',
+        point: '229',
+        done: 3
+      },
+      {
+        key: 3,
+        value: 310,
+        svg: {fill: '#FF832B'},
+        label: 'Mobility',
+        point: '310',
+        done: 4
+      },
+      {
+        key: 4,
+        value: 330,
+        svg: {fill: '#6750A3'},
+        label: 'Goods',
+        point: '330',
+        done: 5
+      },
+      {
+        key: 5,
+        value: 100,
+        svg: {fill: '#FFC542'},
+        label: 'Leisure',
+        point: '100',
+        done: 0
+      },
+    ],
+  },
+};

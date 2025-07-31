@@ -17,6 +17,7 @@ export type RootStackParamList = {
     onSelect: (items: FoodItem[]) => void;
   };
   Statistics: undefined;
+  Services: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

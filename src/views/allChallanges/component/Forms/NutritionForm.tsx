@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import {
   useNavigation,
   NavigationProp,
   useRoute,
+  useFocusEffect,
 } from '@react-navigation/native';
 import GalleryaddIcon from '../../../../images/icons/gallery-add.svg';
 import * as yup from 'yup';
@@ -34,6 +35,10 @@ import {
 import {ImagePickerService} from '../../../../services/ImagePickerService';
 import {FoodItem} from '../../../../features/dropdown/dropdownType';
 import {RootStackParamList} from '../../../../navigations/rootStackNavigator';
+import {
+  getNutritionDetailsById,
+  nutritionUpdate,
+} from '../../../../services/nutritionService';
 
 const mockItems = [
   {name: 'Tofu Stir Fry', points: 18, tag: 'Repeat'},
@@ -50,8 +55,15 @@ const nutritionValidationSchema = yup.object().shape({
   selectedItems: yup.array().min(1, 'At least one item must be selected'),
 });
 
-const NutritionForm = () => {
+type NutritionFormProps = {
+  activityId?: string; // mark as optional if needed
+};
+
+const NutritionForm: React.FC<NutritionFormProps> = ({activityId}) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const cleanId = activityId?.split(' ')[0];
+  console.log('Clean ID:', cleanId);
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const [mealType, setMealType] = useState<number | undefined>();
@@ -216,7 +228,9 @@ const NutritionForm = () => {
 
       console.log('Request Body:', requestBody);
 
-      await dispatch(uploadNutrition(requestBody)).unwrap();
+      cleanId
+        ? await nutritionUpdate({id: cleanId, payloadData: requestBody})
+        : await dispatch(uploadNutrition(requestBody)).unwrap();
       Alert.alert('Success', 'Nutrition data submitted successfully!', [
         {
           text: 'OK',
@@ -309,6 +323,51 @@ const NutritionForm = () => {
       setMealStyle(mealStyles[0].value);
     }
   }, [mealTypes, mealStyles]);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const fetchData = async () => {
+  //       console.log('Screen focused!');
+  //       if (cleanId) {
+  //         try {
+  //           const response = await getNutritionDetailsById(cleanId);
+  //           console.log('Response:', response);
+  //           setMealType(response.data.mealType);
+  //           setMealStyle(response.data.mealStyle);
+  //           setSelectedItems(response.data.item);
+  //           setDescription(response.data.notes);
+  //           setDate(new Date(response.data.date));
+  //         } catch (error) {
+  //           console.error('Error fetching nutrition details:', error);
+  //         }
+  //       }
+  //     };
+
+  //     fetchData();
+  //   }, [cleanId]), // include dependencies here
+  // );
+
+  const fetchDetailsData = async () => {
+    try {
+      if (cleanId) {
+        try {
+          const response = await getNutritionDetailsById(cleanId);
+          console.log('Response:', response);
+          setMealType(response.data.mealType);
+          setMealStyle(response.data.mealStyle);
+          setSelectedItems(response.data.item);
+          setDescription(response.data.notes);
+          setDate(new Date(response.data.date));
+        } catch (error) {
+          console.error('Error fetching nutrition details:', error);
+        }
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchDetailsData();
+  }, [cleanId]);
 
   return (
     <KeyboardAvoidingView

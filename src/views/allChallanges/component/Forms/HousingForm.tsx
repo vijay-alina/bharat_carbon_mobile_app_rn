@@ -36,13 +36,30 @@ import {
   getWasteType,
   getWaterSource,
 } from '../../../../features/dropdown/dropdownThunks';
+import {
+  applianceUpdate,
+  electricityUpdate,
+  fuelUpdate,
+  getApplianceDetailsById,
+  getElectricityDetailsById,
+  getFuelDetailsById,
+  getWasteDetailsById,
+  getWaterDetailsById,
+  wasteUpdate,
+  waterUpdate,
+} from '../../../../services/housingDataService';
 
 type RootStackParamList = {
   MobilityForm: undefined;
   ConsumItemList: undefined;
 };
 
-const HousingForm = () => {
+type HousingFormProps = {
+  activityId?: string; // mark as optional if needed
+  subCategory?: string;
+};
+
+const HousingForm: React.FC<HousingFormProps> = ({activityId, subCategory}) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
 
@@ -83,25 +100,30 @@ const HousingForm = () => {
   const gasusedList = useAppSelector(state => state.dropdown.gasUsed);
   const wasteTypeList = useAppSelector(state => state.dropdown.wasteType);
 
+  const cleanId = activityId?.split(' ')[0];
+  console.log('Clean ID:', cleanId, subCategory);
+
   // Reset form fields and set appropriate date when category changes
   useEffect(() => {
-    // Reset form fields
-    setConsumed('');
-    setQuantity('');
-    setDescription('');
-    setBrandName('');
-    setRefrigerantCharge('');
-    setSolarUnits('');
-    setIsSolarInstalled(false);
-    setErrors({});
+    if (!cleanId) {
+      // Reset form fields
+      setConsumed('');
+      setQuantity('');
+      setDescription('');
+      setBrandName('');
+      setRefrigerantCharge('');
+      setSolarUnits('');
+      setIsSolarInstalled(false);
+      setErrors({});
 
-    // Set date based on category
-    if (category === 'Electricity') {
-      // For Electricity: first day of current month
-      setDate(new Date(currentYear, currentDate.getMonth(), 1));
-    } else {
-      // For other categories: current date
-      setDate(new Date());
+      // Set date based on category
+      if (category === 'Electricity') {
+        // For Electricity: first day of current month
+        setDate(new Date(currentYear, currentDate.getMonth(), 1));
+      } else {
+        // For other categories: current date
+        setDate(new Date());
+      }
     }
   }, [category]);
 
@@ -374,24 +396,157 @@ const HousingForm = () => {
   };
 
   // Submit function with category-specific API calls
+  // const handleSubmit = async () => {
+  //   try {
+  //     setIsSubmitting(true);
+
+  //     // Validate form based on selected category
+  //     const isValid = validateForm();
+  //     if (!isValid) {
+  //       setIsSubmitting(false);
+  //       return;
+  //     }
+
+  //     // Prepare image data
+  //     const imageData = photoBase64 ? [photoBase64] : [];
+
+  //     // Create request body based on category
+  //     let requestBody;
+  //     let unit;
+  //     let apiAction = cleanId ? electricityUpdate : uploadElectricityData;
+
+  //     switch (category) {
+  //       case 'Electricity':
+  //         requestBody = {
+  //           electricities: [
+  //             {
+  //               month: selectedMonth,
+  //               year: selectedYear,
+  //               consumption: parseFloat(consumed),
+  //               notes: description,
+  //               unit: 'kWh',
+  //               isSolarInstalled: isSolarInstalled,
+  //               electricityGenerationUnit: isSolarInstalled ? 'kWh' : undefined,
+  //               electricityGeneration: isSolarInstalled
+  //                 ? parseFloat(solarUnits)
+  //                 : undefined,
+  //               image: imageData,
+  //             },
+  //           ],
+  //         };
+  //         apiAction = cleanId ? electricityUpdate : uploadElectricityData;
+  //         break;
+
+  //       case 'Fuel':
+  //         requestBody = {
+  //           fuels: [
+  //             {
+  //               date: date.toISOString(),
+  //               quantity: parseFloat(consumed),
+  //               fuel: fuelType,
+  //               notes: description,
+  //               unit: 'liters',
+  //               image: imageData,
+  //             },
+  //           ],
+  //         };
+  //         apiAction = cleanId ? fuelUpdate : uploadFuelData;
+  //         break;
+
+  //       case 'Water':
+  //         requestBody = {
+  //           waters: [
+  //             {
+  //               date: date.toISOString(),
+  //               consumed: parseFloat(consumed),
+  //               waterSource: waterSource,
+  //               notes: description,
+  //               unit: 'liters',
+  //               image: imageData,
+  //             },
+  //           ],
+  //         };
+  //         apiAction = cleanId ? waterUpdate : uploadWaterData;
+  //         break;
+
+  //       case 'Waste':
+  //         requestBody = {
+  //           wastes: [
+  //             {
+  //               date: date.toISOString(),
+  //               quantity: parseFloat(quantity),
+  //               wasteType,
+  //               notes: description,
+  //               unit: 'kg',
+  //               image: imageData,
+  //             },
+  //           ],
+  //         };
+  //         apiAction = cleanId ? wasteUpdate : uploadWasteData;
+  //         break;
+
+  //       case 'Appliances':
+  //         unit = gasusedList.find(item => item.value === gasFilled.value)?.unit;
+
+  //         requestBody = {
+  //           appliances: [
+  //             {
+  //               year: selectedYear,
+  //               type: applianceType,
+  //               brandName: brandName,
+  //               gasFilled: gasFilled,
+  //               charge: parseFloat(refrigerantCharge),
+  //               unit,
+  //               notes: description,
+  //               // image: imageData,
+  //             },
+  //           ],
+  //         };
+  //         apiAction = cleanId ? applianceUpdate : uploadAppliancesData;
+  //         break;
+  //     }
+
+  //     console.log('requestBody', requestBody);
+
+  //     cleanId
+  //       ? await apiAction({id: cleanId, payloadData: requestBody})
+  //       : await dispatch(apiAction(requestBody)).unwrap();
+
+  //     Alert.alert('Success', `${category} data submitted successfully!`, [
+  //       {
+  //         text: 'OK',
+  //         onPress: () => navigation.goBack(),
+  //       },
+  //     ]);
+  //   } catch (error: any) {
+  //     console.error(`Error submitting ${category} data:`, error);
+  //     Alert.alert(
+  //       'Error',
+  //       error.message || `Failed to submit ${category} data`,
+  //     );
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
   const handleSubmit = async () => {
     try {
       setIsSubmitting(true);
 
-      // Validate form based on selected category
+      // ✅ Validate form
       const isValid = validateForm();
       if (!isValid) {
         setIsSubmitting(false);
         return;
       }
 
-      // Prepare image data
+      // ✅ Prepare image data
       const imageData = photoBase64 ? [photoBase64] : [];
 
-      // Create request body based on category
-      let requestBody;
-      let unit;
-      let apiAction = uploadElectricityData;
+      // ✅ Declare requestBody and apiAction
+      let requestBody: any = null;
+      let unit: string | undefined;
+      let apiAction: any;
 
       switch (category) {
         case 'Electricity':
@@ -412,7 +567,7 @@ const HousingForm = () => {
               },
             ],
           };
-          apiAction = uploadElectricityData;
+          apiAction = cleanId ? electricityUpdate : uploadElectricityData;
           break;
 
         case 'Fuel':
@@ -428,7 +583,7 @@ const HousingForm = () => {
               },
             ],
           };
-          apiAction = uploadFuelData;
+          apiAction = cleanId ? fuelUpdate : uploadFuelData;
           break;
 
         case 'Water':
@@ -444,7 +599,7 @@ const HousingForm = () => {
               },
             ],
           };
-          apiAction = uploadWaterData;
+          apiAction = cleanId ? waterUpdate : uploadWaterData;
           break;
 
         case 'Waste':
@@ -460,12 +615,11 @@ const HousingForm = () => {
               },
             ],
           };
-          apiAction = uploadWasteData;
+          apiAction = cleanId ? wasteUpdate : uploadWasteData;
           break;
 
         case 'Appliances':
           unit = gasusedList.find(item => item.value === gasFilled.value)?.unit;
-
           requestBody = {
             appliances: [
               {
@@ -476,18 +630,29 @@ const HousingForm = () => {
                 charge: parseFloat(refrigerantCharge),
                 unit,
                 notes: description,
-                // image: imageData,
+                // image: imageData, // Uncomment if appliance images are required
               },
             ],
           };
-          apiAction = uploadAppliancesData;
+          apiAction = cleanId ? applianceUpdate : uploadAppliancesData;
           break;
+
+        default:
+          throw new Error(`Unsupported category: ${category}`);
+      }
+
+      // ✅ Null check to satisfy TypeScript
+      if (!requestBody || !apiAction) {
+        throw new Error('Request body or API action is missing');
       }
 
       console.log('requestBody', requestBody);
 
-      // Call the appropriate API based on category
-      await dispatch(apiAction(requestBody)).unwrap();
+      if (cleanId) {
+        await apiAction({id: cleanId, payloadData: requestBody});
+      } else {
+        await dispatch(apiAction(requestBody)).unwrap();
+      }
 
       Alert.alert('Success', `${category} data submitted successfully!`, [
         {
@@ -546,7 +711,63 @@ const HousingForm = () => {
     }
   }, [fuelTypeList, waterSourceList, gasusedList]);
 
+  const fetchDetailsData = async () => {
+    try {
+      if (cleanId) {
+        try {
+          if (subCategory === 'Electricity') {
+            const response = await getElectricityDetailsById(cleanId);
+            console.log('Response:', response);
+            setDate(new Date(response.data.date));
+            setCategory(subCategory);
+          } else if (subCategory === 'Fuel') {
+            const response = await getFuelDetailsById(cleanId);
+            console.log('Response:', response);
+            setDate(new Date(response.data.date));
+            setCategory(subCategory);
+            setFuelType(response?.data?.fuel);
+            setConsumed(response?.data?.quantity.toString());
+            setDescription(response?.data?.notes);
+          } else if (subCategory === 'Water') {
+            const response = await getWaterDetailsById(cleanId);
+            console.log('Response:', response);
+            setDate(new Date(response.data.date));
+            setCategory(subCategory);
+            setWaterSource(response?.data?.waterSource);
+            setConsumed(response?.data?.consumed.toString());
+            setDescription(response?.data?.notes);
+          } else if (subCategory === 'Waste') {
+            const response = await getWasteDetailsById(cleanId);
+            console.log('Response:', response);
+            setDate(new Date(response.data.date));
+            setCategory(subCategory);
+            setWasteType(response.data.wasteType);
+            setQuantity(response.data.quantity.toString());
+            setDescription(response.data.notes);
+          } else if (subCategory === 'Appliances') {
+            const response = await getApplianceDetailsById(cleanId);
+            console.log('Response:', response);
+            setDate(new Date(response.data.date));
+            setCategory(subCategory);
+            setApplianceType(response.data.type);
+            setBrandName(response.data.brandName);
+            setGasFilled(response.data.gasFilled);
+            setRefrigerantCharge(response.data.charge.toString());
+            setDescription(response.data.notes);
+          }
+        } catch (error) {
+          console.error('Error fetching nutrition details:', error);
+        }
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchDetailsData();
+  }, [cleanId]);
+
   console.log('wasteTypeLiost', wasteTypeList);
+  console.log('xkjdskjdsj', date, consumed, waterSource, description, category);
 
   return (
     <KeyboardAvoidingView
@@ -566,7 +787,10 @@ const HousingForm = () => {
           contentInsetAdjustmentBehavior="automatic">
           <Text style={styles.label}>Choose Usage Category</Text>
           <View style={styles.pickerBox}>
-            <Picker selectedValue={category} onValueChange={setCategory}>
+            <Picker
+              selectedValue={category}
+              onValueChange={setCategory}
+              enabled={cleanId ? false : true}>
               <Picker.Item label="Electricity" value="Electricity" />
               <Picker.Item label="Fuel" value="Fuel" />
               <Picker.Item label="Water" value="Water" />
@@ -700,12 +924,16 @@ const HousingForm = () => {
             <>
               <Text style={styles.label}>Choose Waste Type</Text>
               <View style={styles.pickerBox}>
-                <Picker selectedValue={wasteType} onValueChange={setWasteType}>
+                <Picker
+                  selectedValue={wasteType.value}
+                  onValueChange={val => {
+                    setWasteType(wasteTypeList.find(x => x.value === val));
+                  }}>
                   {wasteTypeList.map(wasteType => (
                     <Picker.Item
                       key={wasteType.dataId}
                       label={wasteType.label}
-                      value={wasteType}
+                      value={wasteType.value}
                     />
                   ))}
                 </Picker>
@@ -762,13 +990,15 @@ const HousingForm = () => {
                 <Text style={styles.label}>Gas Filled</Text>
                 <View style={styles.pickerBox}>
                   <Picker
-                    selectedValue={gasFilled}
-                    onValueChange={setGasFilled}>
+                    selectedValue={gasFilled?.value}
+                    onValueChange={val => {
+                      setGasFilled(gasusedList.find(x => x.value === val));
+                    }}>
                     {gasusedList.map(gasFilled => (
                       <Picker.Item
                         key={gasFilled.dataId}
                         label={gasFilled.label}
-                        value={gasFilled}
+                        value={gasFilled.value}
                       />
                     ))}
                   </Picker>

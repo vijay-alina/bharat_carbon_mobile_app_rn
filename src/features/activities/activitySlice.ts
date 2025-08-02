@@ -4,7 +4,11 @@ import {
   ActivityState,
   MonthlyActivityResponse,
 } from './activityType';
-import {activityGet, monthlyActivityGet} from './activityThunks';
+import {
+  activityGet,
+  deleteActivities,
+  monthlyActivityGet,
+} from './activityThunks';
 import {act} from 'react';
 
 const initialState: ActivityState = {
@@ -54,7 +58,19 @@ const activitySlice = createSlice({
       .addCase(monthlyActivityGet.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
-      });
+      })
+
+      .addCase(
+        deleteActivities.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.status = 'succeeded';
+          console.log('action.payload', action.payload);
+          console.log('state.activities', state.activities);
+          state.activities = state.activities.filter(
+            (item: any) => item._id !== action.payload.data._id,
+          );
+        },
+      );
   },
 });
 

@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import { MobilityUpload } from '../../services/mobilityService';
+import {MobilityUpload } from '../../services/mobilityService';
 
 export const uploadMobility = createAsyncThunk(
   'nutrition/uploadMobility',
@@ -13,3 +13,4 @@ export const uploadMobility = createAsyncThunk(
     }
   },
 );
+

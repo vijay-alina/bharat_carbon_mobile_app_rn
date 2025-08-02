@@ -14,9 +14,7 @@ type ChallengeCardProps = {
   days: number;
   point: number;
   challengeData: any;
-  challengeType: string;
-  buttonDisabled: boolean;
-  setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  openModal: any;
 };
 
 const ChallengeCard: React.FC<ChallengeCardProps> = ({
@@ -26,13 +24,8 @@ const ChallengeCard: React.FC<ChallengeCardProps> = ({
   days,
   point,
   challengeData,
-  challengeType,
-  buttonDisabled,
-  setButtonDisabled,
+  openModal,
 }) => {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const navigation = useNavigation<any>();
-  const dispatch = useAppDispatch();
 
   const startDate = new Date();
   startDate.setUTCHours(0, 0, 0, 0);
@@ -42,10 +35,7 @@ const ChallengeCard: React.FC<ChallengeCardProps> = ({
 
   const formatUTC = (date: Date) => date.toISOString().replace('Z', '+00:00');
 
-  const handlePress = async () => {
-    setButtonDisabled(true);
-    setIsSubmitting(true);
-
+  const handlePress = () => {
     const payload = {
       startDate: formatUTC(startDate),
       endDate: formatUTC(endDate),
@@ -54,31 +44,7 @@ const ChallengeCard: React.FC<ChallengeCardProps> = ({
       challangeType: challengeData?.subChallangeType,
     };
 
-    try {
-      await dispatch(challengeAccept(payload)).unwrap();
-
-      Alert.alert('Success', 'Challenge Accept Successfully!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            navigation.navigate('OngoingChallengeScreen', {
-              challengeType,
-              challengeData: challengeData,
-              days,
-            });
-
-            setTimeout(() => {
-              setButtonDisabled(false);
-              setIsSubmitting(false);
-            }, 400);
-          },
-        },
-      ]);
-    } catch (error) {
-      Alert.alert('Error', 'Failed to accept challenge');
-      setButtonDisabled(false);
-      setIsSubmitting(false);
-    }
+    openModal(payload);
   };
 
   return (
@@ -97,8 +63,6 @@ const ChallengeCard: React.FC<ChallengeCardProps> = ({
         onPress={handlePress}
         backgroundColor={Colors.ThickGreenShades700}
         textColor="#fff"
-        disabled={buttonDisabled}
-        loading={isSubmitting}
       />
     </View>
   );

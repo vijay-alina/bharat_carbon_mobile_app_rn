@@ -15,3 +15,8 @@ export const mobilityUpdate = async (payload: Partial<any>): Promise<any> => {
   const response = await apiClient.put(`/mobility/update/${id}`, payloadData);
   return response.data;
 };
+
+export const mobilityDelete = async (id: string): Promise<any> => {
+  const response = await apiClient.delete(`/mobility/deleteMobility/${id}`);
+  return response.data;
+};

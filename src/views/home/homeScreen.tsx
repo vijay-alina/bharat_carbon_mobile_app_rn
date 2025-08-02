@@ -7,11 +7,12 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
+  Modal as NativeModal,
 } from 'react-native';
 import ListHeaderContent from './components/headerContent';
 import VerticalClimateCard from './components/home-vertical-card';
 import ListFooterContent from './components/footerComponent';
-import {AddPlusIcon, FileUploadIcon} from '../../images/icons';
+import {AddPlusIcon, FileUploadIcon, GroupIcons} from '../../images/icons';
 import {Colors} from '../../constants/colors';
 import {DEVICE_WIDTH, getLineHeight} from '../../utils/utils';
 import Modal from 'react-native-modal';
@@ -25,6 +26,7 @@ import {
   familyMemberProfileDataGet,
   profileDataGet,
 } from '../../features/myProfile/myProfileThunks';
+import Co2TrackerCard from './Testing';
 
 const _item = {
   imageUri: require('../../images/icons/girl_with_phone.png'),
@@ -69,7 +71,13 @@ export const HomeScreen = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useAppDispatch();
   const profiledata = useAppSelector(state => state.myProfile.myProfile);
-  const {completeNotesViewed, isNotesViewed, user} = useAppContext();
+  const {
+    completeNotesViewed,
+    isNotesViewed,
+    user,
+    isFamilyNotesViewed,
+    completeFamilyMemberNotesViewed,
+  } = useAppContext();
   const [currentStep, setCurrentStep] = useState(0);
   const GRADIENT_COLORS = ['#E8FFE8', '#80A380'];
   const PLAIN_COLORS = ['#FFFFFF', '#FFFFFF'];
@@ -99,6 +107,10 @@ export const HomeScreen = () => {
     completeNotesViewed();
   };
 
+  const handleCloseFamilyViewNotes = () => {
+    completeFamilyMemberNotesViewed();
+  };
+
   const getDescriptionTextStyle = () => {
     if (currentStep === 0) {
       return styles.descriptionText;
@@ -126,6 +138,8 @@ export const HomeScreen = () => {
     fetchData();
   }, []);
 
+  console.log('kkkkkkkkkkkkkkkkkkkk', user);
+
   return (
     <>
       {isLoading ? (
@@ -136,7 +150,8 @@ export const HomeScreen = () => {
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
-          <ListHeaderContent />
+          {/* <ListHeaderContent /> */}
+          <Co2TrackerCard />
           <View
             style={{
               flexDirection: 'row',
@@ -207,7 +222,7 @@ export const HomeScreen = () => {
           <ListFooterContent />
           <View style={styles.height} />
           <Modal
-            isVisible={!isNotesViewed}
+            isVisible={!isNotesViewed && user.type === 'student'}
             animationIn="fadeIn"
             animationInTiming={300}
             animationOut="fadeOut"
@@ -262,25 +277,29 @@ export const HomeScreen = () => {
               </View>
             </LinearGradient>
           </Modal>
-          {/* <FlatList
-        ListHeaderComponent={ListHeaderContent}
-        data={list}
-        numColumns={2}
-        contentContainerStyle={styles.contentContainer}
-        renderItem={({item, index}) => (
-          <VerticalClimateCard
-            key={index.toString()}
-            imageUri={item.imageUri}
-            title={item.title}
-            subtitle={item.subtitle}
-            buttonText={item.buttonText}
-            gradientColors={item.gradientColors}
-            icon={item.icon}
-          />
-        )}
-        ListFooterComponent={ListFooterContent}
-        ListFooterComponentStyle={styles.footerContainerStyle}
-      /> */}
+
+          <NativeModal
+            visible={!isFamilyNotesViewed && user.type === 'family'}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={handleCloseFamilyViewNotes}>
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <View style={styles.iconWrapper}>
+                  <GroupIcons width={60} height={60} color="white" />
+                </View>
+                <Text style={styles.modalTitle}>Join Your Family Group</Text>
+                <Text style={styles.modalText}>
+                  Welcome! You've successfully joined your family climate team.
+                </Text>
+                <TouchableOpacity
+                  onPress={handleCloseFamilyViewNotes}
+                  style={styles.modalButton}>
+                  <Text style={styles.modalButtonText}>Join & Continue</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </NativeModal>
         </ScrollView>
       )}
     </>
@@ -466,5 +485,80 @@ const styles = StyleSheet.create({
   earth: {
     width: 170,
     height: 132,
+  },
+
+  //famil Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)', // semi-transparent background
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingVertical: 32,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 6,
+  },
+
+  iconWrapper: {
+    backgroundColor: '#17A086',
+    padding: 30,
+    borderRadius: 100,
+    marginBottom: 20,
+  },
+
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#024064',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+
+  modalText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#557F97',
+    lineHeight: 20,
+    textAlign: 'center',
+    marginBottom: 24,
+    paddingHorizontal: 8,
+  },
+
+  modalButton: {
+    backgroundColor: '#17A086',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+
+  modalButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  openButton: {
+    backgroundColor: '#17A086',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  openButtonText: {
+    color: '#fff',
+    fontWeight: '600',
   },
 });

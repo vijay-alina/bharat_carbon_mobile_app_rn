@@ -7,13 +7,38 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  NativeSyntheticEvent,
+  TextInputKeyPressEventData,
+  Alert,
+  Keyboard,
 } from 'react-native';
 import CustomButton from '../../common/button';
+import {Header} from '../../common/header';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useAppDispatch} from '../../hooks/hooks';
+import {
+  submitMemberThunk,
+  updateMemberThunk,
+} from '../../features/challenge/addMember/addMemberThunk';
+import {verifyOtpAddedFamily} from '../../services/userService';
 
-const OTPVerificationScreen = () => {
+const FamilyOTPVerificationScreen = () => {
   const [otp, setOtp] = useState(['', '', '', '']);
   const [timer, setTimer] = useState(30);
-  const inputs = useRef<TextInput[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const inputs = useRef<Array<TextInput | null>>([]);
+
+  const navigation = useNavigation<any>();
+  const dispatch = useAppDispatch();
+  const route = useRoute();
+  const {isEdit, member, phoneNumber, payload} =
+    (route.params as {
+      phoneNumber: string;
+      payload: any;
+      isEdit: boolean | undefined;
+      member: any;
+    }) || {};
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,10 +52,19 @@ const OTPVerificationScreen = () => {
       const newOtp = [...otp];
       newOtp[index] = text;
       setOtp(newOtp);
+
       if (text !== '' && index < 3) {
-        console.log('hello');
-        inputs.current[index + 1].focus();
+        inputs.current[index + 1]?.focus();
       }
+    }
+  };
+
+  const handleKeyPress = (
+    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
+    index: number,
+  ) => {
+    if (e.nativeEvent.key === 'Backspace' && otp[index] === '' && index > 0) {
+      inputs.current[index - 1]?.focus();
     }
   };
 
@@ -41,32 +75,68 @@ const OTPVerificationScreen = () => {
     }
   };
 
-  const handleSubmit = () => {
-    const fullOtp = otp.join('');
-    console.log('Verifying OTP:', fullOtp);
+  const handleSubmit = async () => {
+    Keyboard.dismiss();
+    const otpString = otp.join('');
+
+    if (otpString.length !== 4) {
+      Alert.alert('Error', 'Please enter complete OTP');
+      return;
+    }
+    setLoading(true);
+    try {
+      await verifyOtpAddedFamily(phoneNumber, otpString);
+      if (isEdit && member?._id) {
+        await dispatch(
+          updateMemberThunk({familyId: member._id, payload}),
+        ).unwrap();
+        Alert.alert('Member updated successfully');
+      } else {
+        await dispatch(submitMemberThunk(payload)).unwrap();
+        Alert.alert('Member added successfully');
+      }
+      navigation.navigate('FamilyOverviewScreen');
+    } catch (error: any) {
+      console.log('error', error);
+      Alert.alert('otp is expire or invalid');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <KeyboardAvoidingView
       style={{flex: 1}}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <Header
+        title={'Otp Verification'}
+        onBackClick={() => navigation.goBack()}
+      />
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
-          {/* <Text style={styles.title}>
+          <Text style={styles.title}>
             We have sent a verification code to{'\n'}
             <Text style={styles.phone}>+91 78122 45690</Text>
-          </Text> */}
+          </Text>
 
           <View style={styles.otpContainer}>
             {otp.map((digit, index) => (
               <TextInput
                 key={index}
-                style={styles.otpInput}
+                ref={ref => {
+                  inputs.current[index] = ref;
+                }}
+                style={[
+                  styles.otpInput,
+                  focusedIndex === index && {borderColor: 'green'},
+                ]}
                 keyboardType="numeric"
                 maxLength={1}
-                // ref={(el) => (inputs.current[index] = el!)}
                 value={digit}
                 onChangeText={text => handleChange(text, index)}
+                onKeyPress={e => handleKeyPress(e, index)}
+                onFocus={() => setFocusedIndex(index)}
+                onBlur={() => setFocusedIndex(null)}
                 returnKeyType="done"
               />
             ))}
@@ -83,8 +153,9 @@ const OTPVerificationScreen = () => {
           <CustomButton
             text="Verify and Continue"
             onPress={handleSubmit}
-            // iconName="arrow-forward"
             backgroundColor="#17a086"
+            loading={loading}
+            disabled={loading}
             style={styles.submitButton}
           />
         </View>
@@ -93,12 +164,11 @@ const OTPVerificationScreen = () => {
   );
 };
 
-export default OTPVerificationScreen;
+export default FamilyOTPVerificationScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   contentContainer: {
     padding: 24,
@@ -139,7 +209,6 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: 24,
     paddingBottom: 24,
-    // marginBottom: 30,
   },
   submitButton: {
     borderRadius: 30,

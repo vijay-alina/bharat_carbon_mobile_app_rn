@@ -18,8 +18,10 @@ export interface IAppContext {
   completeProfile: () => void;
   completeSubscription: () => void;
   completeNotesViewed: () => void;
+  completeFamilyMemberNotesViewed: () => void;
   completeTouchTour: () => void;
   isNotesViewed: boolean;
+  isFamilyNotesViewed: boolean;
   isTouchTourComplete: boolean;
   handleLogout: () => void;
   user: null | any;
@@ -36,8 +38,10 @@ const AppContext = createContext<IAppContext>({
   completeProfile: () => {},
   completeSubscription: () => {},
   completeNotesViewed: () => {},
+  completeFamilyMemberNotesViewed: () => {},
   completeTouchTour: () => {},
   isNotesViewed: false,
+  isFamilyNotesViewed: false,
   isTouchTourComplete: false,
   handleLogout: () => {},
   user: null,
@@ -59,6 +63,7 @@ export const AppProvider: React.FC<{children: ReactElement}> = ({children}) => {
     hasCompletedSubscription: false,
     isLoading: true,
     isNotesViewed: false,
+    isFamilyNotesViewed: false,
     isTouchTourComplete: false,
     user: null,
   });
@@ -137,6 +142,13 @@ export const AppProvider: React.FC<{children: ReactElement}> = ({children}) => {
   const completeTouchTour = async () => {
     const newState = {...appState, isTouchTourComplete: true};
     setAppState(newState);
+    await AsyncStorage.setItem('appState', JSON.stringify(newState));
+  };
+
+  const completeFamilyMemberNotesViewed = async () => {
+    const newState = {...appState, isFamilyNotesViewed: true};
+    setAppState(newState);
+    await AsyncStorage.setItem('appState', JSON.stringify(newState));
   };
 
   const resetApp = async () => {
@@ -147,6 +159,7 @@ export const AppProvider: React.FC<{children: ReactElement}> = ({children}) => {
       hasCompletedSubscription: false,
       isLoading: false,
       isNotesViewed: false,
+      isFamilyNotesViewed: false,
       isTouchTourComplete: false,
       user: null,
     };
@@ -161,6 +174,7 @@ export const AppProvider: React.FC<{children: ReactElement}> = ({children}) => {
     completeProfile,
     completeSubscription,
     completeNotesViewed,
+    completeFamilyMemberNotesViewed,
     completeTouchTour,
     resetApp,
     handleLogout,

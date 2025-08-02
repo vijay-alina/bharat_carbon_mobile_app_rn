@@ -59,3 +59,24 @@ export const familyOtpVerify = async (payload: any): Promise<any> => {
 
   return response.data.data;
 };
+
+export const getOtpAddedFamily = async (mobile: string): Promise<any> => {
+  const response = await apiClient.post(
+    `/familyAuth/checkFamilyMobileNumberByOtp`,
+    {
+      mobileNumber: mobile,
+    },
+  );
+  return response.data;
+};
+
+export const verifyOtpAddedFamily = async (
+  mobile: string,
+  otp: string,
+): Promise<any> => {
+  const response = await apiClient.post(`/familyAuth/familyAddedOtpVerify`, {
+    mobileNumber: mobile,
+    otp: otp,
+  });
+  return response.data;
+};

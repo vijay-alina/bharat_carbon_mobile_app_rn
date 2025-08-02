@@ -60,7 +60,7 @@ const FamilyOverviewScreen = () => {
           name={item.fullName}
           relation={item.relationship}
           avatar={''}
-          co2Value={String(item.totalEmission.toFixed(2) || 0)}
+          co2Value={String(item?.totalEmission?.toFixed(2) || 0)}
           co2Status={'Normal'}
           points={String(item.points || 0)}
           onPress={() => {

@@ -16,19 +16,11 @@ import CameraIcon from '../../images/icons/camera_icon.svg';
 import {Header} from '../../common/header';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {ImagePickerService} from '../../services/ImagePickerService';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from '../../app/store';
-
-import {
-  submitMemberThunk,
-  updateMemberThunk,
-} from '../../features/challenge/addMember/addMemberThunk';
-// import { useAppDispatch } from '../../hooks/hooks';
+import {getOtpAddedFamily} from '../../services/userService';
 
 const AddNewMemberScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const route = useRoute();
-  const dispatch = useDispatch<AppDispatch>();
   const {isEdit, member} =
     (route.params as {
       isEdit?: boolean;
@@ -41,8 +33,7 @@ const AddNewMemberScreen = () => {
   const [relationship, setRelationship] = useState<string>(
     member?.relationship ?? 'Sibling',
   );
-
-  const {loading} = useSelector((state: RootState) => state.members);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handlePickImage = async () => {
     try {
@@ -87,19 +78,7 @@ const AddNewMemberScreen = () => {
       ]);
     }
   };
-  // const handleRemovePhoto = async () => {
-  //   Alert.alert('remove photo', 'Are you want to remove this photo?', [
-  //     { text: 'Cancel', style: 'cancel' },
-  //     {
-  //       text: 'Remove',
-  //       style: 'destructive',
-  //       onPress: () => {
-  //         setPhotoUri(null);
-  //         setPhotoBase64(null);
-  //       },
-  //     },
-  //   ]);
-  // };
+
   const isValidPhoneNumber = (number: string) => {
     const phoneRegex = /^[6-9]\d{9}$/;
     return phoneRegex.test(number);
@@ -123,25 +102,20 @@ const AddNewMemberScreen = () => {
       mobileNumber: phoneNumber,
       relationship,
     };
-
-    if (isEdit && member?._id) {
-      const resultAction = await dispatch(
-        updateMemberThunk({familyId: member._id, payload}),
-      );
-      if (updateMemberThunk.fulfilled.match(resultAction)) {
-        Alert.alert('Member updated successfully');
-        navigation.goBack();
-      } else {
-        Alert.alert('Failed to update member');
-      }
-    } else {
-      const resultAction = await dispatch(submitMemberThunk(payload));
-      if (submitMemberThunk.fulfilled.match(resultAction)) {
-        Alert.alert('Member added successfully');
-        navigation.goBack();
-      } else {
-        Alert.alert('Failed to submit member');
-      }
+    setLoading(true);
+    try {
+      await getOtpAddedFamily(phoneNumber);
+      navigation.navigate('FamilyOTPVerificationScreen', {
+        phoneNumber,
+        payload: payload,
+        isEdit,
+        member: member,
+      });
+    } catch (error: any) {
+      console.log('error', error);
+      Alert.alert('mobile number already registered');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -151,76 +125,67 @@ const AddNewMemberScreen = () => {
         title={isEdit ? 'Edit Member' : 'Add New Member'}
         onBackClick={() => navigation.goBack()}
       />
-      {loading ? (
-        <ActivityIndicator size="large" color="#17a086" style={styles.loader} />
-      ) : (
-        <View style={styles.container}>
-          <TouchableOpacity
-            onPress={handlePickImage}
-            style={styles.avatarContainer}>
-            {/* <Image
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={handlePickImage}
+          style={styles.avatarContainer}>
+          <Image
             source={
-              { uri: 'https://avatar.iran.liara.run/public/boy?username=Ash' }
+              photoUri
+                ? {uri: photoUri}
+                : member?.image
+                ? {uri: member.image}
+                : {
+                    uri: 'https://avatar.iran.liara.run/public/boy?username=Ash',
+                  }
             }
             style={styles.avatar}
-          /> */}
-            <Image
-              source={
-                photoUri
-                  ? {uri: photoUri}
-                  : member?.image
-                  ? {uri: member.image}
-                  : {
-                      uri: 'https://avatar.iran.liara.run/public/boy?username=Ash',
-                    }
-              }
-              style={styles.avatar}
-            />
-
-            <View style={styles.editIcon}>
-              <CameraIcon />
-            </View>
-          </TouchableOpacity>
-
-          <Text style={styles.label}>Full Name</Text>
-          <TextInput
-            style={styles.input}
-            value={fullName}
-            onChangeText={setFullName}
-            placeholder="Enter full name"
           />
 
-          <Text style={styles.label}>Phone Number</Text>
-          <TextInput
-            style={styles.input}
-            value={phoneNumber}
-            onChangeText={text => {
-              // Remove all non-numeric characters
-              const cleaned = text.replace(/[^0-9]/g, '');
-
-              // Limit to 10 digits
-              if (cleaned.length <= 10) {
-                setPhoneNumber(cleaned);
-              }
-            }}
-            maxLength={10} // Also add this for extra safety
-            placeholder="78122 45690"
-            keyboardType="number-pad"
-          />
-
-          <Text style={styles.label}>Relationship</Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={relationship}
-              onValueChange={value => setRelationship(value)}>
-              <Picker.Item label="Sibling" value="Sibling" />
-              <Picker.Item label="Parent" value="Parent" />
-              <Picker.Item label="Child" value="Child" />
-              <Picker.Item label="Friend" value="Friend" />
-            </Picker>
+          <View style={styles.editIcon}>
+            <CameraIcon />
           </View>
+        </TouchableOpacity>
 
-          {/* <CustomButton
+        <Text style={styles.label}>Full Name</Text>
+        <TextInput
+          style={styles.input}
+          value={fullName}
+          onChangeText={setFullName}
+          placeholder="Enter full name"
+        />
+
+        <Text style={styles.label}>Phone Number</Text>
+        <TextInput
+          style={styles.input}
+          value={phoneNumber}
+          onChangeText={text => {
+            // Remove all non-numeric characters
+            const cleaned = text.replace(/[^0-9]/g, '');
+
+            // Limit to 10 digits
+            if (cleaned.length <= 10) {
+              setPhoneNumber(cleaned);
+            }
+          }}
+          maxLength={10} // Also add this for extra safety
+          placeholder="78122 45690"
+          keyboardType="number-pad"
+        />
+
+        <Text style={styles.label}>Relationship</Text>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={relationship}
+            onValueChange={value => setRelationship(value)}>
+            <Picker.Item label="Sibling" value="Sibling" />
+            <Picker.Item label="Parent" value="Parent" />
+            <Picker.Item label="Child" value="Child" />
+            <Picker.Item label="Friend" value="Friend" />
+          </Picker>
+        </View>
+
+        {/* <CustomButton
           text={'Send Invite'}
           onPress={() => { }}
           showIcon={!isSubmitting}
@@ -228,7 +193,7 @@ const AddNewMemberScreen = () => {
           backgroundColor="#17a086"
           style={styles.submitButton}
         /> */}
-          {/* <CustomButton
+        {/* <CustomButton
             text={
               loading
                 ? 'Submitting...'
@@ -241,24 +206,18 @@ const AddNewMemberScreen = () => {
             backgroundColor="#17a086"
             style={styles.submitButton}
           /> */}
-          <CustomButton
-            text={
-              loading
-                ? 'Submitting...'
-                : isEdit
-                ? 'Update Profile'
-                : 'Add Member'
-            }
-            onPress={handleSubmit}
-            disabled={loading}
-            backgroundColor="#17a086"
-            style={styles.submitButton}
-            // iconComponent={AddPlusCircle}
-            // showIcon={true}
-            // isLeftIcon={true}
-          />
-        </View>
-      )}
+        <CustomButton
+          text={isEdit ? 'Verify Mobile Number' : 'Send Invite'}
+          onPress={handleSubmit}
+          disabled={loading}
+          backgroundColor="#17a086"
+          style={styles.submitButton}
+          loading={loading}
+          // iconComponent={AddPlusCircle}
+          // showIcon={true}
+          // isLeftIcon={true}
+        />
+      </View>
     </View>
   );
 };

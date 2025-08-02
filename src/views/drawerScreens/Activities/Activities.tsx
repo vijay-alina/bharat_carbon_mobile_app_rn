@@ -26,8 +26,10 @@ import {useNavigation} from '@react-navigation/native';
 import {useAppDispatch, useAppSelector} from '../../../hooks/hooks';
 import {
   activityGet,
+  deleteActivities,
   monthlyActivityGet,
 } from '../../../features/activities/activityThunks';
+import {boolean} from 'yup';
 // import { monthWiseGetActivitiesList } from '../../../services/activitiesService';
 
 const ITEMS_PER_PAGE = 20;
@@ -39,6 +41,7 @@ const ActivitiesScreen: React.FC = () => {
   const [selectedActivity, setSelectedActivity] = useState<string>(
     dropdownItems[0],
   );
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   // Get current date
   const currentDate = new Date();
@@ -342,6 +345,29 @@ const ActivitiesScreen: React.FC = () => {
     }
   };
 
+  const handleDeleteItem = async (
+    itemIdToDelete: string,
+    subCategory: string,
+  ) => {
+    setDeleteLoading(true);
+    try {
+      await dispatch(
+        deleteActivities({id: itemIdToDelete, subCategory}),
+      ).unwrap();
+      // ✅ Show success alert
+      Alert.alert('Deleted', 'Activity deleted successfully');
+
+      // ✅ Refresh the list
+      await fetchActivities(1, true);
+    } catch (error) {
+      console.error('error', error);
+
+      Alert.alert('Error', 'Failed to delete activity');
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   const renderItem = ({item, index}: any) => {
     return (
       <ActivityComp
@@ -351,6 +377,7 @@ const ActivitiesScreen: React.FC = () => {
         subHeader={item.timestamp}
         name={item.name}
         item={item}
+        handleDeleteItem={handleDeleteItem}
       />
     );
   };
@@ -480,112 +507,123 @@ const ActivitiesScreen: React.FC = () => {
     handleLoadMore();
   };
 
+  console.log('activitySatate', activitiesState.data);
+
   return (
     <View style={styles.container}>
-      <Header
-        title="Activities"
-        isHomeScreen={true}
-        onHomeClick={() => {
-          navigation.navigate('MainTabs', {
-            screen: 'Home',
-          });
-        }}
-        onBackClick={() => {
-          navigation.goBack();
-        }}
-      />
-      <View style={styles.contentContainer}>
-        <View style={styles.tabsContainer}>
-          {activityTabs.map((tab, i) => {
-            const isActive = i === activeTab;
-            return (
-              <TouchableOpacity
-                key={i}
-                style={[
-                  styles.tab,
-                  {
-                    backgroundColor: isActive
-                      ? Colors.ThickGreenShades700
-                      : Colors.White,
-                  },
-                ]}
-                onPress={() => handleTabChange(i)}>
-                {isActive ? tab.icons[0] : tab.icons[1]}
-                <Text
-                  style={[
-                    styles.tabText,
-                    {color: isActive ? Colors.White : Colors.Black},
-                  ]}>
-                  {tab.label}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+      {deleteLoading ? (
+        <View style={styles.emptyContainer}>
+          <ActivityIndicator size="large" color={Colors.ThickGreenShades700} />
+          <Text style={styles.loadingText}>Loading...</Text>
         </View>
-
-        {activeTab === 0 ? (
-          <View style={styles.sectionListContainer}>
-            <View style={styles.dropdownContainer}>
-              <Dropdown
-                data={dropdownItems}
-                onSelect={item => handleActivityChange(item as string)}
-                selectedValue={selectedActivity}
-              />
+      ) : (
+        <>
+          <Header
+            title="Activities"
+            isHomeScreen={true}
+            onHomeClick={() => {
+              navigation.navigate('MainTabs', {
+                screen: 'Home',
+              });
+            }}
+            onBackClick={() => {
+              navigation.goBack();
+            }}
+          />
+          <View style={styles.contentContainer}>
+            <View style={styles.tabsContainer}>
+              {activityTabs.map((tab, i) => {
+                const isActive = i === activeTab;
+                return (
+                  <TouchableOpacity
+                    key={i}
+                    style={[
+                      styles.tab,
+                      {
+                        backgroundColor: isActive
+                          ? Colors.ThickGreenShades700
+                          : Colors.White,
+                      },
+                    ]}
+                    onPress={() => handleTabChange(i)}>
+                    {isActive ? tab.icons[0] : tab.icons[1]}
+                    <Text
+                      style={[
+                        styles.tabText,
+                        {color: isActive ? Colors.White : Colors.Black},
+                      ]}>
+                      {tab.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
-            <SectionList
-              key={selectedActivity}
-              ref={sectionListRef}
-              sections={sectionsData}
-              keyExtractor={(item, index) => `${item.id}-${index}`}
-              renderItem={renderItem}
-              renderSectionHeader={renderSectionHeader}
-              ListEmptyComponent={renderEmpty}
-              ListFooterComponent={renderFooter}
-              stickySectionHeadersEnabled={true}
-              showsVerticalScrollIndicator={false}
-              scrollEnabled={true}
-              nestedScrollEnabled={true}
-              contentContainerStyle={styles.listContent}
-              onEndReached={handleEndReached}
-              onEndReachedThreshold={0.3}
-              removeClippedSubviews={false}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              windowSize={10}
-              style={styles.sectionList}
-            />
+
+            {activeTab === 0 ? (
+              <View style={styles.sectionListContainer}>
+                <View style={styles.dropdownContainer}>
+                  <Dropdown
+                    data={dropdownItems}
+                    onSelect={item => handleActivityChange(item as string)}
+                    selectedValue={selectedActivity}
+                  />
+                </View>
+                <SectionList
+                  key={selectedActivity}
+                  ref={sectionListRef}
+                  sections={sectionsData}
+                  keyExtractor={(item, index) => `${item.id}-${index}`}
+                  renderItem={renderItem}
+                  renderSectionHeader={renderSectionHeader}
+                  ListEmptyComponent={renderEmpty}
+                  ListFooterComponent={renderFooter}
+                  stickySectionHeadersEnabled={true}
+                  showsVerticalScrollIndicator={false}
+                  scrollEnabled={true}
+                  nestedScrollEnabled={true}
+                  contentContainerStyle={styles.listContent}
+                  onEndReached={handleEndReached}
+                  onEndReachedThreshold={0.3}
+                  removeClippedSubviews={false}
+                  initialNumToRender={10}
+                  maxToRenderPerBatch={10}
+                  windowSize={10}
+                  style={styles.sectionList}
+                />
+              </View>
+            ) : (
+              <View style={styles.sectionListContainer}>
+                <Calendar
+                  events={sectionsData}
+                  onMonthChange={handleMonthChange}
+                  initialMonth={selectedMonth}
+                  initialYear={selectedYear}
+                />
+                <SectionList
+                  sections={sectionsData}
+                  keyExtractor={(item, index) => `${item.id}-${index}`}
+                  renderItem={renderItem}
+                  renderSectionHeader={renderSectionHeaderTime}
+                  ListEmptyComponent={renderEmpty}
+                  ListFooterComponent={renderFooter}
+                  stickySectionHeadersEnabled={true}
+                  showsVerticalScrollIndicator={false}
+                  scrollEnabled={true}
+                  nestedScrollEnabled={true}
+                  contentContainerStyle={styles.listContent}
+                  // onEndReached={handleEndReached}
+                  // onEndReachedThreshold={0.3}
+                  // removeClippedSubviews={false}
+                  // initialNumToRender={10}
+                  // maxToRenderPerBatch={10}
+                  // windowSize={10}
+                  style={styles.sectionList}
+                />
+              </View>
+            )}
           </View>
-        ) : (
-          <View style={styles.sectionListContainer}>
-            <Calendar
-              events={sectionsData}
-              onMonthChange={handleMonthChange}
-              initialMonth={selectedMonth}
-              initialYear={selectedYear}
-            />
-            <SectionList
-              sections={sectionsData}
-              keyExtractor={(item, index) => `${item.id}-${index}`}
-              renderItem={renderItem}
-              renderSectionHeader={renderSectionHeaderTime}
-              ListEmptyComponent={renderEmpty}
-              ListFooterComponent={renderFooter}
-              stickySectionHeadersEnabled={true}
-              showsVerticalScrollIndicator={false}
-              scrollEnabled={true}
-              nestedScrollEnabled={true}
-              contentContainerStyle={styles.listContent}
-              // onEndReached={handleEndReached}
-              // onEndReachedThreshold={0.3}
-              // removeClippedSubviews={false}
-              // initialNumToRender={10}
-              // maxToRenderPerBatch={10}
-              // windowSize={10}
-              style={styles.sectionList}
-            />
-          </View>
-        )}
-      </View>
+        </>
+      )}
     </View>
   );
 };

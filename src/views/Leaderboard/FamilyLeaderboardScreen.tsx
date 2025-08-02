@@ -194,37 +194,6 @@ const FamilyLeaderboardScreen = () => {
                   </View>
                 </View>
               </View>
-
-              {/* <TouchableOpacity onPress={openModal} style={styles.openButton}>
-                <Text style={styles.openButtonText}>Open Modal</Text>
-              </TouchableOpacity>
-              <Modal
-                visible={isModalVisible}
-                animationType="slide"
-                transparent={true}
-                onRequestClose={closeModal}>
-                <View style={styles.modalOverlay}>
-                  <View style={styles.modalContent}>
-                    <View style={styles.iconWrapper}>
-                      <GroupIcons width={60} height={60} color="white" />
-                    </View>
-                    <Text style={styles.modalTitle}>
-                      Join Your Family Group
-                    </Text>
-                    <Text style={styles.modalText}>
-                      Welcome! You've successfully joined your family climate
-                      team.
-                    </Text>
-                    <TouchableOpacity
-                      onPress={closeModal}
-                      style={styles.modalButton}>
-                      <Text style={styles.modalButtonText}>
-                        Join & Continue
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </Modal> */}
             </ScrollView>
           </View>
         )
@@ -354,79 +323,4 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
 
-  // ? Modal style
-
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)', // semi-transparent background
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
-
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    paddingVertical: 32,
-    paddingHorizontal: 24,
-    alignItems: 'center',
-    width: '100%',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 6,
-  },
-
-  iconWrapper: {
-    backgroundColor: '#17A086',
-    padding: 30,
-    borderRadius: 100,
-    marginBottom: 20,
-  },
-
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#024064',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-
-  modalText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#557F97',
-    lineHeight: 20,
-    textAlign: 'center',
-    marginBottom: 24,
-    paddingHorizontal: 8,
-  },
-
-  modalButton: {
-    backgroundColor: '#17A086',
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-
-  modalButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  openButton: {
-    backgroundColor: '#17A086',
-    padding: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  openButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
 });

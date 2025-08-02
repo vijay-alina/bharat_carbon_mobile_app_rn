@@ -18,6 +18,7 @@ import PointsComponent from '../../addMember/components/PointsComponent';
 import {DEVICE_WIDTH, getLineHeight} from '../../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {Categories} from '../../../constants/constants';
+import {useAppDispatch} from '../../../hooks/hooks';
 
 export enum ActivityType {
   Nutrition,
@@ -34,10 +35,12 @@ type ActivityCompProps = {
   avatar?: ImageSourcePropType;
   name: string;
   item: any;
+  handleDeleteItem: any;
 };
 
 const ActivityComp = (props: ActivityCompProps) => {
   const navigation = useNavigation<any>();
+  const dispatch = useAppDispatch();
 
   const getChipBgColor = (activityType: ActivityType) => {
     switch (activityType) {
@@ -127,10 +130,12 @@ const ActivityComp = (props: ActivityCompProps) => {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => {
+          onPress: async () => {
             // Handle delete logic here
             console.log('Delete activity:', item);
-            // You can call an API or update local state
+            const splitId = item.id.split(' ')[0];
+            console.log('splitId', splitId);
+            props?.handleDeleteItem(splitId, item.subCategory);
           },
         },
       ],

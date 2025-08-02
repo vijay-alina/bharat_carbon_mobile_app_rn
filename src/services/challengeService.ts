@@ -36,3 +36,8 @@ export const goodsUpdate = async (payload: Partial<any>): Promise<any> => {
   const response = await apiClient.put(`/goods/update/${id}`, payloadData);
   return response.data;
 };
+
+export const goodsDelete = async (id: string): Promise<any> => {
+  const response = await apiClient.delete(`/goods/deleteGoods/${id}`);
+  return response.data;
+};

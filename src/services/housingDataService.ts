@@ -84,3 +84,28 @@ export const applianceUpdate = async (payload: Partial<any>): Promise<any> => {
   const response = await apiClient.put(`/appliance/update/${id}`, payloadData);
   return response.data;
 };
+
+export const electricityDelete = async (id: string): Promise<any> => {
+  const response = await apiClient.delete(`/electricity/deleteElectricity/${id}`);
+  return response.data;
+};
+
+export const fuelDelete = async (id: string): Promise<any> => {
+  const response = await apiClient.delete(`/fuel/deleteFuel/${id}`);
+  return response.data;
+};
+
+export const waterDelete = async (id: string): Promise<any> => {
+  const response = await apiClient.delete(`/water/deleteWater/${id}`);
+  return response.data;
+};
+
+export const wasteDelete = async (id: string): Promise<any> => {
+  const response = await apiClient.delete(`/waste/deleteWaste/${id}`);
+  return response.data;
+};
+
+export const applianceDelete = async (id: string): Promise<any> => {
+  const response = await apiClient.delete(`/appliance/deleteAppliance/${id}`);
+  return response.data;
+};

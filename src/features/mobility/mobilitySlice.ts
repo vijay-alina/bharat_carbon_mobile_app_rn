@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {MobilityState} from './mobilityType';
-import {uploadMobility} from './mobilityThunks';
+import { uploadMobility} from './mobilityThunks';
 
 const initialState: MobilityState = {
   mobility: null,

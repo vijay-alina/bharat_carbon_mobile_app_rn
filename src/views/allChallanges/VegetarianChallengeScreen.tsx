@@ -9,6 +9,9 @@ import {
   Platform,
   ActivityIndicator,
   BackHandler,
+  Modal,
+  Alert,
+  TouchableOpacity,
 } from 'react-native';
 import DayChallengeCard from './component/DayChallengeCard';
 import {Colors} from '../../constants/colors';
@@ -21,16 +24,63 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import {useAppDispatch} from '../../hooks/hooks';
+import {challengeAccept} from '../../features/manageChallege/manageChallengeThunks';
 
 const VegetarianChallengeScreen = () => {
   const tabBarHeight = useBottomTabBarHeight();
   const navigation = useNavigation<any>();
   const route = useRoute();
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const {challengeType, challengeData} = route.params as {
     challengeType: string;
     challengeData: any;
   };
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [challangeAcceptPayload, setChallangeAcceptPayload] = useState<any>();
+
+  const dispatch = useAppDispatch();
+
+  const openModal = (payload: any) => {
+    setIsModalVisible(true);
+    setChallangeAcceptPayload(payload);
+  };
+
+  const handleAccept = async () => {
+    setButtonDisabled(true);
+    setIsSubmitting(true);
+
+    try {
+      await dispatch(challengeAccept(challangeAcceptPayload)).unwrap();
+
+      navigation.navigate('OngoingChallengeScreen', {
+        challengeType,
+        challengeData: challengeData,
+        days: challangeAcceptPayload.days,
+      });
+
+      // Alert.alert('Success', 'Challenge Accept Successfully!', [
+      //   {
+      //     text: 'OK',
+      //     onPress: () => {
+      //       setTimeout(() => {
+      //         setButtonDisabled(false);
+      //         setIsSubmitting(false);
+      //       }, 400);
+      //     },
+      //   },
+      // ]);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to accept challenge');
+      setButtonDisabled(false);
+      setIsSubmitting(false);
+      setIsModalVisible(false);
+    }
+  };
+
+  console.log('challengeData ##################', challengeData);
 
   return (
     <LinearGradient
@@ -74,15 +124,51 @@ const VegetarianChallengeScreen = () => {
                 reward={item.reward}
                 days={item.day}
                 point={item.point}
-                challengeType={challengeType}
                 challengeData={challengeData}
-                buttonDisabled={buttonDisabled}
-                setButtonDisabled={setButtonDisabled}
+                openModal={openModal}
               />
             )}
             showsVerticalScrollIndicator={false}
           />
         </ScrollView>
+
+        <Modal
+          visible={isModalVisible}
+          animationType="slide"
+          transparent={true}
+          // onRequestClose={closeModal}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Save Water Challenge is On!</Text>
+
+              <Text style={styles.modalText}>
+                Track your water-saving actions daily for 7 days. Earn 100
+                points!
+              </Text>
+
+              {/* <View style={styles.iconWrapper}> */}
+              <Image
+                source={challengeData.image}
+                style={styles.illustrationModal}
+                resizeMode="contain"
+              />
+              {/* </View> */}
+
+              <Text style={styles.modalText1}>
+                Save water every day for 7 days.
+              </Text>
+
+              <TouchableOpacity onPress={handleAccept}>
+                {isSubmitting ? (
+                  <ActivityIndicator color="green" />
+                ) : (
+                  <Text style={styles.modalTitle}>All The Best!</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </LinearGradient>
   );
@@ -131,6 +217,72 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 16,
+  },
+
+  //modal
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+
+  illustrationModal: {
+    width: '100%',
+    height: 150,
+    marginBottom: 24,
+  },
+
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingVertical: 30,
+    paddingHorizontal: 24,
+    width: '100%',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 10,
+  },
+
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#0D5F4F',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+
+  modalText: {
+    fontSize: 14,
+    color: '#0D5F4F',
+    fontWeight: '500',
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 16,
+    paddingHorizontal: 8,
+  },
+  modalText1: {
+    fontSize: 14,
+    color: '#127C68',
+    fontWeight: '500',
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 16,
+    paddingHorizontal: 8,
+  },
+
+  iconWrapper: {
+    backgroundColor: '#17A086',
+    borderRadius: 100,
+    padding: 20,
+    marginBottom: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
